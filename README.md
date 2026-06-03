@@ -1,262 +1,154 @@
 # GloryX Digital Agency
 
 [![Next.js](https://img.shields.io/badge/Next.js-15.5.9-black?logo=next.js)](https://nextjs.org/)
+[![Rust](https://img.shields.io/badge/Rust-Axum-brown?logo=rust)](https://www.rust-lang.org/)
+[![Python](https://img.shields.io/badge/Python-FastAPI-blue?logo=python)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-19.2.3-61dafb?logo=react)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4.19-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
 [![Bun](https://img.shields.io/badge/Bun-Runtime-f472b6?logo=bun)](https://bun.sh/)
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> **Full-service digital marketing and automation. We don't just play the game. We rewrite the code.**
+> **Full-service digital marketing, CRM automation, and SEO conquest. We don't just follow trends. We rewrite the code.**
 
-A premium, high-performance digital agency website built with Next.js 14, featuring cutting-edge design inspired by Rockstar Games' aesthetic with a focus on dark themes, smooth animations, and responsive user experiences.
-
----
-
-## 🚀 Features
-
-- **Modern Tech Stack**: Built with Next.js 15, React 19, and TypeScript
-- **Lightning Fast**: Powered by Bun runtime for 3-4x faster package installation and development
-- **Premium UI/UX**: Dark theme with custom green/orange accent colors and glassmorphism effects
-- **Fully Responsive**: Optimized for desktop, tablet, and mobile devices
-- **SEO Optimized**: Server-side rendering with Next.js for excellent SEO performance
-- **Custom Typography**: Professional fonts (Oswald for headers, Roboto for body text)
-- **Interactive Components**: Smooth animations, hover effects, and parallax scrolling
-- **Type-Safe**: Full TypeScript support for better developer experience
+GloryX is a premium, high-performance, full-stack digital agency platform. It combines a client-side Next.js web application, a secure **Rust Axum API Gateway**, and a **Python FastAPI AI microservice** integrating Google's Gemini models. The UI takes inspiration from classic terminal monitors, retro HUD displays, and cyberpunk color profiles.
 
 ---
 
-## 📋 Prerequisites
+## 🏗️ Full-Stack Architecture
 
-Before you begin, ensure you have the following installed:
+GloryX uses a distributed full-stack architecture to ensure security, high performance, and rapid AI operations:
 
-- **Node.js** 18.x or higher
-- **Bun** 1.0 or higher (recommended) or npm/yarn
-- **Git** for version control
+```mermaid
+graph TD
+    Client[Next.js Web Client] <-->|Fetch Proxy| NextAPI[Next.js API Routes]
+    NextAPI <-->|REST HTTP| RustGateway[Rust Axum Gateway :8080]
+    RustGateway <-->|Secure Commit| LocalVault[Local JSON Vault]
+    RustGateway <-->|REST HTTP| PythonAI[Python FastAPI AI Microservice :5000]
+    PythonAI <-->|Gemini API / Offline Fallback| Gemini[Google Gemini Engine]
+```
+
+1. **Frontend App Router**: Serves pages and proxies client requests to the backend gateway, isolating external API endpoints.
+2. **Rust Gateway (`:8080`)**: Manages high-performance routing, applies permissive CORS, generates cryptographically randomized transaction codes, and logs client heist planner briefs securely in local JSON dossiers (`backend-rust/vault/*.json`).
+3. **Python AI Service (`:5000`)**: Queries the Gemini API with structured system instructions to return cybersecurity strategy blueprints and chat dialogue responses. Supports offline sandboxed fallback rules.
 
 ---
 
-## 🛠️ Installation
+## 🚀 Key Features
+
+- **G.L.O.R.Y. AI Interactive Terminal**: A floating terminal interface mimicking retro command prompts. Chat with the AI directly or input local shell commands like `services`, `heist`, and `clear`.
+- **Heist Budget Customizer & Planner**: A multi-step business customizer integrated with a custom hacking minigame. Completing the hack submits targets to the Rust gateway and returns custom AI-compiled operation blueprints.
+- **Dynamic Theme & Font Drawer**: A sliding CRT HUD panel that changes the application's entire color palette, typography (Oswald, Rye, Orbitron, Cinzel), cursors, and scanline attributes in real-time.
+- **Visual Design Aesthetics**: Curved clip-corner UI cards, scanline scrolling filters, custom HUD mouse pointers, and retro audio chirps for inputs, errors, and successes.
+
+---
+
+## 📁 Repository Restructured Map
+
+```
+gloryx/
+├── app/                            # Next.js App Router (Routes & Proxies)
+│   ├── api/
+│   │   ├── chat/route.ts          # Proxies general chat to Rust backend
+│   │   └── heist/route.ts         # Proxies heist submissions to Rust backend
+│   ├── globals.css                # Global stylesheet and theme mappings
+│   ├── layout.tsx                 # Root layout with HTML headers and SEO tags
+│   └── page.tsx                   # HomePage route entry wrapper
+├── components/                     # Categorized React Components
+│   ├── hooks/                     # Context providers and hook structures
+│   │   ├── AudioProvider.tsx      # HTML5 Web Audio context provider
+│   │   └── ThemeProvider.tsx      # Dynamic CSS variable and font manager
+│   ├── layout/                    # Global HUD layouts and utilities
+│   │   ├── Navbar.tsx             # Main header menu bar
+│   │   ├── Footer.tsx             # Page status and manifesto links
+│   │   ├── LayoutWrapper.tsx      # Dynamic body overlay constructor
+│   │   ├── CustomCursor.tsx       # Animated crosshair mouse follower
+│   │   └── IntroLoader.tsx        # Automated CRT system boot visual loader
+│   ├── pages/                     # Decoupled page layouts and states
+│   │   ├── HomePage.tsx           # Homepage index view
+│   │   ├── GamesPage.tsx          # Release catalogue view
+│   │   └── PlannerPage.tsx        # Budget customizer and hacking minigame
+│   └── ui/                        # Presentation widgets & visual grids
+│       ├── Hero.tsx               # Cinematic header section
+│       ├── ServicesGrid.tsx       # Interactive weapons list
+│       ├── InfoSection.tsx        # Business CRM and SEO automation highlights
+│       ├── SettingsDrawer.tsx     # Color profile customization drawer
+│       └── Terminal.tsx           # Floating cyberpunk console
+├── backend-rust/                   # Rust Axum Gateway Source
+│   ├── src/main.rs                # Gateway routing, vault logging, and Python proxies
+│   ├── vault/                     # Local JSON logs database directory
+│   └── Cargo.toml                 # Rust dependencies configuration
+├── backend-python/                 # Python FastAPI Microservice Source
+│   ├── app.py                     # API routing, Gemini prompt builders, and fallbacks
+│   └── requirements.txt           # Python packages listing
+└── package.json                    # Frontend node dependencies
+```
+
+---
+
+## 🛠️ Step-by-Step Installation & Local Execution
+
+Follow these instructions to spin up the GloryX stack locally:
 
 ### 1. Clone the repository
-
 ```bash
 git clone <repository-url>
 cd gloryx
 ```
 
-### 2. Install dependencies
-
-Using Bun (recommended):
-
-```bash
-bun install
-```
-
-Or using npm:
-
-```bash
-npm install
-```
-
-### 3. Set up environment variables
-
+### 2. Configure Environment Variables
 Create a `.env.local` file in the root directory:
-
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-### 4. Run the development server
-
-Using Bun:
-
+### 3. Launch python AI Microservice
 ```bash
-bun run dev
+cd backend-python
+python -m venv .venv
+.venv\Scripts\activate   # Windows (use source .venv/bin/activate on Mac/Linux)
+pip install -r requirements.txt
+python -m uvicorn app:app --port 5000
 ```
+*The service will boot on `http://127.0.0.1:5000`.*
 
-Or using npm:
-
+### 4. Launch Rust API Gateway
 ```bash
-npm run dev
+cd ../backend-rust
+cargo run
 ```
+*The gateway will compile and start listening on `http://127.0.0.1:8080`.*
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to view the website.
-
----
-
-## 📁 Project Structure
-
-```
-gloryx/
-├── app/                        # Next.js App Router
-│   ├── globals.css            # Global styles and Tailwind directives
-│   ├── layout.tsx             # Root layout with fonts and metadata
-│   └── page.tsx               # Homepage component
-├── components/                 # React components
-│   ├── Navbar.tsx             # Sticky navigation with scroll effects
-│   ├── Hero.tsx               # Hero section with gradient background
-│   ├── ServicesGrid.tsx       # Interactive service cards grid
-│   ├── InfoSection.tsx        # Features showcase section
-│   └── Footer.tsx             # Multi-column footer with newsletter
-├── constants.tsx              # Application data and constants
-├── types.ts                   # TypeScript type definitions
-├── next.config.mjs            # Next.js configuration
-├── tailwind.config.ts         # Tailwind CSS configuration
-├── postcss.config.mjs         # PostCSS configuration
-├── tsconfig.json              # TypeScript configuration
-└── package.json               # Project dependencies
-```
-
----
-
-## 🎨 Design System
-
-### Color Palette
-
-| Color           | Hex Code  | Usage                |
-|----------------|-----------|----------------------|
-| GX Black       | `#0a0a0a` | Primary background   |
-| GX Dark        | `#161616` | Secondary background |
-| GX Green       | `#79c043` | Primary accent       |
-| GX Orange      | `#f58220` | Secondary accent     |
-| GX Blue        | `#0f2b5c` | Tertiary accent      |
-| GX Gray        | `#2a2a2a` | Borders & subtle UI  |
-
-### Typography
-
-- **Display**: Oswald (300, 400, 500, 700) - Headers and display text
-- **Body**: Roboto (300, 400, 500, 700) - Body text and UI elements
-
-### Custom Features
-
-- **Clip Corner Effects**: Angled button and card designs
-- **Grid Pattern**: Subtle background texture
-- **Custom Scrollbar**: Branded scrollbar with green accent on hover
-- **Smooth Animations**: Optimized CSS transitions and transforms
-
----
-
-## 🏗️ Available Scripts
-
-| Command          | Description                                    |
-|-----------------|------------------------------------------------|
-| `bun run dev`   | Start development server (with hot reload)     |
-| `bun run build` | Build production-ready application             |
-| `bun run start` | Start production server                        |
-| `bun run lint`  | Run ESLint for code quality checks             |
-
----
-
-## 🌐 Deployment
-
-### Deploy to Vercel (Recommended)
-
-The easiest way to deploy your Next.js app is using [Vercel](https://vercel.com):
-
-1. Push your code to GitHub
-2. Import your repository on Vercel
-3. Configure environment variables
-4. Deploy with one click
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
-
-### Manual Deployment
-
+### 5. Start Next.js Frontend
 ```bash
-# Build the application
-bun run build
-
-# Start the production server
-bun run start
+cd ../
+bun install    # Or npm install
+bun run dev    # Or npm run dev
 ```
+*Open [http://localhost:3000](http://localhost:3000) to view the portal.*
 
 ---
 
-## 🔧 Configuration
+## 🎨 Typography & Accents Palette
 
-### Next.js Configuration (`next.config.mjs`)
+The application binds styling accents to CSS variables dynamic mappings:
 
-- Image optimization for external URLs (Unsplash)
-- Environment variable configuration
-- SWC minification enabled
-
-### Tailwind Configuration (`tailwind.config.ts`)
-
-- Custom color palette
-- Font variable references
-- Custom animations and background patterns
-- Content paths for component scanning
+| Accent | Accents Mapping | Target Fonts | Primary Usage |
+| :--- | :--- | :--- | :--- |
+| **SYSTEM MATRIX** | Green & Orange | Oswald / Roboto | Cyberpunk terminal defaults |
+| **RED DEAD CONQUEST** | Crimson & Amber | Rye / Courier Prime | Vintage western look |
+| **VICE RETRO GLOW** | Neon Pink & Cyan | Orbitron / Inter | Retro neon grid theme |
+| **BULLY PREP CLASS** | Gold & Navy | Cinzel / Georgia | Academy style look |
 
 ---
 
-## 📦 Tech Stack
+## 🤝 Guidelines & Conduct
 
-### Core Framework
-
-- **Next.js 15.5.9** - React framework with App Router
-- **React 19.2.3** - UI library
-- **TypeScript 5.8.3** - Type-safe development
-
-### Styling & UI
-
-- **Tailwind CSS 3.4.19** - Utility-first CSS framework
-- **PostCSS 8.5.6** - CSS transformations
-- **Autoprefixer 10.4.23** - Vendor prefix automation
-
-### UI Component Libraries (Ready for Integration)
-
-- **Chakra UI 2.10.9** - Accessible component library
-- **Material UI 6.5.0** - Production-ready components
-- **DaisyUI 4.12.24** - Tailwind CSS component library
-- **Bulma 1.0.4** - Modern CSS framework
-- **Framer Motion 11.18.2** - Animation library
-
-### Icons & Assets
-
-- **Lucide React 0.563.0** - Beautiful icon library
-
-### Development Tools
-
-- **ESLint** - Code quality and consistency
-- **Bun** - Fast JavaScript runtime and package manager
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📝 License
-
-This project is proprietary and confidential. All rights reserved.
-
----
-
-## 📧 Contact
-
-**GloryX Digital Agency**
-
-- Website: [https://gloryx.com](https://gloryx.com)
-- Email: <contact@gloryx.com>
-- Twitter: [@GloryXAgency](https://twitter.com/GloryXAgency)
-
----
-
-## 🙏 Acknowledgments
-
-- Design inspiration from [Rockstar Games](https://www.rockstargames.com)
-- Built with ❤️ using [Next.js](https://nextjs.org)
-- Powered by [Bun](https://bun.sh)
-
----
+Please refer to the following policy documents for more information:
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md): Code of Conduct standards.
+- [SECURITY.md](SECURITY.md): Vulnerability reporting procedures.
+- [CONTRIBUTING.md](CONTRIBUTING.md): Detailed workflow checklists.
+- [LICENSE](LICENSE): Released under the MIT License.
 
 <div align="center">
   <strong>Dominate The Matrix</strong>

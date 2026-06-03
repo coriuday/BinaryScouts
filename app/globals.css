@@ -5,7 +5,12 @@
 :root {
   --gx-black: #0a0a0a;
   --gx-green: #79c043;
+  --gx-green-rgb: 121, 192, 67;
   --gx-orange: #f58220;
+  --gx-orange-rgb: 245, 130, 32;
+  --gx-blue: #0f2b5c;
+  --gx-blue-rgb: 15, 43, 92;
+  --gx-gray: #2a2a2a;
 }
 
 body {
@@ -31,6 +36,16 @@ body {
   background: var(--gx-green);
 }
 
+/* Hide default cursor on desktop when custom cursor is active */
+@media (min-width: 768px) {
+  html, body {
+    cursor: none !important;
+  }
+  a, button, input, select, textarea, [role="button"], .cursor-pointer {
+    cursor: none !important;
+  }
+}
+
 /* Clip corner utilities */
 .clip-corner {
   clip-path: polygon(0 0, 100% 0, 100% 85%, 95% 100%, 0 100%);
@@ -38,6 +53,50 @@ body {
 
 .clip-corner-rev {
   clip-path: polygon(5% 0, 100% 0, 100% 100%, 0 100%, 0 15%);
+}
+
+/* CRT Screen Effects */
+.crt-screen {
+  position: relative;
+  overflow: hidden;
+}
+
+.crt-screen::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%), 
+              linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
+  z-index: 10;
+  background-size: 100% 3px, 3px 100%;
+  pointer-events: none;
+}
+
+.crt-screen::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.6) 100%);
+  z-index: 11;
+  pointer-events: none;
+}
+
+@keyframes crt-flicker {
+  0% { opacity: 0.975; }
+  50% { opacity: 1; }
+  100% { opacity: 0.98; }
+}
+
+.crt-flicker {
+  animation: crt-flicker 0.15s infinite;
 }
 
 @layer utilities {
@@ -48,4 +107,4 @@ body {
   .bg-grid-pattern {
     background-size: 40px 40px;
   }
-}
+}

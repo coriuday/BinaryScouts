@@ -2,9 +2,9 @@ import { ServiceItem, NavItem, FeatureItem } from './types';
 import { Zap, BarChart3, ShieldCheck, Layers } from 'lucide-react';
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: 'Games', href: '#' },
-  { label: 'Services', href: '#inventory' },
-  { label: 'About', href: '#about' },
+  { label: 'Games', href: '/games' },
+  { label: 'Services', href: '/#inventory' },
+  { label: 'About', href: '/#about' },
 ];
 
 export const SERVICES: ServiceItem[] = [

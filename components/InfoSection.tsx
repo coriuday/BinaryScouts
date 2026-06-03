@@ -6,7 +6,7 @@ import { Wifi, Radio } from 'lucide-react';
 
 const InfoSection: React.FC = () => {
   return (
-    <section className="py-24 bg-white text-gx-black relative overflow-hidden">
+    <section id="about" className="py-24 bg-white text-gx-black relative overflow-hidden">
       {/* Background Texture */}
       <div className="absolute inset-0 bg-grid-pattern bg-[length:20px_20px] opacity-[0.03]"></div>
 

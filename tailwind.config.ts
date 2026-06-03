@@ -8,12 +8,12 @@ export default {
     theme: {
         extend: {
             colors: {
-                'gx-black': '#0a0a0a',
-                'gx-dark': '#161616',
-                'gx-green': '#79c043',
-                'gx-orange': '#f58220',
-                'gx-blue': '#0f2b5c',
-                'gx-gray': '#2a2a2a',
+                'gx-black': 'var(--gx-black)',
+                'gx-dark': 'var(--gx-dark)',
+                'gx-green': 'var(--gx-green)',
+                'gx-orange': 'var(--gx-orange)',
+                'gx-blue': 'var(--gx-blue)',
+                'gx-gray': 'var(--gx-gray)',
                 'rockstar-black': '#000000',
                 'rockstar-yellow': '#fdb927',
             },

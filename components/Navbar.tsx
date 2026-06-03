@@ -1,12 +1,17 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Globe, Settings } from 'lucide-react';
+import Link from 'next/link';
+import { Menu, X, Volume2, VolumeX, Settings } from 'lucide-react';
 import { NAV_ITEMS } from '@/constants';
+import { useAudio } from './AudioProvider';
+import SettingsDrawer from './SettingsDrawer';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const { isMuted, toggleMute, playClick, playHover } = useAudio();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,6 +20,11 @@ const Navbar: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleMuteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleMute();
+  };
 
   return (
     <nav
@@ -27,40 +37,90 @@ const Navbar: React.FC = () => {
         <div className="flex justify-between items-center h-12">
 
           {/* Logo */}
-          <div className="flex-shrink-0 flex items-center gap-2 group cursor-pointer">
+          <Link
+            href="/"
+            onClick={playClick}
+            onMouseEnter={playHover}
+            className="flex-shrink-0 flex items-center gap-2 group cursor-pointer"
+          >
             <div className="w-10 h-10 bg-gx-green flex items-center justify-center font-display font-bold text-xl text-gx-black border-2 border-transparent group-hover:border-white transition-all">
               G
             </div>
             <span className="font-display font-bold text-2xl tracking-tighter text-white uppercase group-hover:text-gx-green transition-colors">
               Glory<span className="text-gx-green group-hover:text-white">X</span>
             </span>
-          </div>
+          </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
             {NAV_ITEMS.map((item) => (
-              <a
+              <Link
                 key={item.label}
                 href={item.href}
+                onClick={playClick}
+                onMouseEnter={playHover}
                 className="font-display text-lg font-bold uppercase tracking-wider text-white hover:text-gx-green transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-gx-green after:transition-all hover:after:w-full"
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
 
-            <button className="bg-gx-blue hover:bg-gx-orange text-white font-display font-bold uppercase tracking-wide px-6 py-2 border border-white/20 hover:border-white transition-all transform hover:-translate-y-1 shadow-[4px_4px_0px_rgba(255,255,255,0.1)] hover:shadow-[4px_4px_0px_rgba(255,255,255,0.3)] clip-corner">
-              Start Project
+            <Link
+              href="/planner"
+              onClick={playClick}
+              onMouseEnter={playHover}
+            >
+              <button className="bg-gx-blue hover:bg-gx-orange text-white font-display font-bold uppercase tracking-wide px-6 py-2 border border-white/20 hover:border-white transition-all transform hover:-translate-y-1 shadow-[4px_4px_0px_rgba(255,255,255,0.1)] hover:shadow-[4px_4px_0px_rgba(255,255,255,0.3)] clip-corner">
+                Start Heist
+              </button>
+            </Link>
+
+            {/* Audio Toggle */}
+            <button
+              onClick={handleMuteClick}
+              onMouseEnter={playHover}
+              title={isMuted ? "Enable Sound Context" : "Mute Sound Context"}
+              className="p-2 text-white hover:text-gx-green transition-colors duration-200"
+            >
+              {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} className="animate-pulse" />}
             </button>
 
-            <button className="p-2 text-white hover:text-gx-green transition-colors hover:rotate-90 duration-500">
+            {/* Settings System Config Toggle */}
+            <button
+              onClick={() => {
+                playClick();
+                setIsSettingsOpen(true);
+              }}
+              onMouseEnter={playHover}
+              title="System Configurations"
+              className="p-2 text-white hover:text-gx-green transition-colors hover:rotate-90 duration-500 cursor-pointer"
+            >
               <Settings size={24} />
             </button>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center gap-4">
             <button
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={handleMuteClick}
+              className="text-white hover:text-gx-green p-2"
+            >
+              {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
+            </button>
+            <button
+              onClick={() => {
+                playClick();
+                setIsSettingsOpen(true);
+              }}
+              className="text-white hover:text-gx-green p-2"
+            >
+              <Settings size={24} />
+            </button>
+            <button
+              onClick={() => {
+                playClick();
+                setIsOpen(!isOpen);
+              }}
               className="text-white hover:text-gx-green p-2 focus:outline-none"
             >
               {isOpen ? <X size={32} /> : <Menu size={32} />}
@@ -76,20 +136,34 @@ const Navbar: React.FC = () => {
       >
         <div className="px-4 pt-8 pb-3 space-y-4 flex flex-col h-full bg-grid-pattern bg-[length:20px_20px]">
           {NAV_ITEMS.map((item) => (
-            <a
+            <Link
               key={item.label}
               href={item.href}
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                playClick();
+                setIsOpen(false);
+              }}
               className="font-display text-4xl font-bold uppercase text-white hover:text-gx-green block border-b border-white/10 pb-4"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
-          <button className="w-full mt-8 bg-gx-green text-gx-black font-display font-bold text-xl uppercase py-4 hover:bg-white transition-colors">
-            Start Project
-          </button>
+          <Link
+            href="/planner"
+            onClick={() => {
+              playClick();
+              setIsOpen(false);
+            }}
+            className="block w-full mt-8"
+          >
+            <button className="w-full bg-gx-green text-gx-black font-display font-bold text-xl uppercase py-4 hover:bg-white transition-colors">
+              Start Heist
+            </button>
+          </Link>
         </div>
       </div>
+      {/* Settings Drawer Panel */}
+      <SettingsDrawer isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
     </nav>
   );
 };

@@ -73,7 +73,7 @@ const IntroLoader: React.FC<IntroLoaderProps> = ({ onComplete }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-gx-black z-[999] flex flex-col justify-between p-8 font-mono text-xs crt-screen crt-flicker">
+    <div className="fixed inset-0 bg-gx-black z-[999] flex flex-col justify-between p-8 font-mono text-xs">
       {/* Top Header info */}
       <div className="flex justify-between text-gx-green/60 border-b border-gx-green/20 pb-4">
         <div>SYSTEM STATUS: BOOTING</div>

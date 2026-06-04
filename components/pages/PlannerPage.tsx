@@ -17,6 +17,7 @@ interface PlannerService {
 }
 
 const PLANNER_SERVICES: PlannerService[] = [
+  { id: 'development', name: 'Web Development', minPrice: 12000, description: 'Building clean, compiled, high-performance systems and interactive layouts.', accent: 'blue' },
   { id: 'marketing', name: 'Digital Marketing Campaign', minPrice: 5000, description: 'Aggressive data-backed user acquisition and scaling.', accent: 'green' },
   { id: 'automation', name: 'Lead Flow Automation (CRM)', minPrice: 8000, description: 'Integrate CRM automation, auto-comms and WhatsApp flows.', accent: 'orange' },
   { id: 'seo', name: 'SEO Engine Conquest', minPrice: 3000, description: 'Aggressive ranking and competitor traffic displacement.', accent: 'blue' },
@@ -269,7 +270,7 @@ export default function PlannerPage() {
 
         {/* Retro Intrusion Hacking Minigame */}
         {isHacking && (
-          <div className="fixed inset-0 bg-gx-black/98 z-[100] flex flex-col items-center justify-center p-6 crt-screen crt-flicker">
+          <div className="fixed inset-0 bg-gx-black/98 z-[100] flex flex-col items-center justify-center p-6">
             <div className="border-2 border-gx-orange bg-gx-dark p-6 md:p-10 max-w-md w-full relative clip-corner shadow-[0_0_40px_rgba(245,130,32,0.3)]">
               
               {/* Alert Header */}
@@ -351,7 +352,7 @@ export default function PlannerPage() {
 
         {/* Dynamic Matrix-style Loader for execution */}
         {isCompiling && (
-          <div className="fixed inset-0 bg-gx-black/95 z-[100] flex flex-col items-center justify-center p-6 crt-screen crt-flicker">
+          <div className="fixed inset-0 bg-gx-black/95 z-[100] flex flex-col items-center justify-center p-6">
             <div className="text-center max-w-md w-full">
               <h2 className="font-display text-gx-green text-4xl md:text-5xl uppercase tracking-tighter mb-4 animate-pulse">
                 COMPILING HEIST PLAN

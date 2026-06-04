@@ -86,6 +86,73 @@ G.L.O.R.Y. AI IS ONLINE. PROMPT TO BEGIN.`
       return;
     }
 
+    if (lowerCmd === 'help' || lowerCmd === 'commands') {
+      setHistory((prev) => [
+        ...prev,
+        {
+          role: 'system',
+          text: `GLORYX CONSOLE ACTIONS MENU:
+- HELP / COMMANDS: Display this menu
+- SERVICES: List all active digital weapons (services) in inventory
+- ABOUT: Read the GloryX agency operational manifesto
+- HEIST / PLANNER: Navigate to custom budget strategy engine
+- GAMES / RELEASES: Open the releases brief archive page
+- CONTACT / CREW: Initiate encrypted message transceiver
+- CLEAR: Wipe command line buffer`
+        }
+      ]);
+      playSuccess();
+      setLoading(false);
+      return;
+    }
+
+    if (lowerCmd === 'services') {
+      setHistory((prev) => [
+        ...prev,
+        {
+          role: 'system',
+          text: `GLORYX SYSTEMS INVENTORY (OPERATIONAL SERVICES):
+1. WEB DEVELOPMENT: Next.js frontend interfaces, Rust API gateways & FastAPI AI systems
+2. DIGITAL MARKETING: High-impact PPC customer acquisition campaigns
+3. BUSINESS CRM AUTOMATION: Autonomous leads, email & WhatsApp railroads
+4. SEO ENGINE CONQUEST: Dominating search terms to ranking page #1
+5. CINEMATIC VIDEO & DESIGN: High-speed bullet-time visual brand assets`
+        }
+      ]);
+      playSuccess();
+      setLoading(false);
+      return;
+    }
+
+    if (lowerCmd === 'about') {
+      setHistory((prev) => [
+        ...prev,
+        {
+          role: 'system',
+          text: `GLORYX AGENCY SYSTEM PROFILE:
+THE MATRIX REWRITTEN. WE COMBINE RAW CREATIVE BRAND IDENTITY WITH AUTONOMOUS BOT SCRIPTS AND OPTIMIZED CODING.
+OUR ARSENAL CONVERGES NEXT.JS DESIGN AESTHETICS, RUST BACKEND LOG FILES, AND FASTAPI AI CALIBRATORS TO AMPLIFY CORPORATE SCALE.`
+        }
+      ]);
+      playSuccess();
+      setLoading(false);
+      return;
+    }
+
+    if (lowerCmd === 'contact' || lowerCmd === 'crew') {
+      setHistory((prev) => [
+        ...prev,
+        { role: 'system', text: 'REDIRECTING SIGNAL LINK TO TRANSCEIVER PORT /CONTACT...' }
+      ]);
+      playSuccess();
+      setTimeout(() => {
+        setIsOpen(false);
+        router.push('/contact');
+      }, 1000);
+      setLoading(false);
+      return;
+    }
+
     if (lowerCmd === 'heist' || lowerCmd === 'planner') {
       setHistory((prev) => [
         ...prev,
@@ -183,7 +250,7 @@ G.L.O.R.Y. AI IS ONLINE. PROMPT TO BEGIN.`
       {/* Actual Terminal Window */}
       {isOpen && (
         <div
-          className={`bg-gx-dark border-2 border-gx-green flex flex-col transition-all duration-300 shadow-[0_0_30px_rgba(121,192,67,0.35)] clip-corner crt-screen crt-flicker ${
+          className={`bg-gx-dark border-2 border-gx-green flex flex-col transition-all duration-300 shadow-[0_0_30px_rgba(121,192,67,0.35)] clip-corner ${
             isMinimized ? 'h-10 w-64' : 'h-[420px] w-[350px] sm:w-[450px]'
           }`}
         >

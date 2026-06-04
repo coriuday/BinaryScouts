@@ -12,7 +12,7 @@ interface SettingsDrawerProps {
 }
 
 export default function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
-  const { currentTheme, setTheme, customCursorEnabled, setCustomCursorEnabled, crtScanlinesEnabled, setCrtScanlinesEnabled } = useTheme();
+  const { currentTheme, setTheme, customCursorEnabled, setCustomCursorEnabled } = useTheme();
   const { playClick, playHover, playSuccess } = useAudio();
 
   const handleThemeChange = (id: string) => {
@@ -23,11 +23,6 @@ export default function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps)
   const handleCursorToggle = () => {
     playClick();
     setCustomCursorEnabled(!customCursorEnabled);
-  };
-
-  const handleCrtToggle = () => {
-    playClick();
-    setCrtScanlinesEnabled(!crtScanlinesEnabled);
   };
 
   return (
@@ -49,7 +44,7 @@ export default function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps)
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 bottom-0 w-80 sm:w-96 bg-gx-dark border-l-2 border-gx-green z-[100] flex flex-col justify-between p-6 shadow-[0_0_30px_rgba(0,0,0,0.8)] font-mono crt-screen crt-flicker text-xs"
+            className="fixed right-0 top-0 bottom-0 w-80 sm:w-96 bg-gx-dark border-l-2 border-gx-green z-[100] flex flex-col justify-between p-6 shadow-[0_0_30px_rgba(0,0,0,0.8)] font-mono text-xs"
           >
             {/* Header section */}
             <div>
@@ -132,20 +127,7 @@ export default function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps)
                   </button>
                 </div>
 
-                {/* CRT Scanline Filter Toggle */}
-                <div className="flex justify-between items-center text-white/80">
-                  <div>
-                    <span className="block font-bold">CRT MONITOR SCANLINES</span>
-                    <span className="text-gray-500 text-[10px]">Toggles vintage screen scan/flicker</span>
-                  </div>
-                  <button
-                    onClick={handleCrtToggle}
-                    onMouseEnter={playHover}
-                    className="text-gx-green hover:scale-105 transition-transform"
-                  >
-                    {crtScanlinesEnabled ? <ToggleRight size={32} /> : <ToggleLeft size={32} className="text-gray-600" />}
-                  </button>
-                </div>
+
               </div>
             </div>
 

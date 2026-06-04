@@ -29,7 +29,7 @@ const CrewTicker: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full bg-[#030303] border-b border-gx-green/20 text-[10px] md:text-xs font-mono h-8 flex items-center justify-between px-4 text-gx-green relative z-[60] select-none uppercase tracking-wider crt-screen">
+    <div className="w-full bg-[#030303] border-b border-gx-green/20 text-[10px] md:text-xs font-mono h-8 flex items-center justify-between px-4 text-gx-green relative z-[60] select-none uppercase tracking-wider">
       <div className="flex items-center gap-2">
         <Radio className="w-3.5 h-3.5 text-gx-orange animate-pulse" />
         <span className="text-gx-orange/80 font-bold">OPERATIONAL STATUS:</span>

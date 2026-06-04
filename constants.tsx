@@ -3,18 +3,25 @@ import { Zap, BarChart3, ShieldCheck, Layers } from 'lucide-react';
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Games', href: '/games' },
-  { label: 'Services', href: '/#inventory' },
-  { label: 'About', href: '/#about' },
+  { label: 'Services', href: '/services' },
+  { label: 'About', href: '/about' },
 ];
 
 export const SERVICES: ServiceItem[] = [
+  {
+    id: '0',
+    title: 'Web Development',
+    description: 'Building clean, compiled, high-performance systems and interactive layouts.',
+    imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop',
+    featured: true,
+    gridSpan: 'md:col-span-2'
+  },
   {
     id: '1',
     title: 'Digital Marketing',
     description: 'Dominate the market with data-driven campaigns that hit harder.',
     imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop',
-    featured: true,
-    gridSpan: 'md:col-span-2'
+    gridSpan: 'md:col-span-1'
   },
   {
     id: '2',

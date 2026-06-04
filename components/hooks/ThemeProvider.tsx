@@ -100,8 +100,6 @@ interface ThemeContextType {
   setTheme: (id: string) => void;
   customCursorEnabled: boolean;
   setCustomCursorEnabled: (enabled: boolean) => void;
-  crtScanlinesEnabled: boolean;
-  setCrtScanlinesEnabled: (enabled: boolean) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -109,7 +107,6 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentThemeId, setCurrentThemeId] = useState('matrix');
   const [customCursorEnabled, setCustomCursorEnabled] = useState(true);
-  const [crtScanlinesEnabled, setCrtScanlinesEnabled] = useState(true);
   const [mounted, setMounted] = useState(false);
 
   // Load preferences from localStorage on mount
@@ -117,16 +114,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setMounted(true);
     const savedTheme = localStorage.getItem('gloryx_theme');
     const savedCursor = localStorage.getItem('gloryx_cursor');
-    const savedCrt = localStorage.getItem('gloryx_crt');
 
     if (savedTheme && THEMES.some(t => t.id === savedTheme)) {
       setCurrentThemeId(savedTheme);
     }
     if (savedCursor !== null) {
       setCustomCursorEnabled(savedCursor === 'true');
-    }
-    if (savedCrt !== null) {
-      setCrtScanlinesEnabled(savedCrt === 'true');
     }
   }, []);
 
@@ -176,11 +169,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, [customCursorEnabled, mounted]);
 
-  useEffect(() => {
-    if (mounted) {
-      localStorage.setItem('gloryx_crt', String(crtScanlinesEnabled));
-    }
-  }, [crtScanlinesEnabled, mounted]);
+
 
   const setTheme = (id: string) => {
     if (THEMES.some(t => t.id === id)) {
@@ -196,9 +185,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         currentTheme,
         setTheme,
         customCursorEnabled,
-        setCustomCursorEnabled,
-        crtScanlinesEnabled,
-        setCrtScanlinesEnabled
+        setCustomCursorEnabled
       }}
     >
       {children}

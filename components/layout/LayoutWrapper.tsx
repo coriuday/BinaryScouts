@@ -13,12 +13,12 @@ interface LayoutWrapperProps {
 }
 
 export default function LayoutWrapper({ children, bodyClass }: LayoutWrapperProps) {
-  const { customCursorEnabled, crtScanlinesEnabled } = useTheme();
+  const { customCursorEnabled } = useTheme();
 
   return (
     <body
       className={`${bodyClass} antialiased text-white selection:bg-gx-green selection:text-gx-black min-h-screen bg-gx-black ${
-        crtScanlinesEnabled ? 'crt-screen crt-flicker' : ''
+        customCursorEnabled ? 'has-custom-cursor' : ''
       }`}
     >
       <AudioProvider>

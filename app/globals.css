@@ -38,10 +38,7 @@ body {
 
 /* Hide default cursor on desktop when custom cursor is active */
 @media (min-width: 768px) {
-  html, body {
-    cursor: none !important;
-  }
-  a, button, input, select, textarea, [role="button"], .cursor-pointer {
+  .has-custom-cursor, .has-custom-cursor * {
     cursor: none !important;
   }
 }
@@ -61,43 +58,6 @@ body {
   overflow: hidden;
 }
 
-.crt-screen::before {
-  content: " ";
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%), 
-              linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
-  z-index: 10;
-  background-size: 100% 3px, 3px 100%;
-  pointer-events: none;
-}
-
-.crt-screen::after {
-  content: " ";
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: radial-gradient(circle, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.6) 100%);
-  z-index: 11;
-  pointer-events: none;
-}
-
-@keyframes crt-flicker {
-  0% { opacity: 0.975; }
-  50% { opacity: 1; }
-  100% { opacity: 0.98; }
-}
-
-.crt-flicker {
-  animation: crt-flicker 0.15s infinite;
-}
 
 @layer utilities {
   .text-balance {

@@ -267,7 +267,7 @@ export default function GamesPage() {
 
         {/* Mission Dossier Modal overlay */}
         {activeGame && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gx-black/90 backdrop-blur-md crt-screen crt-flicker">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gx-black/90 backdrop-blur-md">
             <div className="bg-gx-dark border-2 border-gx-green max-w-3xl w-full max-h-[85vh] overflow-y-auto relative clip-corner p-6 md:p-10 shadow-[0_0_50px_rgba(121,192,67,0.3)]">
               
               {/* Close Button */}

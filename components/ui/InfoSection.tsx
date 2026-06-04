@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { FEATURES } from '@/constants';
 import { Wifi, Radio } from 'lucide-react';
 
@@ -40,9 +41,11 @@ const InfoSection: React.FC = () => {
             </ul>
 
             <div className="mt-12">
-              <button className="px-10 py-4 bg-transparent border-2 border-gx-black text-gx-black font-display font-bold text-xl uppercase tracking-wider hover:bg-gx-black hover:text-white transition-colors duration-300 clip-corner">
-                Read Manifesto
-              </button>
+              <Link href="/about#manifesto">
+                <button className="px-10 py-4 bg-transparent border-2 border-gx-black text-gx-black font-display font-bold text-xl uppercase tracking-wider hover:bg-gx-black hover:text-white transition-colors duration-300 clip-corner">
+                  Read Manifesto
+                </button>
+              </Link>
             </div>
           </div>
 

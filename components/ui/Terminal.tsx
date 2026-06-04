@@ -112,7 +112,7 @@ G.L.O.R.Y. AI IS ONLINE. PROMPT TO BEGIN.`
         {
           role: 'system',
           text: `GLORYX SYSTEMS INVENTORY (OPERATIONAL SERVICES):
-1. WEB DEVELOPMENT: Next.js frontend interfaces, Rust API gateways & FastAPI AI systems
+1. FULL STACK DEVELOPMENT: Next.js frontend interfaces, Rust API gateways & FastAPI AI systems
 2. DIGITAL MARKETING: High-impact PPC customer acquisition campaigns
 3. BUSINESS CRM AUTOMATION: Autonomous leads, email & WhatsApp railroads
 4. SEO ENGINE CONQUEST: Dominating search terms to ranking page #1

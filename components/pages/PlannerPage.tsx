@@ -17,7 +17,7 @@ interface PlannerService {
 }
 
 const PLANNER_SERVICES: PlannerService[] = [
-  { id: 'development', name: 'Web Development', minPrice: 12000, description: 'Building clean, compiled, high-performance systems and interactive layouts.', accent: 'blue' },
+  { id: 'development', name: 'Full Stack Development', minPrice: 12000, description: 'Building clean, compiled, high-performance systems and interactive layouts.', accent: 'blue' },
   { id: 'marketing', name: 'Digital Marketing Campaign', minPrice: 5000, description: 'Aggressive data-backed user acquisition and scaling.', accent: 'green' },
   { id: 'automation', name: 'Lead Flow Automation (CRM)', minPrice: 8000, description: 'Integrate CRM automation, auto-comms and WhatsApp flows.', accent: 'orange' },
   { id: 'seo', name: 'SEO Engine Conquest', minPrice: 3000, description: 'Aggressive ranking and competitor traffic displacement.', accent: 'blue' },

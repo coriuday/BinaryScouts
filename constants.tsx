@@ -10,7 +10,7 @@ export const NAV_ITEMS: NavItem[] = [
 export const SERVICES: ServiceItem[] = [
   {
     id: '0',
-    title: 'Web Development',
+    title: 'Full Stack Development',
     description: 'Building clean, compiled, high-performance systems and interactive layouts.',
     imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop',
     featured: true,

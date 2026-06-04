@@ -22,7 +22,7 @@ interface ServiceDetail {
 const SERVICES_EXTENDED: ServiceDetail[] = [
   {
     id: '0',
-    title: 'Web Development',
+    title: 'Full Stack Development',
     category: 'development',
     priceRange: '$12,000 - $50,000',
     clearanceLevel: 'LEVEL 5 ENCRYPTED',

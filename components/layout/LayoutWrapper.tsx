@@ -6,9 +6,7 @@ import CustomCursor from '@/components/layout/CustomCursor';
 import CrewTicker from '@/components/layout/CrewTicker';
 import Terminal from '@/components/ui/Terminal';
 import ScrollProgressBar from '@/components/motion/ScrollProgressBar';
-import LenisProvider from '@/components/motion/LenisProvider';
 import ClickRipple from '@/components/motion/ClickRipple';
-import RouteTransition from '@/components/motion/RouteTransition';
 
 interface LayoutWrapperProps {
   children: React.ReactNode;
@@ -30,8 +28,7 @@ export default function LayoutWrapper({ children, bodyClass }: LayoutWrapperProp
         color: 'var(--text-primary)',
       }}
     >
-      <LenisProvider>
-        <AudioProvider>
+      <AudioProvider>
           {mounted && <ScrollProgressBar />}
           {mounted && <CustomCursor />}
           {mounted && <ClickRipple />}
@@ -40,11 +37,10 @@ export default function LayoutWrapper({ children, bodyClass }: LayoutWrapperProp
             <CrewTicker />
           </div>
 
-          <RouteTransition>{children}</RouteTransition>
+          {children}
 
           <Terminal />
         </AudioProvider>
-      </LenisProvider>
     </body>
   );
 }

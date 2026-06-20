@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
-import { motion, useScroll, useTransform, useMotionValue, useInView } from 'framer-motion';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import MagneticButton from '@/components/motion/MagneticButton';
 import ScrambleText from '@/components/motion/ScrambleText';
 import HeroDotGrid from '@/components/ui/HeroDotGrid';
 import HeroWireframes from '@/components/ui/HeroWireframes';
@@ -15,7 +14,7 @@ const AnimatedStat: React.FC<{ end: number; prefix?: string; suffix?: string; la
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true });
-  const [val, setVal] = useState(0);
+  const [val, setVal] = React.useState(0);
 
   useEffect(() => {
     if (!inView) return;
@@ -44,6 +43,7 @@ const AnimatedStat: React.FC<{ end: number; prefix?: string; suffix?: string; la
 };
 
 const Hero: React.FC = () => {
+  const sectionRef = useRef<HTMLElement>(null);
   const isMobile = useMemo(
     () => typeof window !== 'undefined' && window.innerWidth < 768,
     []
@@ -51,40 +51,21 @@ const Hero: React.FC = () => {
 
   const { scrollY } = useScroll();
   const heroO = useTransform(scrollY, [0, 500], isMobile ? [1, 1] : [1, 0]);
-  const heroS = useTransform(scrollY, [0, 500], isMobile ? [1, 1] : [1, 0.97]);
-
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const rafId = useRef(0);
-
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    if (isMobile) return;
-    cancelAnimationFrame(rafId.current);
-    const cx = e.clientX;
-    const cy = e.clientY;
-    rafId.current = requestAnimationFrame(() => {
-      mouseX.set((cx / window.innerWidth - 0.5) * 2);
-      mouseY.set((cy / window.innerHeight - 0.5) * 2);
-    });
-  }, [isMobile, mouseX, mouseY]);
-
-  useEffect(() => () => cancelAnimationFrame(rafId.current), []);
-
-  const [mx, setMx] = useState(0);
-  const [my, setMy] = useState(0);
-  useEffect(() => {
-    const unsubX = mouseX.on('change', setMx);
-    const unsubY = mouseY.on('change', setMy);
-    return () => { unsubX(); unsubY(); };
-  }, [mouseX, mouseY]);
+  const heroS = useTransform(scrollY, [0, 500], isMobile ? [1, 1] : [1, 0.98]);
 
   return (
     <motion.section
-      className="relative min-h-screen w-full flex items-center overflow-hidden pt-28 pb-32"
-      style={{ backgroundColor: '#050505', opacity: heroO, scale: heroS }}
-      onMouseMove={handleMouseMove}
+      ref={sectionRef}
+      className="hero-section relative min-h-screen w-full flex items-center overflow-hidden pt-28 pb-32"
+      style={{
+        backgroundColor: '#050505',
+        opacity: heroO,
+        scale: heroS,
+        ['--spot-x' as string]: '50%',
+        ['--spot-y' as string]: '40%',
+      }}
     >
-      <HeroDotGrid mouseX={mx} mouseY={my} />
+      <HeroDotGrid containerRef={sectionRef} />
       <HeroWireframes />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -134,20 +115,12 @@ const Hero: React.FC = () => {
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1], delay: 1.2 }}
             className="flex flex-wrap gap-3 items-center"
           >
-            <Link href="/planner">
-              <MagneticButton
-                className="btn-primary text-base px-8 py-4 gap-2"
-                strength={0.25}
-                radius={80}
-              >
-                Start the Conversation
-                <ArrowRight size={17} />
-              </MagneticButton>
+            <Link href="/planner" className="btn-primary text-base px-8 py-4 gap-2 inline-flex items-center">
+              Start the Conversation
+              <ArrowRight size={17} />
             </Link>
-            <Link href="/work">
-              <MagneticButton className="btn-secondary text-base px-8 py-4" strength={0.2} radius={80}>
-                See Our Work
-              </MagneticButton>
+            <Link href="/work" className="btn-secondary text-base px-8 py-4 inline-flex items-center">
+              See Our Work
             </Link>
           </motion.div>
 

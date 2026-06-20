@@ -988,17 +988,40 @@ a:focus-visible {
 ═══════════════════════════════════════════════════════════ */
 .section-lazy {
   content-visibility: auto;
-  /* Placeholder height estimate — prevents layout shift on scroll.
-   * Over-estimate is fine (section just appears slightly earlier).
-   * Under-estimate causes layout shift. 600px is a safe minimum. */
   contain-intrinsic-size: 0 600px;
 }
 
-/* Layout containment for orb containers — prevents orb animations
- * from triggering ancestor repaints. */
 .orb-container {
   contain: layout paint;
   position: relative;
   overflow: hidden;
+  pointer-events: none;
+}
+
+/* Hero dot grid — CSS only, no canvas RAF */
+.hero-dot-grid {
+  background-image: radial-gradient(circle, rgba(0, 212, 255, 0.14) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(
+    circle 350px at var(--spot-x, 50%) var(--spot-y, 40%),
+    black 0%,
+    transparent 70%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle 350px at var(--spot-x, 50%) var(--spot-y, 40%),
+    black 0%,
+    transparent 70%
+  );
+}
+
+.hero-dot-grid::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle 400px at var(--spot-x, 50%) var(--spot-y, 40%),
+    rgba(0, 212, 255, 0.07) 0%,
+    transparent 70%
+  );
   pointer-events: none;
 }

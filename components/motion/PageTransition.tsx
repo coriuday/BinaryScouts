@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import { dur, ease } from '@/lib/motion';
 
 interface PageTransitionProps {
@@ -9,13 +8,11 @@ interface PageTransitionProps {
   className?: string;
 }
 
+/** Lightweight page wrapper — no AnimatePresence (breaks App Router navigation). */
 const PageTransition: React.FC<PageTransitionProps> = ({ children, className = '' }) => (
-  <motion.div
+  <div
     className={`min-h-screen flex flex-col relative ${className}`}
     style={{ backgroundColor: '#050505' }}
-    initial={{ opacity: 0, clipPath: 'inset(0 0 0 100%)' }}
-    animate={{ opacity: 1, clipPath: 'inset(0 0 0 0%)' }}
-    transition={{ duration: dur.medium, ease: [0.16, 1, 0.3, 1] }}
   >
     <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }} aria-hidden="true">
       <div
@@ -43,7 +40,7 @@ const PageTransition: React.FC<PageTransitionProps> = ({ children, className = '
     <div className="relative z-10 flex flex-col flex-grow">
       {children}
     </div>
-  </motion.div>
+  </div>
 );
 
 export default PageTransition;

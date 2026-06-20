@@ -10,6 +10,9 @@ export default function ClickRipple() {
     if (reduced) return;
 
     const onClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('a, button, input, textarea, select')) return;
+
       const ripple = document.createElement('div');
       ripple.className = 'click-ripple';
       ripple.style.left = `${e.clientX}px`;

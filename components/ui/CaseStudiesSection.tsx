@@ -2,38 +2,29 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { getFeaturedProjects } from '@/lib/projects';
 import ProjectCard from '@/components/ui/ProjectCard';
 import ScrollReveal from '@/components/motion/ScrollReveal';
-import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 const CaseStudiesSection: React.FC = () => {
   const featured = getFeaturedProjects();
-  const reduced = useReducedMotion();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const scrollX = useMotionValue(0);
-  const [maxDrag, setMaxDrag] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const update = () => {
-      if (!containerRef.current) return;
-      const el = containerRef.current;
-      setMaxDrag(Math.max(0, el.scrollWidth - el.clientWidth));
-    };
-    update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
-  }, [featured.length]);
+    const el = scrollRef.current;
+    if (!el) return;
 
-  useEffect(() => {
-    const unsub = scrollX.on('change', (v) => {
-      if (maxDrag > 0) setProgress(Math.abs(v) / maxDrag);
-    });
-    return unsub;
-  }, [scrollX, maxDrag]);
+    const onScroll = () => {
+      const max = el.scrollWidth - el.clientWidth;
+      setProgress(max > 0 ? el.scrollLeft / max : 0);
+    };
+
+    el.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => el.removeEventListener('scroll', onScroll);
+  }, [featured.length]);
 
   return (
     <section id="work" className="py-28 relative overflow-hidden" style={{ backgroundColor: '#0a0a0a' }}>
@@ -62,34 +53,24 @@ const CaseStudiesSection: React.FC = () => {
           </div>
         </ScrollReveal>
 
-        {/* Progress bar */}
         <div className="h-px mb-6 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
-          <motion.div
-            className="h-full rounded-full"
+          <div
+            className="h-full rounded-full transition-[width] duration-150"
             style={{ background: '#00d4ff', width: `${progress * 100}%` }}
           />
         </div>
 
-        {/* Horizontal drag scroll */}
-        <motion.div
-          ref={containerRef}
-          className="flex gap-6 cursor-grab active:cursor-grabbing pb-4"
-          style={{ x: scrollX }}
-          drag={reduced ? false : 'x'}
-          dragConstraints={{ left: -maxDrag, right: 0 }}
-          dragElastic={0.08}
-          onDragEnd={(_, info) => {
-            if (reduced) return;
-            const target = Math.max(-maxDrag, Math.min(0, scrollX.get() + info.velocity.x * 0.3));
-            animate(scrollX, target, { type: 'spring', stiffness: 300, damping: 30 });
-          }}
+        <div
+          ref={scrollRef}
+          className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-thin"
+          style={{ WebkitOverflowScrolling: 'touch' }}
         >
           {featured.map((project, i) => (
-            <div key={project.id} className="flex-shrink-0 w-[340px] md:w-[380px]">
+            <div key={project.id} className="flex-shrink-0 w-[340px] md:w-[380px] snap-start">
               <ProjectCard project={project} index={i} showLiveTicker />
             </div>
           ))}
-        </motion.div>
+        </div>
 
         <ScrollReveal delay={0.2}>
           <p className="text-center mt-10 font-sans text-sm" style={{ color: '#555' }}>

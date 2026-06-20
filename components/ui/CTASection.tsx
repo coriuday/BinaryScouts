@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, CalendarCheck } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import MagneticButton from '@/components/motion/MagneticButton';
 import ScrollReveal from '@/components/motion/ScrollReveal';
 
 const CTASection: React.FC = () => {
@@ -83,23 +82,24 @@ const CTASection: React.FC = () => {
             </div>
 
             <div className="flex flex-wrap gap-4 justify-center">
-              <div onMouseEnter={() => setBtnHover(true)} onMouseLeave={() => setBtnHover(false)}>
-                <Link href="/planner">
-                  <MagneticButton className="btn-primary text-base px-10 py-4 gap-2 relative overflow-hidden" strength={0.25} radius={80}>
-                    {btnHover && (
-                      <motion.span
-                        className="absolute inset-0 origin-left"
-                        style={{ background: 'rgba(0,212,255,0.15)' }}
-                        initial={{ scaleX: 0 }}
-                        animate={{ scaleX: 1 }}
-                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                      />
-                    )}
-                    <CalendarCheck size={17} className="relative z-10" />
-                    <span className="relative z-10">Start the Conversation</span>
-                  </MagneticButton>
-                </Link>
-              </div>
+              <Link
+                href="/planner"
+                className="btn-primary text-base px-10 py-4 gap-2 relative overflow-hidden inline-flex items-center"
+                onMouseEnter={() => setBtnHover(true)}
+                onMouseLeave={() => setBtnHover(false)}
+              >
+                {btnHover && (
+                  <motion.span
+                    className="absolute inset-0 origin-left"
+                    style={{ background: 'rgba(0,212,255,0.15)' }}
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  />
+                )}
+                <CalendarCheck size={17} className="relative z-10" />
+                <span className="relative z-10">Start the Conversation</span>
+              </Link>
               <Link href="/services">
                 <button className="btn-secondary text-base px-10 py-4 gap-2">
                   View All Services

@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, Sparkles } from 'lucide-react';
 import TypewriterText from '@/components/motion/TypewriterText';
-import MagneticButton from '@/components/motion/MagneticButton';
 
 const SOLUTIONS = [
   { label: 'AI Systems',        href: '/services#ai-systems' },
@@ -107,31 +106,29 @@ const SOCIALS = [
   },
 ];
 
-/* ── Social icon button — magnetic glow on hover ── */
+/* ── Social icon button ── */
 const SocialButton: React.FC<typeof SOCIALS[number]> = ({
   Icon, href, label, brandColor, brandGlow, brandBg,
 }) => {
   const [hovered, setHovered] = useState(false);
   return (
-    <MagneticButton strength={0.3} radius={60}>
-      <a
-        href={href}
-        aria-label={label}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-250"
-        style={{
-          color: hovered ? brandColor : '#888',
-          background: hovered ? brandBg : 'rgba(26,26,26,0.8)',
-          border: `0.5px solid ${hovered ? brandColor + '40' : 'rgba(255,255,255,0.08)'}`,
-          boxShadow: hovered ? `0 0 16px ${brandGlow}` : 'none',
-        }}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
-        <Icon />
-      </a>
-    </MagneticButton>
+    <a
+      href={href}
+      aria-label={label}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-250"
+      style={{
+        color: hovered ? brandColor : '#888',
+        background: hovered ? brandBg : 'rgba(26,26,26,0.8)',
+        border: `0.5px solid ${hovered ? brandColor + '40' : 'rgba(255,255,255,0.08)'}`,
+        boxShadow: hovered ? `0 0 16px ${brandGlow}` : 'none',
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <Icon />
+    </a>
   );
 };
 

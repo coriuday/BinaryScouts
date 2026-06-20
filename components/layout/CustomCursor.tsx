@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 
-const CURSOR_SIZE = 8;
-const RING_SIZE = 32;
+const CURSOR_SIZE = 12;
+const RING_SIZE = 24;
 
 const CustomCursor: React.FC = () => {
   const dotRef  = useRef<HTMLDivElement>(null);
@@ -53,9 +53,9 @@ const CustomCursor: React.FC = () => {
         dotRef.current.style.transform = `translate3d(${x - CURSOR_SIZE / 2}px, ${y - CURSOR_SIZE / 2}px, 0)`;
       }
 
-      // Ring: lagging
-      ringPos.current.x = lerp(ringPos.current.x, x, 0.18);
-      ringPos.current.y = lerp(ringPos.current.y, y, 0.18);
+      // Ring: lagging (~80ms feel via lower lerp)
+      ringPos.current.x = lerp(ringPos.current.x, x, 0.12);
+      ringPos.current.y = lerp(ringPos.current.y, y, 0.12);
       if (ringRef.current) {
         ringRef.current.style.transform = `translate3d(${ringPos.current.x - RING_SIZE / 2}px, ${ringPos.current.y - RING_SIZE / 2}px, 0)`;
       }
@@ -115,7 +115,8 @@ const CustomCursor: React.FC = () => {
           width: CURSOR_SIZE,
           height: CURSOR_SIZE,
           borderRadius: '50%',
-          backgroundColor: 'var(--accent)',
+          backgroundColor: '#00d4ff',
+          boxShadow: '0 0 12px rgba(0,212,255,0.6)',
           pointerEvents: 'none',
           zIndex: 9999,
           opacity: isVisible ? 1 : 0,
@@ -135,14 +136,15 @@ const CustomCursor: React.FC = () => {
           width: RING_SIZE,
           height: RING_SIZE,
           borderRadius: '50%',
-          border: `1.5px solid ${isPointer ? 'var(--cyan)' : 'var(--accent)'}`,
+          border: `1.5px solid ${isPointer ? '#00d4ff' : 'rgba(0,212,255,0.4)'}`,
+          boxShadow: isPointer ? '0 0 16px rgba(0,212,255,0.3)' : 'none',
           pointerEvents: 'none',
           zIndex: 9998,
           opacity: isVisible ? 0.65 : 0,
           transition: 'opacity 0.3s ease, border-color 0.2s ease, width 0.2s ease, height 0.2s ease',
           transform: 'translate3d(-100px, -100px, 0)',
           ...(isPointer
-            ? { width: 44, height: 44, opacity: 0.45 }
+            ? { width: 48, height: 48, opacity: 0.5, background: 'rgba(0,212,255,0.08)' }
             : {}),
         }}
       />

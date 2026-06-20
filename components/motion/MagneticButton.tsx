@@ -6,20 +6,14 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 interface MagneticButtonProps {
   children: React.ReactNode;
   className?: string;
-  strength?: number;   // 0–1, how strongly it pulls (default 0.35)
-  radius?: number;     // px around element for magnet to activate (default 90)
-  as?: 'button' | 'div' | 'a';
+  strength?: number;
+  radius?: number;
   onClick?: () => void;
-  href?: string;
   type?: 'button' | 'submit';
   disabled?: boolean;
   style?: React.CSSProperties;
 }
 
-/**
- * Magnetic element — subtly moves toward the cursor when nearby.
- * Uses RAF-free spring motion values for GPU-safe animation.
- */
 const MagneticButton: React.FC<MagneticButtonProps> = ({
   children,
   className = '',
@@ -30,7 +24,7 @@ const MagneticButton: React.FC<MagneticButtonProps> = ({
   type = 'button',
   disabled = false,
 }) => {
-  const ref = useRef<HTMLButtonElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const springCfg = { damping: 20, stiffness: 160, mass: 0.6 };
@@ -49,8 +43,9 @@ const MagneticButton: React.FC<MagneticButtonProps> = ({
 
     if (dist < radius) {
       const pull = (1 - dist / radius) * strength;
-      x.set(dx * pull);
-      y.set(dy * pull);
+      const max = 8;
+      x.set(Math.max(-max, Math.min(max, dx * pull)));
+      y.set(Math.max(-max, Math.min(max, dy * pull)));
     } else {
       x.set(0);
       y.set(0);
@@ -72,18 +67,23 @@ const MagneticButton: React.FC<MagneticButtonProps> = ({
   }, [onMouseMove, onMouseLeave]);
 
   return (
-    <motion.button
+    <motion.div
       ref={ref}
-      type={type}
-      disabled={disabled}
       className={className}
-      style={{ ...style, x: xSpring, y: ySpring }}
+      style={{ ...style, x: xSpring, y: ySpring, display: 'inline-flex' }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={onClick}
+      role={onClick ? 'button' : undefined}
     >
-      {children}
-    </motion.button>
+      {type === 'button' && onClick ? (
+        <button type="button" disabled={disabled} className="contents" onClick={onClick}>
+          {children}
+        </button>
+      ) : (
+        children
+      )}
+    </motion.div>
   );
 };
 

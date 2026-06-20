@@ -31,9 +31,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   // Initialize from the DOM attribute that the blocking script already set.
   // Fallback to 'light' on server (SSR has no DOM).
   const [theme, setTheme] = useState<ThemeMode>(() => {
-    if (typeof document === 'undefined') return 'light';
+    if (typeof document === 'undefined') return 'dark';
     const attr = document.documentElement.getAttribute('data-theme');
-    return attr === 'dark' ? 'dark' : 'light';
+    return attr === 'light' ? 'light' : 'dark';
   });
 
   // Sync in case the blocking script ran before React and set a different value.

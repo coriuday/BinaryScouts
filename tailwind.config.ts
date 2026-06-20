@@ -107,8 +107,8 @@ const config: Config = {
 
       fontFamily: {
         sans:    ['var(--font-jakarta)', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
-        display: ['var(--font-syne)', 'Syne', 'sans-serif'],
-        mono:    ['"JetBrains Mono"', '"Fira Code"', 'Consolas', 'monospace'],
+        display: ['var(--font-jakarta)', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+        mono:    ['var(--font-mono)', 'JetBrains Mono', 'Consolas', 'monospace'],
       },
 
       backgroundImage: {

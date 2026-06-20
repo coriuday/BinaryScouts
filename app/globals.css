@@ -97,69 +97,69 @@
    CINEMATIC DARK THEME — Deep Indigo Luxury
 ═══════════════════════════════════════════════════════════ */
 [data-theme="dark"] {
-  --bg-canvas:         #070611;
-  --bg-primary:        #0C0A18;
-  --bg-secondary:      #110E1E;
-  --bg-tertiary:       #181428;
-  --bg-elevated:       rgba(20, 16, 36, 0.92);
+  --bg-canvas:         #050505;
+  --bg-primary:        #050505;
+  --bg-secondary:      #0a0a0a;
+  --bg-tertiary:       #0d0d0d;
+  --bg-elevated:       rgba(17, 17, 17, 0.92);
 
-  --glass-1:           rgba(14, 11, 28, 0.52);
-  --glass-2:           rgba(20, 16, 40, 0.76);
-  --glass-3:           rgba(28, 22, 52, 0.94);
-  --glass-border-1:    rgba(167, 139, 250, 0.08);
-  --glass-border-2:    rgba(167, 139, 250, 0.16);
-  --glass-border-3:    rgba(167, 139, 250, 0.30);
-  --glass-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.07), inset 0 -1px 0 rgba(0, 0, 0, 0.20);
-  --glass-inner:       inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  --glass-1:           rgba(10, 10, 10, 0.52);
+  --glass-2:           rgba(17, 17, 17, 0.76);
+  --glass-3:           rgba(26, 26, 26, 0.94);
+  --glass-border-1:    rgba(255, 255, 255, 0.06);
+  --glass-border-2:    rgba(255, 255, 255, 0.08);
+  --glass-border-3:    rgba(0, 212, 255, 0.25);
+  --glass-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.05), inset 0 -1px 0 rgba(0, 0, 0, 0.20);
+  --glass-inner:       inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
-  --bg-glass:          rgba(20, 16, 40, 0.76);
-  --bg-glass-solid:    rgba(12, 10, 24, 0.98);
+  --bg-glass:          rgba(17, 17, 17, 0.76);
+  --bg-glass-solid:    rgba(5, 5, 5, 0.98);
 
-  --border-subtle:     rgba(167, 139, 250, 0.08);
-  --border-default:    rgba(167, 139, 250, 0.16);
-  --border-strong:     rgba(167, 139, 250, 0.36);
+  --border-subtle:     rgba(255, 255, 255, 0.06);
+  --border-default:    rgba(255, 255, 255, 0.08);
+  --border-strong:     rgba(0, 212, 255, 0.30);
 
-  --text-primary:      #EDE9FF;
-  --text-secondary:    #9B97C0;
-  --text-muted:        #5B5780;
-  --text-inverse:      #0C0A18;
+  --text-primary:      #FFFFFF;
+  --text-secondary:    #888888;
+  --text-muted:        #555555;
+  --text-inverse:      #050505;
 
-  --accent:            #A78BFA;
-  --accent-dark:       #8B5CF6;
-  --accent-light:      rgba(167, 139, 250, 0.13);
-  --accent-glow:       rgba(167, 139, 250, 0.28);
+  --accent:            #00D4FF;
+  --accent-dark:       #00A8CC;
+  --accent-light:      rgba(0, 212, 255, 0.10);
+  --accent-glow:       rgba(0, 212, 255, 0.28);
 
-  --rose:              #F472B6;
-  --rose-soft:         #F9A8D4;
-  --rose-light:        rgba(244, 114, 182, 0.11);
-  --rose-glow:         rgba(244, 114, 182, 0.18);
+  --rose:              #7B00FF;
+  --rose-soft:         #9B40FF;
+  --rose-light:        rgba(123, 0, 255, 0.12);
+  --rose-glow:         rgba(123, 0, 255, 0.22);
 
-  --sage:              #34D399;
-  --sage-soft:         #86EFAC;
-  --sage-light:        rgba(134, 239, 172, 0.11);
+  --sage:              #10B981;
+  --sage-soft:         #34D399;
+  --sage-light:        rgba(16, 185, 129, 0.12);
 
-  --cyan:              #F472B6;
-  --cyan-light:        rgba(244, 114, 182, 0.11);
+  --cyan:              #00D4FF;
+  --cyan-light:        rgba(0, 212, 255, 0.10);
 
   --shadow-glass:      0 8px 40px rgba(0, 0, 0, 0.55), var(--glass-inner);
-  --shadow-card:       0 4px 32px rgba(0, 0, 0, 0.38);
-  --shadow-card-hover: 0 24px 80px rgba(0, 0, 0, 0.60), 0 0 40px rgba(167, 139, 250, 0.12);
-  --shadow-brand:      0 8px 32px rgba(167, 139, 250, 0.32);
-  --shadow-glow:       0 0 56px rgba(167, 139, 250, 0.42);
-  --shadow-rose:       0 8px 32px rgba(244, 114, 182, 0.18);
+  --shadow-card:       0 4px 32px rgba(0, 0, 0, 0.45);
+  --shadow-card-hover: 0 24px 80px rgba(0, 0, 0, 0.60), 0 0 20px rgba(0, 212, 255, 0.15);
+  --shadow-brand:      0 8px 32px rgba(0, 212, 255, 0.22);
+  --shadow-glow:       0 0 20px rgba(0, 212, 255, 0.20);
+  --shadow-rose:       0 8px 32px rgba(123, 0, 255, 0.18);
 
-  --gradient-primary:  linear-gradient(135deg, #A78BFA 0%, #F472B6 100%);
-  --gradient-dreamy:   linear-gradient(135deg, #7C3AED 0%, #A78BFA 45%, #F9A8D4 100%);
-  --gradient-aurora:   linear-gradient(135deg, #86EFAC 0%, #A78BFA 50%, #F472B6 100%);
-  --gradient-violet:   linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
-  --gradient-warm-bg:  linear-gradient(160deg, #0C0A18 0%, #110E1E 50%, #0C0A18 100%);
+  --gradient-primary:  linear-gradient(135deg, #00D4FF 0%, #7B00FF 100%);
+  --gradient-dreamy:   linear-gradient(135deg, #00D4FF 0%, #00A8CC 45%, #7B00FF 100%);
+  --gradient-aurora:   linear-gradient(135deg, #00D4FF 0%, #7B00FF 50%, #003344 100%);
+  --gradient-violet:   linear-gradient(135deg, #00A8CC 0%, #00D4FF 100%);
+  --gradient-warm-bg:  linear-gradient(160deg, #050505 0%, #0a0a0a 50%, #050505 100%);
 
-  --ticker-bg:         #110E1E;
-  --ticker-border:     rgba(167, 139, 250, 0.11);
-  --grid-color:        rgba(167, 139, 250, 0.05);
-  --orb-violet:        rgba(167, 139, 250, 0.14);
-  --orb-rose:          rgba(244, 114, 182, 0.10);
-  --orb-sage:          rgba(134, 239, 172, 0.08);
+  --ticker-bg:         #0a0a0a;
+  --ticker-border:     rgba(0, 212, 255, 0.10);
+  --grid-color:        rgba(0, 212, 255, 0.04);
+  --orb-violet:        rgba(0, 212, 255, 0.10);
+  --orb-rose:          rgba(123, 0, 255, 0.08);
+  --orb-sage:          rgba(0, 212, 255, 0.06);
 
   /* ── Spacing rhythm ───────────────────────────────────── */
   --section-gap:       5rem;
@@ -207,7 +207,7 @@ body {
    SELECTION
 ═══════════════════════════════════════════════════════════ */
 ::selection {
-  background-color: rgba(139, 92, 246, 0.15);
+  background-color: rgba(0, 212, 255, 0.15);
   color: var(--accent);
 }
 
@@ -585,7 +585,7 @@ body {
   transition: opacity 0.4s ease;
   background: radial-gradient(
     circle 220px at var(--spotlight-x, 50%) var(--spotlight-y, 50%),
-    rgba(139,92,246,0.09) 0%,
+    rgba(0,212,255,0.09) 0%,
     transparent 70%
   );
   contain: paint;
@@ -820,6 +820,28 @@ body {
 /* Bar grow for charts */
 @keyframes barGrow {
   from { height: 0%; }
+}
+
+/* Global click ripple */
+@keyframes clickRipple {
+  from {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.6;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(4);
+    opacity: 0;
+  }
+}
+.click-ripple {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  background: radial-gradient(circle, rgba(0,212,255,0.4) 0%, transparent 70%);
+  animation: clickRipple 0.4s ease-out forwards;
 }
 
 /* ═══════════════════════════════════════════════════════════

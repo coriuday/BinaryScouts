@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, Sparkles } from 'lucide-react';
+import TypewriterText from '@/components/motion/TypewriterText';
+import MagneticButton from '@/components/motion/MagneticButton';
 
 const SOLUTIONS = [
   { label: 'AI Systems',        href: '/services#ai-systems' },
@@ -105,30 +107,31 @@ const SOCIALS = [
   },
 ];
 
-/* ── Social icon button ──────────────────────────── */
+/* ── Social icon button — magnetic glow on hover ── */
 const SocialButton: React.FC<typeof SOCIALS[number]> = ({
-  Icon, href, label, brandColor, brandGlow, brandBg, gradient,
+  Icon, href, label, brandColor, brandGlow, brandBg,
 }) => {
   const [hovered, setHovered] = useState(false);
   return (
-    <a
-      href={href}
-      aria-label={label}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-250 glass-chip"
-      style={{
-        color: hovered ? brandColor : 'var(--text-muted)',
-        background: hovered ? brandBg : 'var(--glass-3)',
-        borderColor: hovered ? brandColor + '40' : 'var(--glass-border-2)',
-        transform: hovered ? 'scale(1.12) translateY(-1px)' : 'scale(1)',
-        boxShadow: hovered ? `0 6px 20px ${brandGlow}` : 'none',
-      }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <Icon />
-    </a>
+    <MagneticButton strength={0.3} radius={60}>
+      <a
+        href={href}
+        aria-label={label}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-250"
+        style={{
+          color: hovered ? brandColor : '#888',
+          background: hovered ? brandBg : 'rgba(26,26,26,0.8)',
+          border: `0.5px solid ${hovered ? brandColor + '40' : 'rgba(255,255,255,0.08)'}`,
+          boxShadow: hovered ? `0 0 16px ${brandGlow}` : 'none',
+        }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        <Icon />
+      </a>
+    </MagneticButton>
   );
 };
 
@@ -146,12 +149,12 @@ const Footer: React.FC = () => {
   return (
     <footer
       className="relative pt-20 pb-10 overflow-hidden"
-      style={{ backgroundColor: 'var(--bg-secondary)' }}
+      style={{ backgroundColor: '#050505' }}
     >
-      {/* Top fade border */}
+      {/* Cyan top border */}
       <div
         className="absolute inset-x-0 top-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, var(--glass-border-2), transparent)' }}
+        style={{ background: 'linear-gradient(90deg, transparent, #00d4ff, transparent)', opacity: 0.4 }}
       />
 
       {/* Atmospheric gradient */}
@@ -316,7 +319,9 @@ const Footer: React.FC = () => {
               Terms of Service
             </Link>
           </div>
-          <p className="font-sans">Built with precision by BinaryScouts Studio</p>
+          <p className="font-sans">
+            <TypewriterText text="Built with precision by BinaryScouts Studio" />
+          </p>
         </div>
       </div>
     </footer>

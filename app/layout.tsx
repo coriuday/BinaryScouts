@@ -1,20 +1,20 @@
 import type { Metadata } from 'next';
-import { Syne, Plus_Jakarta_Sans } from 'next/font/google';
+import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/hooks/ThemeProvider';
 import LayoutWrapper from '@/components/layout/LayoutWrapper';
-
-const syne = Syne({
-  variable: '--font-syne',
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  display: 'swap',
-});
 
 const jakarta = Plus_Jakarta_Sans({
   variable: '--font-jakarta',
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700', '800'],
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: '--font-mono',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
 });
 
@@ -73,7 +73,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${syne.variable} ${jakarta.variable} scroll-smooth`}
+      className={`${jakarta.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
       {/*
@@ -92,10 +92,10 @@ export default function RootLayout({
   try {
     var saved = localStorage.getItem('bs_theme');
     var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var theme = (saved === 'dark' || saved === 'light') ? saved : (prefersDark ? 'dark' : 'light');
+    var theme = (saved === 'dark' || saved === 'light') ? saved : 'dark';
     document.documentElement.setAttribute('data-theme', theme);
   } catch(e) {
-    document.documentElement.setAttribute('data-theme', 'light');
+    document.documentElement.setAttribute('data-theme', 'dark');
   }
 })();
             `,

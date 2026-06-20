@@ -1,223 +1,118 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, CalendarCheck, Sparkles } from 'lucide-react';
-import { ease, dur, viewport } from '@/lib/motion';
+import { ArrowRight, CalendarCheck } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import AnimatedText from '@/components/motion/AnimatedText';
+import MagneticButton from '@/components/motion/MagneticButton';
+import ScrollReveal from '@/components/motion/ScrollReveal';
 
 const CTASection: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
+  const [btnHover, setBtnHover] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start end', 'end start'],
   });
-  const orb1Y = useTransform(scrollYProgress, [0, 1], reduced ? [0, 0] : [-24, 24]);
-  const orb2Y = useTransform(scrollYProgress, [0, 1], reduced ? [0, 0] : [24, -24]);
-  const cardY = useTransform(scrollYProgress, [0, 1], reduced ? [0, 0] : [12, -12]);
+  const orbY = useTransform(scrollYProgress, [0, 1], reduced ? [0, 0] : [-30, 30]);
 
   return (
-    <section
-      ref={sectionRef}
-      className="py-28 relative overflow-hidden"
-      style={{ backgroundColor: 'var(--bg-secondary)' }}
-    >
-      {/* Atmospheric background layers */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <motion.div
-          style={{ y: orb1Y }}
-          className="absolute w-[700px] h-[700px] rounded-full"
-          aria-hidden="true"
-        >
-          <div
-            className="w-full h-full rounded-full"
-            style={{
-              background: 'radial-gradient(circle, var(--orb-violet) 0%, transparent 65%)',
-              filter: 'blur(80px)',
-              position: 'absolute',
-              top: '-30%',
-              left: '50%',
-              transform: 'translateX(-50%)',
-            }}
-          />
-        </motion.div>
-        <motion.div
-          style={{ y: orb2Y }}
-          className="absolute bottom-0 right-0 w-80 h-80"
-        >
-          <div
-            className="w-full h-full rounded-full"
-            style={{
-              background: 'radial-gradient(circle, var(--orb-rose) 0%, transparent 65%)',
-              filter: 'blur(70px)',
-            }}
-          />
-        </motion.div>
+    <section ref={sectionRef} className="py-28 relative overflow-hidden" style={{ backgroundColor: '#050505' }}>
+      {/* Animated gradient orb */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none flex items-center justify-center"
+        style={{ y: orbY }}
+        aria-hidden="true"
+      >
         <div
-          className="absolute top-10 left-10 w-48 h-48 rounded-full"
+          className="w-[600px] h-[600px] rounded-full"
           style={{
-            background: 'radial-gradient(circle, var(--orb-sage) 0%, transparent 65%)',
-            filter: 'blur(60px)',
-            animation: 'atmosphericFloat 14s ease-in-out infinite',
+            background: 'radial-gradient(circle, rgba(0,212,255,0.12) 0%, rgba(123,0,255,0.06) 40%, transparent 70%)',
+            filter: 'blur(80px)',
+            animation: reduced ? 'none' : 'atmosphericFloat 20s ease-in-out infinite',
           }}
         />
-      </div>
+      </motion.div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
-        {/* Giant cinematic CTA container */}
-        <motion.div
-          style={{ y: cardY }}
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="glass-card rounded-[2.5rem] p-12 md:p-16 text-center relative overflow-hidden"
-        >
-          {/* Inner atmospheric gradient */}
+        <ScrollReveal>
           <div
-            className="absolute inset-0 pointer-events-none rounded-[2.5rem]"
+            className="rounded-[2rem] p-12 md:p-16 text-center relative overflow-hidden"
             style={{
-              background: 'radial-gradient(ellipse 80% 70% at 50% 20%, rgba(139,92,246,0.08) 0%, transparent 70%)',
+              background: 'rgba(17,17,17,0.6)',
+              backdropFilter: 'blur(12px)',
+              border: '0.5px solid rgba(255,255,255,0.08)',
             }}
-          />
-          {/* Gradient top border highlight */}
-          <div
-            className="absolute inset-x-0 top-0 h-0.5 rounded-t-[2.5rem]"
-            style={{ background: 'var(--gradient-dreamy)', opacity: 0.5 }}
-          />
-
-          {/* Eyebrow */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 8 }}
-            whileInView={{ opacity: 1, scale: 1, y: 0 }}
-            viewport={viewport()}
-            transition={{ duration: dur.base, ease: ease.spring }}
-            className="eyebrow-badge mb-8 mx-auto w-fit"
           >
-            <CalendarCheck size={12} />
-            <span>Free Strategy Session</span>
-          </motion.div>
+            <div className="eyebrow-badge mb-8 mx-auto w-fit">
+              <CalendarCheck size={12} />
+              <span>Free Strategy Session</span>
+            </div>
 
-          {/* Headline */}
-          <h2
-            className="font-display font-bold text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight mb-6 relative z-10"
-            style={{ color: 'var(--text-primary)', letterSpacing: '-0.04em' }}
-          >
-            <AnimatedText text="Ready to build something" delay={0.05} stagger={0.07} />
-            <span style={{ display: 'block', overflow: 'hidden' }}>
-              <motion.span
-                className="gradient-text font-display font-bold inline-block"
-                initial={{ y: '110%', opacity: 0 }}
-                whileInView={{ y: '0%', opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: dur.medium, ease: ease.out, delay: 0.52 }}
-              >
-                extraordinary?
-              </motion.span>
-            </span>
-          </h2>
+            <h2 className="font-sans font-medium text-4xl md:text-5xl lg:text-6xl leading-tight mb-6" style={{ color: '#fff' }}>
+              Ready to build something{' '}
+              <span style={{ color: '#00d4ff' }}>extraordinary?</span>
+            </h2>
 
-          {/* Body */}
-          <motion.p
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={viewport()}
-            transition={{ duration: dur.base, ease: ease.out, delay: 0.38 }}
-            className="font-sans text-lg leading-relaxed mb-8 max-w-xl mx-auto relative z-10"
-            style={{ color: 'var(--text-secondary)', letterSpacing: '-0.01em' }}
-          >
-            Let’s spend 30 minutes mapping what your business could become
-            with the right systems behind it. No pitch. No pressure.
-            Just an honest conversation about what’s possible.
-          </motion.p>
+            <p className="font-sans text-lg leading-relaxed mb-10 max-w-xl mx-auto" style={{ color: '#888' }}>
+              Let&apos;s spend 30 minutes mapping what your business could become with the right systems behind it.
+            </p>
 
-          {/* Process steps */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={viewport()}
-            transition={{ duration: dur.base, ease: ease.out, delay: 0.48 }}
-            className="flex items-center justify-center gap-4 sm:gap-6 mb-10 relative z-10 flex-wrap"
-          >
-            {[
-              { step: '01', label: 'We talk' },
-              { step: '02', label: 'We map' },
-              { step: '03', label: 'We build' },
-            ].map(({ step, label }, i) => (
-              <React.Fragment key={step}>
+            {/* Animated steps */}
+            <div className="flex items-center justify-center gap-4 sm:gap-8 mb-10 flex-wrap">
+              {[
+                { step: '01', label: 'We talk' },
+                { step: '02', label: 'We map' },
+                { step: '03', label: 'We build' },
+              ].map(({ step, label }, i) => (
                 <motion.div
-                  initial={{ opacity: 0, y: 8 }}
+                  key={step}
+                  initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={viewport()}
-                  transition={{ duration: dur.fast, ease: ease.out, delay: 0.48 + i * 0.12 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: 0.2 + i * 0.15, ease: [0.16, 1, 0.3, 1] }}
                   className="flex items-center gap-2"
                 >
-                  <span
-                    className="font-mono text-[10px] font-bold"
-                    style={{ color: 'var(--accent)', letterSpacing: '0.05em' }}
-                  >
-                    {step}
-                  </span>
-                  <span
-                    className="font-sans text-sm font-semibold"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    {label}
-                  </span>
+                  <span className="font-mono text-xs font-medium" style={{ color: '#00d4ff' }}>{step}</span>
+                  <span className="font-sans text-sm font-medium" style={{ color: '#888' }}>{label}</span>
                 </motion.div>
-                {i < 2 && (
-                  <motion.div
-                    initial={{ scaleX: 0, opacity: 0 }}
-                    whileInView={{ scaleX: 1, opacity: 1 }}
-                    viewport={viewport()}
-                    transition={{ duration: 0.4, delay: 0.54 + i * 0.12, ease: ease.out }}
-                    className="hidden sm:block h-px w-8 origin-left"
-                    style={{ background: 'var(--glass-border-2)' }}
-                  />
-                )}
-              </React.Fragment>
-            ))}
-          </motion.div>
+              ))}
+            </div>
 
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={viewport()}
-            transition={{ duration: dur.base, ease: ease.out, delay: 0.62 }}
-            className="flex flex-wrap gap-4 justify-center relative z-10"
-          >
-            <Link href="/planner">
-              <button className="btn-primary shimmer-sweep text-base px-10 py-4 gap-2">
-                <CalendarCheck size={17} />
-                Start the Conversation
-              </button>
-            </Link>
-            <Link href="/services">
-              <button className="btn-secondary text-base px-10 py-4 gap-2">
-                View All Services
-                <ArrowRight size={15} />
-              </button>
-            </Link>
-          </motion.div>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <div onMouseEnter={() => setBtnHover(true)} onMouseLeave={() => setBtnHover(false)}>
+                <Link href="/planner">
+                  <MagneticButton className="btn-primary text-base px-10 py-4 gap-2 relative overflow-hidden" strength={0.25} radius={80}>
+                    {btnHover && (
+                      <motion.span
+                        className="absolute inset-0 origin-left"
+                        style={{ background: 'rgba(0,212,255,0.15)' }}
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
+                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                      />
+                    )}
+                    <CalendarCheck size={17} className="relative z-10" />
+                    <span className="relative z-10">Start the Conversation</span>
+                  </MagneticButton>
+                </Link>
+              </div>
+              <Link href="/services">
+                <button className="btn-secondary text-base px-10 py-4 gap-2">
+                  View All Services
+                  <ArrowRight size={15} />
+                </button>
+              </Link>
+            </div>
 
-          {/* Trust strip */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={viewport()}
-            transition={{ duration: dur.medium, delay: 0.8 }}
-            className="mt-8 font-sans text-sm relative z-10"
-            style={{ color: 'var(--text-muted)' }}
-          >
-            30-minute call · No pitch · No commitment
-          </motion.p>
-        </motion.div>
+            <p className="mt-8 font-sans text-sm" style={{ color: '#555' }}>
+              30-minute call · No pitch · No commitment
+            </p>
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );

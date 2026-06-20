@@ -30,7 +30,7 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     setMounted(true);
-    const onScroll = () => setScrolled(window.scrollY > 60);
+    const onScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -50,13 +50,12 @@ const Navbar: React.FC = () => {
         <motion.div
           className="w-full max-w-5xl rounded-2xl flex items-center justify-between px-4 md:px-6 h-14 transition-all duration-500"
           style={{
-            background: scrolled ? 'var(--glass-2)' : 'var(--glass-1)',
-            backdropFilter: 'blur(24px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-            border: `1.5px solid ${scrolled ? 'var(--glass-border-2)' : 'var(--glass-border-1)'}`,
-            boxShadow: scrolled
-              ? 'var(--shadow-card), var(--glass-inner)'
-              : '0 4px 24px rgba(139,92,246,0.06), var(--glass-inner)',
+            background: scrolled ? 'rgba(10,10,10,0.75)' : 'transparent',
+            backdropFilter: scrolled ? 'blur(20px)' : 'none',
+            WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'none',
+            border: scrolled ? '0.5px solid rgba(255,255,255,0.08)' : '0.5px solid transparent',
+            boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.4)' : 'none',
+            transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         >
           {/* ── Logo ─────────────────────────────────────────── */}

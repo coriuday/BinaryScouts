@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useTheme } from '@/components/hooks/ThemeProvider';
 import { AudioProvider } from '@/components/hooks/AudioProvider';
 import CustomCursor from '@/components/layout/CustomCursor';
 import CrewTicker from '@/components/layout/CrewTicker';
 import Terminal from '@/components/ui/Terminal';
 import ScrollProgressBar from '@/components/motion/ScrollProgressBar';
+import LenisProvider from '@/components/motion/LenisProvider';
+import ClickRipple from '@/components/motion/ClickRipple';
+import RouteTransition from '@/components/motion/RouteTransition';
 
 interface LayoutWrapperProps {
   children: React.ReactNode;
@@ -14,7 +16,6 @@ interface LayoutWrapperProps {
 }
 
 export default function LayoutWrapper({ children, bodyClass }: LayoutWrapperProps) {
-  const { isDark } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -29,24 +30,21 @@ export default function LayoutWrapper({ children, bodyClass }: LayoutWrapperProp
         color: 'var(--text-primary)',
       }}
     >
-      <AudioProvider>
-        {/* Scroll progress line — top of viewport, above everything */}
-        {mounted && <ScrollProgressBar />}
+      <LenisProvider>
+        <AudioProvider>
+          {mounted && <ScrollProgressBar />}
+          {mounted && <CustomCursor />}
+          {mounted && <ClickRipple />}
 
-        {/* Custom cursor — desktop only, disabled on touch */}
-        {mounted && <CustomCursor />}
+          <div className="hidden md:block">
+            <CrewTicker />
+          </div>
 
-        {/* System status ticker — hidden on mobile, visible from md: */}
-        <div className="hidden md:block">
-          <CrewTicker />
-        </div>
+          <RouteTransition>{children}</RouteTransition>
 
-        {/* Page content */}
-        {children}
-
-        {/* Floating AI terminal — event-driven via bs:terminal-toggle */}
-        <Terminal />
-      </AudioProvider>
+          <Terminal />
+        </AudioProvider>
+      </LenisProvider>
     </body>
   );
 }

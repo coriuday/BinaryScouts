@@ -1,11 +1,68 @@
 'use client';
 
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { ArrowRight, ExternalLink, Github, Zap } from 'lucide-react';
 import { type Project } from '@/lib/projects';
 import { ease, dur } from '@/lib/motion';
+import TiltCard from '@/components/motion/TiltCard';
+
+function parseMetricValue(value: string): { num: number; prefix: string; suffix: string } {
+  const match = value.match(/^([^0-9−-]*)([−-]?\d+\.?\d*)(.*)$/);
+  if (!match) return { num: 0, prefix: '', suffix: value };
+  return { prefix: match[1], num: Math.abs(parseFloat(match[2])), suffix: match[3] };
+}
+
+const CountUpMetric: React.FC<{ value: string; label: string }> = ({ value, label }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true });
+  const { num, prefix, suffix } = parseMetricValue(value);
+  const isNegative = value.includes('−') || value.includes('-');
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!inView) return;
+    const duration = 1400;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setCurrent(Math.round(eased * num));
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [inView, num]);
+
+  const display = isNegative ? `−${current}` : `${prefix}${current}${suffix}`;
+
+  return (
+    <div ref={ref} className="px-2.5 py-1.5 rounded-xl text-center"
+      style={{ background: 'rgba(17,17,17,0.8)', border: '0.5px solid rgba(0,212,255,0.15)' }}>
+      <p className="font-mono font-medium text-xs leading-none mb-0.5" style={{ color: '#00d4ff' }}>{display}</p>
+      <p className="font-sans text-[9px] uppercase tracking-wider" style={{ color: '#555' }}>{label}</p>
+    </div>
+  );
+};
+
+const LiveTicker: React.FC = () => {
+  const [tick, setTick] = useState(4821);
+  const [ms, setMs] = useState(12);
+  useEffect(() => {
+    const t = setInterval(() => {
+      setTick((n) => n + 1);
+      setMs(Math.floor(Math.random() * 50 + 5));
+    }, 3000);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <div className="mt-3 overflow-hidden h-4">
+      <p className="font-mono text-[9px] whitespace-nowrap" style={{ color: '#555' }}>
+        Lead #{tick.toLocaleString()} qualified · {ms}ms ago
+      </p>
+    </div>
+  );
+};
 
 /* ── Status badge ────────────────────────────────────── */
 const STATUS_CONFIG = {
@@ -17,11 +74,11 @@ const STATUS_CONFIG = {
 interface ProjectCardProps {
   project: Project;
   index?: number;
-  /** If true, renders a larger featured-hero variant */
   featured?: boolean;
+  showLiveTicker?: boolean;
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ project, index = 0, featured = false }) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, index = 0, featured = false, showLiveTicker = false }) => {
   const [hovered, setHovered] = useState(false);
   const spotRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -49,14 +106,24 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index = 0, featured 
       style={{ willChange: 'transform, opacity' }}
     >
       <Link href={`/work/${project.slug}`} className="block group">
-        <div
-          ref={cardRef}
-          className="glass-card-interactive rounded-3xl overflow-hidden flex flex-col relative"
-          style={{ minHeight: featured ? 420 : 340 }}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-          onMouseMove={handleMouseMove}
+        <TiltCard
+          className="rounded-2xl overflow-hidden flex flex-col relative"
+          intensity={10}
+          scale={1.015}
+          style={{
+            minHeight: featured ? 420 : 340,
+            background: 'rgba(17,17,17,0.6)',
+            backdropFilter: 'blur(12px)',
+            border: '0.5px solid rgba(255,255,255,0.08)',
+          }}
         >
+          <div
+            ref={cardRef}
+            className="flex flex-col h-full"
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            onMouseMove={handleMouseMove}
+          >
           {/* Spotlight layer */}
           <div ref={spotRef} className="card-spotlight" />
 
@@ -115,16 +182,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index = 0, featured 
               </span>
               <span
                 className="px-2.5 py-1 rounded-full font-sans text-[10px] font-bold uppercase tracking-wider flex items-center gap-1"
-                style={{
-                  background: status.bg,
-                  color: status.color,
-                }}
+                style={{ background: status.bg, color: status.color }}
               >
                 {project.status === 'live' && (
-                  <span
-                    className="w-1.5 h-1.5 rounded-full inline-block"
-                    style={{ background: status.color, boxShadow: `0 0 6px ${status.color}` }}
-                  />
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: status.color }} />
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: status.color }} />
+                  </span>
                 )}
                 {status.label}
               </span>
@@ -134,26 +198,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index = 0, featured 
             <motion.div
               className="absolute bottom-4 right-4 flex gap-2"
               initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 8 }}
+              animate={{ opacity: hovered ? 1 : 0.7, y: hovered ? 0 : 8 }}
               transition={{ duration: 0.25, ease: ease.out }}
             >
               {project.metrics.slice(0, 2).map((m) => (
-                <div
-                  key={m.label}
-                  className="px-2.5 py-1.5 rounded-xl text-center"
-                  style={{
-                    background: 'var(--glass-2)',
-                    border: '1px solid var(--glass-border-2)',
-                    backdropFilter: 'blur(8px)',
-                  }}
-                >
-                  <p className="font-display font-bold text-xs leading-none mb-0.5" style={{ color: 'var(--accent)' }}>
-                    {m.value}
-                  </p>
-                  <p className="font-sans text-[9px] uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-                    {m.label}
-                  </p>
-                </div>
+                <CountUpMetric key={m.label} value={m.value} label={m.label} />
               ))}
             </motion.div>
           </div>
@@ -195,11 +244,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index = 0, featured 
               {project.techStack.slice(0, 4).map((tech) => (
                 <span
                   key={tech}
-                  className="px-2 py-1 rounded-lg font-mono text-[10px]"
+                  className="px-2 py-1 rounded-full font-mono text-[10px]"
                   style={{
-                    background: 'var(--accent-light)',
-                    color: 'var(--accent)',
-                    border: '1px solid var(--glass-border-1)',
+                    background: 'rgba(0,212,255,0.08)',
+                    color: '#00d4ff',
+                    border: '0.5px solid rgba(0,212,255,0.2)',
                   }}
                 >
                   {tech}
@@ -265,8 +314,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index = 0, featured 
                 )}
               </div>
             </div>
+            {showLiveTicker && project.status === 'live' && <LiveTicker />}
           </div>
-        </div>
+          </div>
+        </TiltCard>
       </Link>
     </motion.div>
   );

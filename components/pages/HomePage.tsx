@@ -43,7 +43,7 @@ export default function Home() {
         style={{
           opacity: showIntro ? 0 : 1,
           transition: 'opacity 0.5s ease',
-          backgroundColor: 'var(--bg-primary)',
+          backgroundColor: '#050505',
         }}
       >
         <Navbar />

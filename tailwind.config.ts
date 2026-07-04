@@ -29,6 +29,18 @@ const config: Config = {
         // Backward compat
         'bs-cyan':      'var(--cyan)',
 
+        // ── V2 Portfolio Design System ─────────────────────────
+        'v2-space':    'var(--space)',
+        'v2-space-2':  'var(--space-2)',
+        'v2-space-3':  'var(--space-3)',
+        'v2-space-4':  'var(--space-4)',
+        'v2-indigo':   'var(--indigo)',
+        'v2-cyan':     'var(--cyan-v2)',
+        'v2-purple':   'var(--purple)',
+        'v2-emerald':  'var(--emerald)',
+        'v2-amber':    'var(--amber)',
+        'v2-teal':     'var(--teal)',
+
         // ── Brand violet palette ──────────────────────────────
         brand: {
           50:  '#faf5ff',
@@ -106,8 +118,8 @@ const config: Config = {
       },
 
       fontFamily: {
-        sans:    ['var(--font-jakarta)', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
-        display: ['var(--font-jakarta)', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+        sans:    ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['var(--font-syne)', 'Syne', 'system-ui', 'sans-serif'],
         mono:    ['var(--font-mono)', 'JetBrains Mono', 'Consolas', 'monospace'],
       },
 

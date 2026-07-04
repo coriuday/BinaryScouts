@@ -2,9 +2,9 @@
 
 import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Sun, Moon, Volume2, VolumeX, Terminal, Palette, Sliders } from 'lucide-react';
-import { useTheme } from '@/components/hooks/ThemeProvider';
+import { X, Volume2, VolumeX, Terminal, Sliders } from 'lucide-react';
 import { useAudio } from '@/components/hooks/AudioProvider';
+import Logo from '@/components/ui/Logo';
 
 interface SettingsDrawerProps {
   isOpen: boolean;
@@ -52,7 +52,6 @@ const Toggle: React.FC<{ checked: boolean; onChange: () => void; id: string }> =
 );
 
 const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose, onTerminalOpen }) => {
-  const { isDark, toggleTheme } = useTheme();
   const { isMuted, toggleMute } = useAudio();
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -160,10 +159,12 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose, onTerm
               </p>
 
               <Row
-                label={isDark ? 'Dark Mode' : 'Light Mode'}
-                sub="Toggle the UI colour scheme"
+                label="Theme"
+                sub="Dark cinematic theme (site default)"
               >
-                <Toggle checked={isDark} onChange={toggleTheme} id="settings-theme" />
+                <span className="font-mono text-xs" style={{ color: 'var(--text-muted)' }}>
+                  Dark only
+                </span>
               </Row>
 
               {/* Audio */}
@@ -228,15 +229,8 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose, onTerm
               {/* About */}
               <div className="mt-6 pt-4" style={{ borderTop: '1px solid var(--border-subtle)' }}>
                 <div className="flex items-center gap-2 mb-1">
-                  <div
-                    className="w-6 h-6 rounded-lg flex items-center justify-center"
-                    style={{ background: 'linear-gradient(135deg, #6366f1, #06b6d4)' }}
-                  >
-                    <span className="font-bold text-[9px] text-white">BS</span>
-                  </div>
-                  <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)' }}>
-                    Binary<span className="gradient-text">Scouts</span>
-                  </p>
+                  <Logo variant="icon" size={24} decorative />
+                  <Logo variant="wordmark" size={16} />
                 </div>
                 <p className="font-sans text-[11px] leading-relaxed" style={{ color: 'var(--text-muted)' }}>
                   AI-Native Digital Engineering Studio · v2.5.0

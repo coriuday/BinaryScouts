@@ -29,7 +29,7 @@ graph TD
 ```
 
 1. **Frontend App Router**: Serves pages and proxies client requests to the backend gateway, isolating external API endpoints.
-2. **Rust Gateway (`:8081`)**: Manages high-performance routing, applies permissive CORS, generates cryptographically randomized transaction codes, and logs client heist planner briefs securely in local JSON dossiers (`backend-rust/vault/*.json`).
+2. **Rust Gateway (`:8081`)**: Manages high-performance routing, generates transaction codes, and logs planner briefs to `backend-rust/vault/` (gitignored — contains PII).
 3. **Python AI Service (`:5000`)**: Queries the Gemini API with structured system instructions to return cybersecurity strategy blueprints and chat dialogue responses. Supports offline sandboxed fallback rules.
 
 ---
@@ -63,20 +63,19 @@ binaryscouts/
 │   │   ├── Footer.tsx             # Page status and manifesto links
 │   │   ├── LayoutWrapper.tsx      # Dynamic body overlay constructor
 │   │   ├── CustomCursor.tsx       # Animated crosshair mouse follower
-│   │   └── IntroLoader.tsx        # Automated CRT system boot visual loader
+│   │   └── LoadingScreen.tsx      # First-visit brand loader
 │   ├── pages/                     # Decoupled page layouts and states
 │   │   ├── HomePage.tsx           # Homepage index view
-│   │   ├── GamesPage.tsx          # Release catalogue view
 │   │   └── PlannerPage.tsx        # Budget customizer and hacking minigame
 │   └── ui/                        # Presentation widgets & visual grids
-│       ├── Hero.tsx               # Cinematic header section
-│       ├── ServicesGrid.tsx       # Interactive weapons list
-│       ├── InfoSection.tsx        # Business CRM and SEO automation highlights
-│       ├── SettingsDrawer.tsx     # Color profile customization drawer
-│       └── Terminal.tsx           # Floating cyberpunk console
+│       ├── HeroNew.tsx            # Cinematic header section
+│       ├── ServicesBento.tsx      # Services grid
+│       ├── SettingsDrawer.tsx     # Preferences drawer
+│       └── Terminal.tsx           # Floating AI console
+├── data/                           # Contact/newsletter leads (gitignored)
 ├── backend-rust/                   # Rust Axum Gateway Source
 │   ├── src/main.rs                # Gateway routing, vault logging, and Python proxies
-│   ├── vault/                     # Local JSON logs database directory
+│   ├── vault/                     # Local JSON leads (gitignored)
 │   └── Cargo.toml                 # Rust dependencies configuration
 ├── backend-python/                 # Python FastAPI Microservice Source
 │   ├── app.py                     # API routing, Gemini prompt builders, and fallbacks
@@ -97,10 +96,24 @@ cd binaryscouts
 ```
 
 ### 2. Configure Environment Variables
-Create a `.env.local` file in the root directory:
+Copy `.env.example` to `.env.local` and fill in values:
+
 ```env
+# Required for /admin
+ADMIN_PASSWORD=change-me-to-a-long-random-string
+ADMIN_SESSION_SECRET=another-long-random-string
+
+# Optional: contact form email delivery (Resend)
+RESEND_API_KEY=
+CONTACT_TO_EMAIL=hello@binaryscouts.com
+
+# Python AI service only (never put this in Next.js client config)
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
+
+Contact and newsletter submissions are saved under `data/contacts/` and `data/newsletter/` (gitignored). When `RESEND_API_KEY` and `CONTACT_TO_EMAIL` are set, leads are also emailed.
+
+Admin login uses an httpOnly signed cookie — never put `ADMIN_PASSWORD` in client code.
 
 ### 3. Launch python AI Microservice
 ```bash

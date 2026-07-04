@@ -1,35 +1,49 @@
 'use client';
 
-import React from 'react';
 import LegalPage from '@/components/pages/LegalPage';
 
 const TERMS_SECTIONS = [
   {
-    title: 'OPERATOR SYSTEM ENGAGEMENT',
+    title: 'Acceptance of terms',
     paragraphs: [
-      'By engaging with the BinaryScouts digital agency website and submitting target briefs through the Heist Planner interface, you agree to comply with standard security procedures and avoid malicious script injection attempts against our console ports.',
-      'Our AI strategist (B.I.N.A.R.Y. AI) operates with structured prompts. While we strive for extreme precision, strategy blueprints are for planning purposes and do not represent guaranteed commercial revenue metrics.'
-    ]
+      'By using the BinaryScouts website and related tools (including the project planner and AI terminal), you agree to these terms.',
+      'If you do not agree, please do not use the site.',
+    ],
   },
   {
-    title: 'VAULT INFILTRATION CONDITIONS',
+    title: 'Services and estimates',
     paragraphs: [
-      'Any attempts to reverse-engineer backend APIs, bypass hacking minigames (unless using authorized Sysadmin force-bypass overrides), or download vault directories without credentials will result in immediate signal lockout.'
-    ]
+      'Content on this site describes our capabilities and past work. Strategy outputs from the planner or AI assistant are for planning purposes only and do not guarantee commercial results.',
+      'Project scope, pricing, and timelines are confirmed only in a written agreement.',
+    ],
   },
   {
-    title: 'INTELLECTUAL PROPERTIES',
+    title: 'Acceptable use',
     paragraphs: [
-      'The graphics, code, halftone designs, layout configurations, and sound chirps contained within the BinaryScouts portal are protected by proprietary licensing models. Authorized operators are granted a limited license to review released briefs for educational usage.'
-    ]
-  }
+      'You may not attempt to disrupt, overload, or reverse-engineer our systems, or submit malicious content through forms or APIs.',
+      'We may rate-limit or block abusive traffic to protect the service.',
+    ],
+  },
+  {
+    title: 'Intellectual property',
+    paragraphs: [
+      'Site design, branding, and original content are owned by BinaryScouts unless otherwise noted. You may not copy or redistribute them without permission.',
+      'You retain ownership of materials you submit; you grant us a limited license to use them to respond to your inquiry.',
+    ],
+  },
+  {
+    title: 'Contact',
+    paragraphs: [
+      'Questions about these terms: hello@binaryscouts.com.',
+    ],
+  },
 ];
 
 export default function Page() {
   return (
     <LegalPage
-      title="TERMS OF SERVICE"
-      subtitle="SYSTEM HARDWARE USE CONDITIONS"
+      title="Terms of Service"
+      subtitle="Website and engagement conditions"
       sections={TERMS_SECTIONS}
     />
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -12,8 +12,9 @@ import {
   PROJECTS, type Project, type ProjectStatus, PROJECT_CATEGORIES,
 } from '@/lib/projects';
 import { TEAM_MEMBERS, type TeamMember } from '@/lib/team';
-import { adminLogout, isAdminAuthenticated } from '@/lib/admin-auth';
+import { adminLogout } from '@/lib/admin-auth';
 import { ease, dur } from '@/lib/motion';
+import Logo from '@/components/ui/Logo';
 
 /* ── Sidebar nav item ─────────────────────────────── */
 const NavItem: React.FC<{
@@ -168,15 +169,10 @@ const AdminDashboardPage: React.FC = () => {
   const [team] = useState<TeamMember[]>(TEAM_MEMBERS);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
 
-  useEffect(() => {
-    if (!isAdminAuthenticated()) {
-      router.replace('/admin/login');
-    }
-  }, [router]);
-
-  const handleLogout = useCallback(() => {
-    adminLogout();
+  const handleLogout = useCallback(async () => {
+    await adminLogout();
     router.replace('/admin/login');
+    router.refresh();
   }, [router]);
 
   const liveProjects = projects.filter((p) => p.status === 'live').length;
@@ -187,9 +183,17 @@ const AdminDashboardPage: React.FC = () => {
       className="min-h-screen flex"
       style={{ backgroundColor: 'var(--bg-canvas)' }}
     >
+      {/* Read-only notice — CMS writes not yet persisted */}
+      <div
+        className="fixed top-0 left-0 right-0 z-50 px-4 py-2 text-center text-xs font-sans"
+        style={{ background: 'rgba(0,212,255,0.12)', color: '#00d4ff', borderBottom: '1px solid rgba(0,212,255,0.2)' }}
+        role="status"
+      >
+        Admin is read-only. Project and team data is served from source files — edits are not saved.
+      </div>
       {/* ── Sidebar ──────────────────────────────────── */}
       <aside
-        className="w-64 flex-shrink-0 flex flex-col p-4 relative"
+        className="w-64 flex-shrink-0 flex flex-col p-4 relative pt-12"
         style={{
           backgroundColor: 'var(--bg-secondary)',
           borderRight: '1px solid var(--glass-border-1)',
@@ -197,17 +201,10 @@ const AdminDashboardPage: React.FC = () => {
       >
         {/* Logo */}
         <div className="flex items-center gap-2.5 px-2 py-3 mb-6">
-          <div
-            className="w-8 h-8 rounded-xl flex items-center justify-center"
-            style={{ background: 'var(--gradient-primary)' }}
-          >
-            <span className="font-display font-bold text-xs text-white">BS</span>
-          </div>
-          <div>
-            <p className="font-display font-bold text-sm" style={{ color: 'var(--text-primary)', letterSpacing: '-0.03em' }}>
-              BinaryScouts
-            </p>
-            <p className="font-sans text-[10px]" style={{ color: 'var(--accent)' }}>Admin Studio</p>
+          <Logo variant="icon" size={32} decorative />
+          <div className="min-w-0">
+            <Logo variant="wordmark" size={14} />
+            <p className="font-sans text-[10px] mt-1" style={{ color: 'var(--accent)' }}>Admin Studio</p>
           </div>
         </div>
 
@@ -263,7 +260,7 @@ const AdminDashboardPage: React.FC = () => {
       </aside>
 
       {/* ── Main content ─────────────────────────────── */}
-      <main className="flex-1 overflow-auto p-8">
+      <main className="flex-1 overflow-auto p-8 pt-14">
         <AnimatePresence mode="wait">
 
           {/* OVERVIEW ─────────────────────────────────── */}

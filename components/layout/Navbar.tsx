@@ -4,38 +4,65 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Sun, Moon, Settings, Sparkles } from 'lucide-react';
-import { useTheme } from '@/components/hooks/ThemeProvider';
+import { Menu, X, Settings } from 'lucide-react';
 import { useAudio } from '@/components/hooks/AudioProvider';
 import SettingsDrawer from '@/components/ui/SettingsDrawer';
+import Logo from '@/components/ui/Logo';
 
 const NAV_LINKS = [
-  { label: 'Services', href: '/services' },
-  { label: 'Work',     href: '/work' },
-  { label: 'Studio',   href: '/about' },
-  { label: 'Contact',  href: '/contact' },
+  { label: 'Services', href: '#services' },
+  { label: 'Work',     href: '#work' },
+  { label: 'Team',     href: '#team' },
+  { label: 'Process',  href: '#process' },
+  { label: 'Contact',  href: '#contact' },
 ];
 
 const Navbar: React.FC = () => {
-  const { isDark, toggleTheme } = useTheme();
   const { isMuted, toggleMute } = useAudio();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  // Avoid hydration mismatch: isDark comes from localStorage which
-  // the server doesn't know about. We delay theme-dependent rendering
-  // until after the first client paint.
-  const [mounted, setMounted] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
 
   useEffect(() => {
-    setMounted(true);
-    const onScroll = () => setScrolled(window.scrollY > 80);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 80);
+
+      // Track active section
+      const sections = NAV_LINKS.map((l) => l.href.replace('#', ''));
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sections[i]);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 180) {
+            setActiveSection(sections[i]);
+            return;
+          }
+        }
+      }
+      setActiveSection('');
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   const closeMenu = () => setIsOpen(false);
+
+  const handleNavClick = (href: string) => {
+    closeMenu();
+    if (pathname !== '/') {
+      // Navigate to homepage with anchor
+      window.location.href = '/' + href;
+      return;
+    }
+    // Smooth scroll on homepage
+    const id = href.replace('#', '');
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   return (
     <>
@@ -50,7 +77,7 @@ const Navbar: React.FC = () => {
         <motion.div
           className="w-full max-w-5xl rounded-2xl flex items-center justify-between px-4 md:px-6 h-14 transition-all duration-500"
           style={{
-            background: scrolled ? 'rgba(10,10,10,0.75)' : 'transparent',
+            background: scrolled ? 'rgba(10,10,15,0.8)' : 'transparent',
             backdropFilter: scrolled ? 'blur(20px)' : 'none',
             WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'none',
             border: scrolled ? '0.5px solid rgba(255,255,255,0.08)' : '0.5px solid transparent',
@@ -58,263 +85,210 @@ const Navbar: React.FC = () => {
             transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         >
-          {/* ── Logo ─────────────────────────────────────────── */}
-          <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
-            <div
-              className="relative w-8 h-8 rounded-xl flex items-center justify-center overflow-hidden"
-              style={{ background: 'var(--gradient-primary)' }}
-            >
-              <span className="font-display font-bold text-xs text-white tracking-tight z-10">BS</span>
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{
-                  background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.28) 50%, transparent 65%)',
-                  backgroundSize: '200% 100%',
-                  animationPlayState: 'paused',
-                }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.animationPlayState = 'running')}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.animationPlayState = 'paused')}
-              />
-            </div>
-            <span
-              className="font-display font-bold text-lg tracking-tight transition-colors duration-200 hidden sm:block"
-              style={{ color: 'var(--text-primary)', letterSpacing: '-0.03em' }}
-            >
-              Binary<span className="gradient-text">Scouts</span>
-            </span>
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2.5 group" style={{ textDecoration: 'none' }} aria-label="BinaryScouts home">
+            <Logo variant="icon" size={36} priority decorative />
+            <Logo variant="wordmark" size={20} priority className="hidden sm:inline-block" />
           </Link>
 
-          {/* ── Desktop Nav Links ─────────────────────────────── */}
-          <div className="hidden md:flex items-center gap-0.5">
-            {NAV_LINKS.map((item) => {
-              const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-1">
+            {NAV_LINKS.map((link) => {
+              const isActive = activeSection === link.href.replace('#', '');
               return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className={`relative px-4 py-2 rounded-xl font-sans font-medium text-sm transition-all duration-200 group nav-active-dot ${isActive ? 'nav-active' : ''}`}
+                <button
+                  key={link.label}
+                  onClick={() => handleNavClick(link.href)}
                   style={{
-                    color: isActive ? 'var(--accent)' : 'var(--text-secondary)',
-                    letterSpacing: '-0.01em',
+                    fontFamily: 'var(--font-inter)',
+                    fontWeight: 500,
+                    fontSize: 13,
+                    color: isActive ? 'var(--indigo)' : 'var(--text-2)',
+                    background: isActive ? 'var(--indigo-dim)' : 'transparent',
+                    border: 'none',
+                    borderRadius: 8,
+                    padding: '7px 14px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    position: 'relative',
                   }}
-                  onMouseEnter={(e) => !isActive && (e.currentTarget.style.color = 'var(--text-primary)')}
-                  onMouseLeave={(e) => !isActive && (e.currentTarget.style.color = 'var(--text-secondary)')}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.color = 'var(--text-1)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.color = 'var(--text-2)';
+                    }
+                  }}
                 >
-                  {item.label}
-                  <span
-                    className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                    style={{ background: 'var(--accent-light)' }}
-                  />
-                </Link>
+                  {link.label}
+                </button>
               );
             })}
           </div>
 
-          {/* ── Desktop Actions ───────────────────────────────── */}
-          <div className="hidden md:flex items-center gap-2">
-            {/* Theme toggle */}
-            <button
-              onClick={toggleTheme}
-              // suppressHydrationWarning prevents React from complaining about
-              // the title attribute differing between SSR (unknown theme) and
-              // the first client paint (theme resolved from localStorage).
-              suppressHydrationWarning
-              title={mounted ? (isDark ? 'Switch to light' : 'Switch to dark') : 'Toggle theme'}
-              className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200"
-              style={{
-                color: 'var(--text-muted)',
-                border: '1px solid var(--glass-border-1)',
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.color = 'var(--accent)';
-                (e.currentTarget as HTMLElement).style.borderColor = 'var(--glass-border-2)';
-                (e.currentTarget as HTMLElement).style.background = 'var(--accent-light)';
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)';
-                (e.currentTarget as HTMLElement).style.borderColor = 'var(--glass-border-1)';
-                (e.currentTarget as HTMLElement).style.background = 'transparent';
-              }}
-            >
-              {/* Render neutral icon on server; correct icon after mount */}
-              {!mounted ? <Moon size={15} /> : isDark ? <Sun size={15} /> : <Moon size={15} />}
-            </button>
+          {/* Right side actions */}
+          <div className="flex items-center gap-2">
+            {/* Live indicator */}
+            <div className="hidden sm:flex items-center gap-1.5 mr-2" style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--emerald)' }}>
+              <span className="v2-live-dot" style={{ width: 5, height: 5 }} />
+              LIVE
+            </div>
+
+
 
             {/* Settings */}
             <button
-              onClick={() => setSettingsOpen((p) => !p)}
-              title="Settings"
-              className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200"
+              onClick={() => setSettingsOpen(true)}
               style={{
-                color: settingsOpen ? 'var(--accent)' : 'var(--text-muted)',
-                border: '1px solid',
-                borderColor: settingsOpen ? 'var(--glass-border-3)' : 'var(--glass-border-1)',
-                background: settingsOpen ? 'var(--accent-light)' : 'transparent',
+                width: 36,
+                height: 36,
+                borderRadius: 10,
+                border: '0.5px solid var(--border-v2)',
+                background: 'transparent',
+                color: 'var(--text-2)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'var(--border-hover)';
+                e.currentTarget.style.color = 'var(--text-1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'var(--border-v2)';
+                e.currentTarget.style.color = 'var(--text-2)';
+              }}
+              aria-label="Open settings"
+            >
+              <Settings size={16} />
+            </button>
+
+            {/* CTA */}
+            <a
+              href="#contact"
+              onClick={(e) => { e.preventDefault(); handleNavClick('#contact'); }}
+              className="hidden md:inline-flex"
+              style={{
+                fontFamily: 'var(--font-inter)',
+                fontWeight: 600,
+                fontSize: 13,
+                color: '#fff',
+                background: 'linear-gradient(135deg, var(--indigo), var(--cyan-v2))',
+                padding: '8px 20px',
+                borderRadius: 10,
+                textDecoration: 'none',
+                transition: 'filter 0.2s, box-shadow 0.2s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.filter = 'brightness(1.15)';
+                e.currentTarget.style.boxShadow = '0 0 20px var(--indigo-glow)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.filter = 'brightness(1)';
+                e.currentTarget.style.boxShadow = 'none';
               }}
             >
-              <Settings size={15} />
-            </button>
+              Start Project
+            </a>
 
-            {/* Primary CTA */}
-            <Link href="/planner">
-              <button className="btn-primary text-sm px-5 py-2.5 gap-1.5">
-                <Sparkles size={13} />
-                Book a Call
-              </button>
-            </Link>
-          </div>
-
-          {/* ── Mobile Trigger ────────────────────────────────── */}
-          <div className="md:hidden flex items-center gap-1.5">
+            {/* Mobile hamburger */}
             <button
-              onClick={toggleTheme}
-              suppressHydrationWarning
-              className="w-9 h-9 rounded-xl flex items-center justify-center"
-              style={{ color: 'var(--text-muted)' }}
-            >
-              {!mounted ? <Moon size={16} /> : isDark ? <Sun size={16} /> : <Moon size={16} />}
-            </button>
-            <button
+              className="md:hidden"
               onClick={() => setIsOpen(!isOpen)}
-              className="w-9 h-9 rounded-xl flex items-center justify-center"
-              style={{ color: 'var(--text-primary)', background: isOpen ? 'var(--accent-light)' : 'transparent' }}
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 10,
+                border: '0.5px solid var(--border-v2)',
+                background: 'transparent',
+                color: 'var(--text-2)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
             >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={isOpen ? 'close' : 'open'}
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  {isOpen ? <X size={20} /> : <Menu size={20} />}
-                </motion.div>
-              </AnimatePresence>
+              {isOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
         </motion.div>
       </motion.nav>
 
-      {/* ── Cinematic Mobile Menu ─────────────────────────────── */}
+      {/* ── Mobile Menu Overlay ──────────────────────────── */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="md:hidden fixed inset-0 z-40 flex flex-col"
-            style={{
-              background: 'var(--bg-glass-solid)',
-              backdropFilter: 'blur(32px)',
-              WebkitBackdropFilter: 'blur(32px)',
-              paddingTop: 'calc(var(--navbar-top, 12px) + 64px)',
-            }}
-            initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
-            animate={{ opacity: 1, backdropFilter: 'blur(32px)' }}
-            exit={{ opacity: 0, transition: { duration: 0.22 } }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            key="mobile-menu"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-40"
+            style={{ background: 'rgba(0,0,0,0.88)', backdropFilter: 'blur(20px)' }}
+            onClick={closeMenu}
           >
-            {/* Atmospheric mini-orb inside menu */}
-            <div
-              className="absolute top-1/4 right-0 w-64 h-64 rounded-full pointer-events-none"
-              style={{
-                background: 'radial-gradient(circle, var(--orb-rose) 0%, transparent 65%)',
-                filter: 'blur(50px)',
-                opacity: 0.6,
-                animation: 'atmosphericFloat 10s ease-in-out infinite',
-              }}
-            />
-            <div
-              className="absolute bottom-1/4 left-0 w-48 h-48 rounded-full pointer-events-none"
-              style={{
-                background: 'radial-gradient(circle, var(--orb-violet) 0%, transparent 65%)',
-                filter: 'blur(50px)',
-                opacity: 0.4,
-                animation: 'atmosphericFloat 14s ease-in-out infinite reverse',
-              }}
-            />
-
-            {/* Nav links — staggered reveal */}
-            <div className="relative z-10 flex flex-col px-6 pt-4 pb-8 flex-1">
-              <div className="flex flex-col gap-1 mb-auto">
-                {NAV_LINKS.map((item, i) => {
-                  const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-                  return (
-                    <motion.div
-                      key={item.label}
-                      initial={{ opacity: 0, x: -20, filter: 'blur(4px)' }}
-                      animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-                      exit={{ opacity: 0, x: -12, filter: 'blur(2px)' }}
-                      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1], delay: 0.05 + i * 0.07 }}
-                      className="relative"
-                    >
-                      {/* Active left-side indicator */}
-                      {isActive && (
-                        <motion.div
-                          layoutId="mobile-active-indicator"
-                          className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 rounded-full"
-                          style={{ background: 'var(--gradient-primary)' }}
-                          transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                        />
-                      )}
-                      <Link
-                        href={item.href}
-                        onClick={closeMenu}
-                        className="flex items-center justify-between px-5 py-4 rounded-2xl transition-all duration-200"
-                        style={{
-                          color: isActive ? 'var(--accent)' : 'var(--text-primary)',
-                          background: isActive ? 'var(--accent-light)' : 'transparent',
-                        }}
-                      >
-                        <span
-                          className="font-display font-bold text-2xl"
-                          style={{ letterSpacing: '-0.03em' }}
-                        >
-                          {item.label}
-                        </span>
-                        {isActive && (
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="w-2 h-2 rounded-full"
-                            style={{ background: 'var(--accent)' }}
-                          />
-                        )}
-                      </Link>
-                    </motion.div>
-                  );
-                })}
-              </div>
-
-              {/* Bottom CTA */}
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], delay: 0.35 }}
-                className="mt-8 space-y-3"
-              >
-                <div className="h-px" style={{ background: 'var(--glass-border-1)' }} />
-                <Link href="/planner" onClick={closeMenu} className="block">
-                  <button className="btn-primary w-full justify-center gap-2 py-4 text-base">
-                    <Sparkles size={16} />
-                    Start the Conversation
-                  </button>
-                </Link>
-                <p
-                  className="text-center font-sans text-[11px]"
-                  style={{ color: 'var(--text-muted)' }}
+            <motion.div
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -20, opacity: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+              className="flex flex-col items-center justify-center h-full gap-8"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {NAV_LINKS.map((link, i) => (
+                <motion.button
+                  key={link.label}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + i * 0.05 }}
+                  onClick={() => handleNavClick(link.href)}
+                  style={{
+                    fontFamily: 'var(--font-syne)',
+                    fontWeight: 600,
+                    fontSize: 32,
+                    color: activeSection === link.href.replace('#', '') ? 'var(--indigo)' : 'var(--text-1)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: 'color 0.2s',
+                  }}
                 >
-                  30-minute call · No pitch · No commitment
-                </p>
-              </motion.div>
-            </div>
+                  {link.label}
+                </motion.button>
+              ))}
+              <motion.a
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                href="#contact"
+                onClick={(e) => { e.preventDefault(); handleNavClick('#contact'); }}
+                style={{
+                  fontFamily: 'var(--font-inter)',
+                  fontWeight: 600,
+                  fontSize: 16,
+                  color: '#fff',
+                  background: 'linear-gradient(135deg, var(--indigo), var(--cyan-v2))',
+                  padding: '14px 36px',
+                  borderRadius: 12,
+                  textDecoration: 'none',
+                  marginTop: 16,
+                }}
+              >
+                Start Project →
+              </motion.a>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Settings Drawer */}
-      <SettingsDrawer
-        isOpen={settingsOpen}
-        onClose={() => setSettingsOpen(false)}
-        onTerminalOpen={() => {}}
-      />
+      {/* ── Settings Drawer ──────────────────────────────── */}
+      <SettingsDrawer isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </>
   );
 };

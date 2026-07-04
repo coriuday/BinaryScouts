@@ -1,20 +1,27 @@
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
+import { Syne, Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/hooks/ThemeProvider';
 import LayoutWrapper from '@/components/layout/LayoutWrapper';
 
-const jakarta = Plus_Jakarta_Sans({
-  variable: '--font-jakarta',
+const syne = Syne({
+  variable: '--font-syne',
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800'],
+  weight: ['600', '700', '800'],
+  display: 'swap',
+});
+
+const inter = Inter({
+  variable: '--font-inter',
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
   display: 'swap',
 });
 
 const jetbrainsMono = JetBrains_Mono({
   variable: '--font-mono',
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '500'],
   display: 'swap',
 });
 
@@ -42,9 +49,9 @@ export const metadata: Metadata = {
     siteName: 'BinaryScouts',
     images: [
       {
-        url: 'https://binaryscouts.com/og-image.png',
+        url: 'https://binaryscouts.com/logo.png',
         width: 1200,
-        height: 630,
+        height: 1200,
         alt: 'BinaryScouts — AI-Native Digital Engineering Studio',
       },
     ],
@@ -56,7 +63,7 @@ export const metadata: Metadata = {
     title: 'BinaryScouts — AI-Native Digital Engineering Studio',
     description:
       'We design, build, and automate intelligent digital systems for modern businesses.',
-    images: ['https://binaryscouts.com/og-image.png'],
+    images: ['https://binaryscouts.com/logo.png'],
   },
   robots: {
     index: true,
@@ -73,37 +80,19 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${jakarta.variable} ${jetbrainsMono.variable}`}
+      className={`${syne.variable} ${inter.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
-      {/*
-       * FOUC Prevention: This blocking script runs synchronously before
-       * the browser paints anything. It reads the saved theme from
-       * localStorage and applies data-theme to <html> immediately,
-       * eliminating the flash of unstyled content on dark-mode page loads.
-       *
-       * Must be render-blocking (no defer/async) and placed before body.
-       */}
+      {/* Dark theme — always. No light mode. */}
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `
-(function() {
-  try {
-    var saved = localStorage.getItem('bs_theme');
-    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var theme = (saved === 'dark' || saved === 'light') ? saved : 'dark';
-    document.documentElement.setAttribute('data-theme', theme);
-  } catch(e) {
-    document.documentElement.setAttribute('data-theme', 'dark');
-  }
-})();
-            `,
+            __html: `document.documentElement.setAttribute('data-theme','dark');`,
           }}
         />
       </head>
       <ThemeProvider>
-        <LayoutWrapper bodyClass={jakarta.className}>{children}</LayoutWrapper>
+        <LayoutWrapper bodyClass={inter.className}>{children}</LayoutWrapper>
       </ThemeProvider>
     </html>
   );

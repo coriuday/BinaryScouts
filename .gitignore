@@ -61,3 +61,8 @@ lerna-debug.log*
 *.sw?
 thumbs.db
 db.json
+
+# Lead / contact data (PII — never commit)
+backend-rust/vault/
+data/contacts/
+data/newsletter/

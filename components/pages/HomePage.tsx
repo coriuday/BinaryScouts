@@ -2,19 +2,19 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Navbar from '@/components/layout/Navbar';
-import Hero from '@/components/ui/Hero';
-import StatsBar from '@/components/ui/StatsBar';
-import ServicesGrid from '@/components/ui/ServicesGrid';
-import CaseStudiesSection from '@/components/ui/CaseStudiesSection';
-import InfoSection from '@/components/ui/InfoSection';
-import CTASection from '@/components/ui/CTASection';
 import Footer from '@/components/layout/Footer';
-import IntroLoader from '@/components/layout/IntroLoader';
-import SectionBridge from '@/components/motion/SectionBridge';
+import LoadingScreen from '@/components/layout/LoadingScreen';
+import HeroNew from '@/components/ui/HeroNew';
+import AboutSection from '@/components/ui/AboutSection';
+import ServicesBento from '@/components/ui/ServicesBento';
+import CaseStudiesNew from '@/components/ui/CaseStudiesNew';
+import TeamNew from '@/components/ui/TeamNew';
+import ProcessSection from '@/components/ui/ProcessSection';
+import TechStackGrid from '@/components/ui/TechStackGrid';
+import TestimonialsSection from '@/components/ui/TestimonialsSection';
+import ContactSection from '@/components/ui/ContactSection';
 
 export default function Home() {
-  // Default showIntro=false — avoids a flash of the loader on SSR.
-  // On mount, we check sessionStorage to decide if the loader should play.
   const [showIntro, setShowIntro] = useState(false);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function Home() {
 
   return (
     <>
-      {showIntro && <IntroLoader onComplete={handleIntroComplete} />}
+      {showIntro && <LoadingScreen onComplete={handleIntroComplete} />}
 
       {/* Skip to main content — screen reader / keyboard navigation */}
       <a href="#main-content" className="skip-to-content">
@@ -40,57 +40,61 @@ export default function Home() {
 
       <div
         className="min-h-screen"
+        inert={showIntro ? true : undefined}
+        aria-hidden={showIntro || undefined}
         style={{
           opacity: showIntro ? 0 : 1,
           transition: 'opacity 0.5s ease',
-          backgroundColor: '#050505',
+          backgroundColor: 'var(--space)',
+          pointerEvents: showIntro ? 'none' : undefined,
         }}
       >
         <Navbar />
         <main id="main-content">
-          {/* ── 1. CURIOSITY → AWE ───────────────────────── */}
-          <Hero />
+          {/* ── 1. HERO — Curiosity → Awe ────────────────── */}
+          <HeroNew />
 
-          {/* Bridge: hero → proof */}
-          <SectionBridge hint="The results that brought them back" direction="light-to-dark" showLine />
-
-          {/* ── 2. AWE → IMMERSION: Numbers anchor belief ── */}
+          {/* ── 2. ABOUT — Awe → Trust ───────────────────── */}
           <div className="section-lazy">
-            <StatsBar />
+            <AboutSection />
           </div>
 
-          {/* Bridge: proof → story */}
-          <SectionBridge hint="The studio behind the numbers" direction="dark-to-light" showLine />
-
-          {/* ── 3. IMMERSION → TRUST: Who we are first ───── */}
+          {/* ── 3. SERVICES — Trust → Interest ───────────── */}
           <div className="section-lazy">
-            <InfoSection />
+            <ServicesBento />
           </div>
 
-          {/* Bridge: story → capabilities */}
-          <SectionBridge hint="What we build for you" direction="light-to-dark" showLine />
-
-          {/* ── 4. TRUST → INTEREST: Capabilities land on trust ── */}
+          {/* ── 4. CASE STUDIES — Interest → Confidence ──── */}
           <div className="section-lazy">
-            <ServicesGrid />
+            <CaseStudiesNew />
           </div>
 
-          {/* Bridge: capabilities → proof of capabilities */}
-          <SectionBridge hint="See these disciplines in action" direction="dark-to-light" showLine />
-
-          {/* ── 5. INTEREST → CONFIDENCE: Work validates everything ── */}
+          {/* ── 5. TEAM — Confidence → Connection ────────── */}
           <div className="section-lazy">
-            <CaseStudiesSection />
+            <TeamNew />
           </div>
 
-          {/* Bridge: confidence → desire */}
-          <SectionBridge hint="Ready to build yours?" direction="light-to-dark" showLine={false} />
-
-          {/* ── 6. CONFIDENCE → DESIRE → INTENT ─────────── */}
+          {/* ── 6. PROCESS — Connection → Understanding ──── */}
           <div className="section-lazy">
-            <CTASection />
+            <ProcessSection />
+          </div>
+
+          {/* ── 7. TECH STACK — Understanding → Respect ──── */}
+          <div className="section-lazy">
+            <TechStackGrid />
+          </div>
+
+          {/* ── 8. TESTIMONIALS — Respect → Trust ────────── */}
+          <div className="section-lazy">
+            <TestimonialsSection />
+          </div>
+
+          {/* ── 9. CONTACT — Trust → Intent → Action ─────── */}
+          <div className="section-lazy">
+            <ContactSection />
           </div>
         </main>
+
         <div className="section-lazy">
           <Footer />
         </div>

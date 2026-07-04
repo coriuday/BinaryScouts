@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Lock, Sparkles, AlertCircle } from 'lucide-react';
-import { adminLogin, isAdminAuthenticated } from '@/lib/admin-auth';
+import { adminLogin } from '@/lib/admin-auth';
 import { ease, dur } from '@/lib/motion';
 
 const AdminLoginPage: React.FC = () => {
@@ -14,13 +14,6 @@ const AdminLoginPage: React.FC = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    // If already authenticated, redirect to dashboard
-    if (isAdminAuthenticated()) {
-      router.replace('/admin');
-    }
-  }, [router]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!password.trim()) return;
@@ -28,14 +21,12 @@ const AdminLoginPage: React.FC = () => {
     setIsLoading(true);
     setError('');
 
-    // Small delay for UX
-    await new Promise((r) => setTimeout(r, 500));
-
-    const success = adminLogin(password);
-    if (success) {
+    const result = await adminLogin(password);
+    if (result.ok) {
       router.replace('/admin');
+      router.refresh();
     } else {
-      setError('Incorrect password. Please try again.');
+      setError(result.error || 'Incorrect password. Please try again.');
       setIsLoading(false);
     }
   };

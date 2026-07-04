@@ -38,20 +38,36 @@ const INFO_CARDS = [
   },
 ];
 
-type FormStatus = 'idle' | 'loading' | 'success';
+type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: '', email: '', message: '', budget: '' });
+  const [form, setForm] = useState({ name: '', email: '', message: '', budget: '', website: '' });
   const [status, setStatus] = useState<FormStatus>('idle');
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) return;
 
     setStatus('loading');
-    setTimeout(() => {
+    setError('');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'contact', ...form }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setStatus('error');
+        setError(data.error || 'Could not send message.');
+        return;
+      }
       setStatus('success');
-    }, 1800);
+    } catch {
+      setStatus('error');
+      setError('Network error. Email hello@binaryscouts.com.');
+    }
   };
 
   return (
@@ -168,7 +184,7 @@ export default function ContactPage() {
                       We&apos;ll be in touch within one business day with a tailored response.
                     </p>
                     <button
-                      onClick={() => { setStatus('idle'); setForm({ name: '', email: '', message: '', budget: '' }); }}
+                      onClick={() => { setStatus('idle'); setError(''); setForm({ name: '', email: '', message: '', budget: '', website: '' }); }}
                       className="btn-secondary px-8 py-3 text-sm mt-8"
                     >
                       Send another message
@@ -184,14 +200,20 @@ export default function ContactPage() {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                   >
-                    {/* Name */}
+                    <div aria-hidden="true" className="sr-only">
+                      <label htmlFor="page-contact-website">Website</label>
+                      <input id="page-contact-website" name="website" tabIndex={-1} autoComplete="off" value={form.website} onChange={(e) => setForm({ ...form, website: e.target.value })} />
+                    </div>
+
                     <div className="flex flex-col gap-2">
-                      <label className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+                      <label htmlFor="page-contact-name" className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
                         Your Name *
                       </label>
                       <input
+                        id="page-contact-name"
                         type="text"
                         required
+                        autoComplete="name"
                         value={form.name}
                         onChange={(e) => setForm({ ...form, name: e.target.value })}
                         placeholder="Jane Smith"
@@ -199,14 +221,15 @@ export default function ContactPage() {
                       />
                     </div>
 
-                    {/* Email */}
                     <div className="flex flex-col gap-2">
-                      <label className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+                      <label htmlFor="page-contact-email" className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
                         Email Address *
                       </label>
                       <input
+                        id="page-contact-email"
                         type="email"
                         required
+                        autoComplete="email"
                         value={form.email}
                         onChange={(e) => setForm({ ...form, email: e.target.value })}
                         placeholder="jane@company.com"
@@ -214,12 +237,12 @@ export default function ContactPage() {
                       />
                     </div>
 
-                    {/* Budget */}
                     <div className="flex flex-col gap-2">
-                      <label className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+                      <label htmlFor="page-contact-budget" className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
                         Project Budget
                       </label>
                       <select
+                        id="page-contact-budget"
                         value={form.budget}
                         onChange={(e) => setForm({ ...form, budget: e.target.value })}
                         className="input-cinematic"
@@ -233,15 +256,14 @@ export default function ContactPage() {
                       </select>
                     </div>
 
-                    {/* Placeholder for layout alignment */}
                     <div className="hidden md:block" />
 
-                    {/* Message — full width */}
                     <div className="md:col-span-2 flex flex-col gap-2">
-                      <label className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+                      <label htmlFor="page-contact-message" className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
                         Tell Us About Your Project *
                       </label>
                       <textarea
+                        id="page-contact-message"
                         required
                         rows={5}
                         value={form.message}
@@ -251,6 +273,10 @@ export default function ContactPage() {
                         style={{ resize: 'vertical', minHeight: 120 }}
                       />
                     </div>
+
+                    {error && (
+                      <p role="alert" className="md:col-span-2 font-sans text-sm" style={{ color: '#f87171' }}>{error}</p>
+                    )}
 
                     {/* Submit */}
                     <div className="md:col-span-2 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">

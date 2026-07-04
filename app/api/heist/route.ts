@@ -1,36 +1,95 @@
 import { NextResponse } from 'next/server';
+import { clientIp, rateLimit } from '@/lib/rate-limit';
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_BRIEF = 4000;
+const MAX_TARGETS = 12;
 
 export async function POST(req: Request) {
+  const ip = clientIp(req);
+  const limited = rateLimit(`heist:${ip}`, 10, 60 * 60_000);
+  if (!limited.ok) {
+    return NextResponse.json(
+      { error: 'Too many requests. Try again later.' },
+      { status: 429 }
+    );
+  }
+
+  let body: Record<string, unknown>;
   try {
-    const body = await req.json();
+    const text = await req.text();
+    if (text.length > 40_000) {
+      return NextResponse.json({ error: 'Payload too large' }, { status: 413 });
+    }
+    body = JSON.parse(text);
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+  }
 
-    // Forward to Rust API Gateway on port 8081
-    const rustUrl = 'http://127.0.0.1:8081/api/heist';
+  const codeName = String(body.codeName || '').trim().slice(0, 80);
+  const corporation = String(body.corporation || '').trim().slice(0, 120);
+  const email = String(body.email || '').trim().toLowerCase();
+  const channel = String(body.channel || '').trim().slice(0, 40);
+  const brief = String(body.brief || '').trim().slice(0, MAX_BRIEF);
+  const timeline = String(body.timeline || '').trim().slice(0, 40);
+  const budget = Number(body.budget);
+  const targets = Array.isArray(body.targets)
+    ? body.targets.map((t) => String(t).slice(0, 60)).slice(0, MAX_TARGETS)
+    : [];
 
+  if (!codeName || !email || !EMAIL_RE.test(email)) {
+    return NextResponse.json(
+      { error: 'Valid codeName and email are required' },
+      { status: 400 }
+    );
+  }
+  if (!Number.isFinite(budget) || budget < 0 || budget > 10_000_000) {
+    return NextResponse.json({ error: 'Invalid budget' }, { status: 400 });
+  }
+
+  const payload = {
+    codeName,
+    corporation,
+    email,
+    channel,
+    brief,
+    targets,
+    budget: Math.round(budget),
+    timeline,
+  };
+
+  try {
+    const rustUrl = process.env.RUST_API_URL_HEIST || 'http://127.0.0.1:8081/api/heist';
     const response = await fetch(rustUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...(process.env.INTERNAL_API_KEY
+          ? { 'x-internal-key': process.env.INTERNAL_API_KEY }
+          : {}),
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Rust API Gateway error:', errorText);
+      console.error('Rust API Gateway error:', response.status);
       return NextResponse.json(
-        { error: 'Rust Gateway Error', details: errorText },
-        { status: response.status }
+        { error: 'Unable to process brief right now' },
+        { status: 502 }
       );
     }
 
     const data = await response.json();
-    return NextResponse.json(data);
+    return NextResponse.json({
+      heistCode: data.heistCode,
+      status: data.status,
+      blueprint: typeof data.blueprint === 'string' ? data.blueprint.slice(0, 20_000) : '',
+    });
   } catch (error) {
     console.error('Heist Proxy API error:', error);
     return NextResponse.json(
-      { error: 'Internal server error proxying heist brief' },
-      { status: 500 }
+      { error: 'Service temporarily unavailable' },
+      { status: 503 }
     );
   }
 }

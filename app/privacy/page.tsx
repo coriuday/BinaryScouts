@@ -1,36 +1,49 @@
 'use client';
 
-import React from 'react';
 import LegalPage from '@/components/pages/LegalPage';
 
 const PRIVACY_SECTIONS = [
   {
-    title: 'DATA VAULT COMS INTEGRITY',
+    title: 'What we collect',
     paragraphs: [
-      'BinaryScouts Digital Agency prioritizes client records security. All details submitted via the Heist Planner or contact forms are logged within locally-stored JSON files inside the Rust Axum Gateway ("vault/"). We do not sell, rent, or lease your strategic operator details to third-party tracking conglomerates.',
-      'Data logs committed to the local vault are retained solely for project assessment, strategy compiling, and direct secure transmission follow-ups.'
-    ]
+      'When you use our contact form, newsletter signup, or project planner, we collect the information you submit — typically your name, email address, company, and project details.',
+      'We also store basic technical data such as IP address and submission time to prevent abuse and improve reliability.',
+    ],
   },
   {
-    title: 'ENCRYPTION LOGS',
+    title: 'How we use your data',
     paragraphs: [
-      'We run active SSL encryption layers on all server proxy pathways. Communication between our client-side Next.js route proxies, the Rust API Gateway gateway, and the Python FastAPI microservices is fully isolated from external networks.',
-      'Your email channel is only used to send back customized PDF briefs, target logs, or to check schedule parameters.'
-    ]
+      'We use submitted information only to respond to inquiries, evaluate project fit, and send newsletters you explicitly subscribed to.',
+      'We do not sell, rent, or share your personal information with third parties for marketing.',
+    ],
   },
   {
-    title: 'COOKIES & STATE PREFERENCES',
+    title: 'Storage and security',
     paragraphs: [
-      'We utilize localStorage parameters to cache browser settings for the CRT Monitor scanline overlay, theme color palettes, and Custom Crosshair state. These elements are kept strictly client-side to maintain system integrity.'
-    ]
-  }
+      'Form submissions are stored securely on our servers (and optionally emailed to our team via a transactional email provider when configured).',
+      'Public traffic to the website is served over HTTPS. Internal services communicate on private networks and are not exposed to the public internet.',
+    ],
+  },
+  {
+    title: 'Cookies and preferences',
+    paragraphs: [
+      'We use localStorage and cookies for theme preferences, session settings, and (for admin users only) authenticated sessions.',
+      'These preferences stay on your device or in secure httpOnly cookies and are not used for advertising tracking.',
+    ],
+  },
+  {
+    title: 'Contact',
+    paragraphs: [
+      'For privacy requests, email hello@binaryscouts.com. We will respond within a reasonable timeframe.',
+    ],
+  },
 ];
 
 export default function Page() {
   return (
     <LegalPage
-      title="PRIVACY POLICY"
-      subtitle="SYSTEM VAULT & RECORDS POLICY"
+      title="Privacy Policy"
+      subtitle="How we handle your information"
       sections={PRIVACY_SECTIONS}
     />
   );

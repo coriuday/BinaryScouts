@@ -43,7 +43,7 @@ const nextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: https://images.unsplash.com",
+              "img-src 'self' data: blob: https://images.unsplash.com https://api.microlink.io https://*.microlink.io",
               "font-src 'self' data:",
               "connect-src 'self'",
               "frame-ancestors 'none'",

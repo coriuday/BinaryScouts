@@ -72,8 +72,14 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-16">
           {/* Brand column */}
           <div className="lg:col-span-1">
-            <Link href="/" className="mb-6 inline-block group" style={{ textDecoration: 'none' }}>
-              <Logo variant="full" size={72} />
+            <Link
+              href="/"
+              className="mb-6 flex items-center gap-3 group"
+              style={{ textDecoration: 'none' }}
+              aria-label="BinaryScouts home"
+            >
+              <Logo variant="icon" size={40} decorative />
+              <Logo variant="wordmark" size={22} />
             </Link>
 
             <p style={{ fontFamily: 'var(--font-inter)', fontSize: 14, color: 'var(--text-2)', lineHeight: 1.6, marginBottom: 20 }}>

@@ -4,26 +4,59 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
-const BUBBLES: {
+type Bubble = {
   label: string;
+  slug: string;
+  color: string; // hex without #
   size: number;
   left: string;
   top: string;
   delay: number;
   duration: number;
-  accent: string;
-}[] = [
-  { label: 'Next.js', size: 96, left: '12%', top: '8%', delay: 0, duration: 5.5, accent: '#00d4ff' },
-  { label: 'React', size: 88, left: '48%', top: '4%', delay: 0.1, duration: 6.2, accent: '#61dafb' },
-  { label: 'TypeScript', size: 104, left: '68%', top: '22%', delay: 0.15, duration: 5.8, accent: '#3178c6' },
-  { label: 'Node.js', size: 92, left: '8%', top: '38%', delay: 0.2, duration: 6.5, accent: '#68a063' },
-  { label: 'Python', size: 80, left: '42%', top: '36%', delay: 0.25, duration: 5.2, accent: '#ffd43b' },
-  { label: 'PostgreSQL', size: 100, left: '72%', top: '52%', delay: 0.3, duration: 6.8, accent: '#336791' },
-  { label: 'Supabase', size: 84, left: '22%', top: '62%', delay: 0.35, duration: 5.6, accent: '#3ecf8e' },
-  { label: 'Rust', size: 76, left: '52%', top: '68%', delay: 0.4, duration: 6.1, accent: '#dea584' },
-  { label: 'Docker', size: 86, left: '4%', top: '78%', delay: 0.45, duration: 5.9, accent: '#2496ed' },
-  { label: 'OpenAI', size: 90, left: '58%', top: '82%', delay: 0.5, duration: 6.4, accent: '#00d4ff' },
+  ampY: number;
+  ampX: number;
+};
+
+/** Spread across full right column — centers ~14%+ apart, corners filled */
+const BUBBLES: Bubble[] = [
+  { label: 'Next.js', slug: 'nextdotjs', color: 'FFFFFF', size: 100, left: '2%', top: '2%', delay: 0, duration: 5.8, ampY: 12, ampX: 5 },
+  { label: 'React', slug: 'react', color: '61DAFB', size: 92, left: '38%', top: '0%', delay: 0.08, duration: 6.4, ampY: 10, ampX: 7 },
+  { label: 'TypeScript', slug: 'typescript', color: '3178C6', size: 88, left: '72%', top: '4%', delay: 0.12, duration: 5.5, ampY: 14, ampX: 4 },
+  { label: 'Node.js', slug: 'nodedotjs', color: '339933', size: 96, left: '18%', top: '22%', delay: 0.16, duration: 6.8, ampY: 11, ampX: 8 },
+  { label: 'Python', slug: 'python', color: '3776AB', size: 84, left: '54%', top: '20%', delay: 0.2, duration: 5.2, ampY: 13, ampX: 6 },
+  { label: 'PostgreSQL', slug: 'postgresql', color: '4169E1', size: 90, left: '82%', top: '28%', delay: 0.24, duration: 7.0, ampY: 9, ampX: 5 },
+  { label: 'Supabase', slug: 'supabase', color: '3ECF8E', size: 86, left: '4%', top: '44%', delay: 0.28, duration: 5.9, ampY: 12, ampX: 7 },
+  { label: 'Rust', slug: 'rust', color: 'DEA584', size: 78, left: '36%', top: '42%', delay: 0.32, duration: 6.2, ampY: 10, ampX: 9 },
+  { label: 'Docker', slug: 'docker', color: '2496ED', size: 94, left: '66%', top: '46%', delay: 0.36, duration: 5.6, ampY: 14, ampX: 4 },
+  { label: 'OpenAI', slug: 'openai', color: '10A37F', size: 88, left: '88%', top: '52%', delay: 0.4, duration: 6.6, ampY: 11, ampX: 6 },
+  { label: 'Vercel', slug: 'vercel', color: 'FFFFFF', size: 82, left: '14%', top: '66%', delay: 0.44, duration: 5.4, ampY: 13, ampX: 5 },
+  { label: 'Framer', slug: 'framer', color: '0055FF', size: 90, left: '46%', top: '64%', delay: 0.48, duration: 6.9, ampY: 10, ampX: 8 },
+  { label: 'Redis', slug: 'redis', color: 'DC382D', size: 80, left: '76%', top: '70%', delay: 0.52, duration: 5.7, ampY: 12, ampX: 4 },
+  { label: 'AWS', slug: 'amazonaws', color: 'FF9900', size: 86, left: '0%', top: '84%', delay: 0.56, duration: 6.3, ampY: 9, ampX: 7 },
+  { label: 'Tailwind', slug: 'tailwindcss', color: '06B6D4', size: 92, left: '32%', top: '82%', delay: 0.6, duration: 5.8, ampY: 14, ampX: 5 },
+  { label: 'GraphQL', slug: 'graphql', color: 'E10098', size: 84, left: '62%', top: '88%', delay: 0.64, duration: 6.5, ampY: 11, ampX: 6 },
 ];
+
+function iconUrl(slug: string, color: string) {
+  return `https://cdn.simpleicons.org/${slug}/${color}`;
+}
+
+const BubbleIcon: React.FC<{ slug: string; color: string; size: number }> = ({ slug, color, size }) => {
+  const [hidden, setHidden] = useState(false);
+  if (hidden) return null;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={iconUrl(slug, color)}
+      alt=""
+      width={size}
+      height={size}
+      loading="lazy"
+      onError={() => setHidden(true)}
+      style={{ display: 'block', flexShrink: 0 }}
+    />
+  );
+};
 
 const TechBubbles: React.FC = () => {
   const reduced = useReducedMotion();
@@ -31,43 +64,47 @@ const TechBubbles: React.FC = () => {
 
   return (
     <div
-      className="relative w-full h-full min-h-[380px] max-w-[440px] ml-auto"
+      className="relative w-full h-full min-h-[500px]"
       aria-hidden="true"
     >
-      {/* Soft bloom behind cluster */}
+      {/* Soft bloom */}
       <div
         style={{
           position: 'absolute',
-          inset: '10% 5%',
+          inset: '5% 0%',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(0,212,255,0.12) 0%, rgba(99,102,241,0.06) 45%, transparent 70%)',
-          filter: 'blur(4px)',
+          background:
+            'radial-gradient(ellipse 80% 70% at 50% 45%, rgba(0,212,255,0.1) 0%, rgba(99,102,241,0.05) 40%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
 
       {BUBBLES.map((b) => {
         const isHover = hovered === b.label;
+        const brand = `#${b.color}`;
+        const iconPx = b.size >= 92 ? 28 : b.size >= 84 ? 24 : 20;
+        const fontSize = b.size >= 92 ? 10 : 9;
+
         return (
           <motion.div
             key={b.label}
-            initial={{ opacity: 0, scale: 0.7 }}
+            initial={{ opacity: 0, scale: 0.65 }}
             animate={
               reduced
                 ? { opacity: 1, scale: 1, x: 0, y: 0 }
                 : {
                     opacity: 1,
-                    scale: isHover ? 1.06 : 1,
-                    y: [0, -10, 4, 0],
-                    x: [0, 6, -4, 0],
+                    scale: isHover ? 1.08 : 1,
+                    y: [0, -b.ampY, b.ampY * 0.4, 0],
+                    x: [0, b.ampX, -b.ampX * 0.6, 0],
                   }
             }
             transition={
               reduced
-                ? { duration: 0.4, delay: 0.8 + b.delay }
+                ? { duration: 0.4, delay: 0.85 + b.delay }
                 : {
-                    opacity: { duration: 0.5, delay: 0.9 + b.delay },
-                    scale: { duration: 0.25 },
+                    opacity: { duration: 0.45, delay: 0.9 + b.delay },
+                    scale: { duration: 0.22 },
                     y: {
                       duration: b.duration,
                       delay: b.delay,
@@ -75,8 +112,8 @@ const TechBubbles: React.FC = () => {
                       ease: 'easeInOut',
                     },
                     x: {
-                      duration: b.duration * 1.15,
-                      delay: b.delay + 0.2,
+                      duration: b.duration * (1.1 + (b.ampX % 3) * 0.08),
+                      delay: b.delay + 0.15,
                       repeat: Infinity,
                       ease: 'easeInOut',
                     },
@@ -92,30 +129,40 @@ const TechBubbles: React.FC = () => {
               height: b.size,
               borderRadius: '50%',
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              textAlign: 'center',
-              padding: 8,
+              gap: 4,
+              padding: 6,
               background: isHover
-                ? `rgba(0, 212, 255, 0.12)`
-                : 'rgba(255, 255, 255, 0.04)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              border: `0.5px solid ${isHover ? `${b.accent}88` : 'rgba(0, 212, 255, 0.22)'}`,
+                ? `color-mix(in srgb, ${brand} 18%, rgba(10,10,15,0.85))`
+                : 'rgba(10, 10, 18, 0.72)',
+              backdropFilter: 'blur(14px)',
+              WebkitBackdropFilter: 'blur(14px)',
+              border: `1px solid ${isHover ? brand : `${brand}55`}`,
               boxShadow: isHover
-                ? `0 0 28px ${b.accent}44, inset 0 1px 0 rgba(255,255,255,0.12)`
-                : '0 0 20px rgba(0, 212, 255, 0.08), inset 0 1px 0 rgba(255,255,255,0.06)',
-              fontFamily: 'var(--font-mono), monospace',
-              fontSize: b.size > 95 ? 12 : 11,
-              fontWeight: 500,
-              color: isHover ? '#e0f7ff' : 'rgba(224, 247, 255, 0.88)',
-              letterSpacing: '0.02em',
+                ? `0 0 32px ${brand}55, inset 0 1px 0 rgba(255,255,255,0.12)`
+                : `0 0 18px ${brand}22, inset 0 1px 0 rgba(255,255,255,0.06)`,
               cursor: 'default',
               userSelect: 'none',
               willChange: reduced ? undefined : 'transform',
             }}
           >
-            {b.label}
+            <BubbleIcon slug={b.slug} color={b.color} size={iconPx} />
+            <span
+              style={{
+                fontFamily: 'var(--font-mono), monospace',
+                fontSize,
+                fontWeight: 500,
+                color: isHover ? '#fff' : 'rgba(255,255,255,0.88)',
+                letterSpacing: '0.01em',
+                lineHeight: 1.15,
+                textAlign: 'center',
+                maxWidth: '90%',
+              }}
+            >
+              {b.label}
+            </span>
           </motion.div>
         );
       })}

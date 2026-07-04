@@ -285,7 +285,7 @@ const HeroNew: React.FC = () => {
         </div>
 
           {/* Floating tech bubbles — desktop right column */}
-          <div className="hidden lg:flex items-center justify-end min-h-[420px]">
+          <div className="hidden lg:flex items-center justify-end min-h-[500px] w-full">
             <TechBubbles />
           </div>
         </div>

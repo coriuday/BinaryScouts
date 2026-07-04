@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next';
+import { getSiteUrl } from '@/lib/site';
 
 export default function robots(): MetadataRoute.Robots {
+  const base = getSiteUrl();
   return {
     rules: [
       {
@@ -9,6 +11,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/_next/', '/admin', '/admin/'],
       },
     ],
-    sitemap: 'https://binaryscouts.com/sitemap.xml',
+    sitemap: `${base}/sitemap.xml`,
   };
 }

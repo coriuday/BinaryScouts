@@ -3,6 +3,9 @@ import { Syne, Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/hooks/ThemeProvider';
 import LayoutWrapper from '@/components/layout/LayoutWrapper';
+import { getSiteUrl } from '@/lib/site';
+
+const siteUrl = getSiteUrl();
 
 const syne = Syne({
   variable: '--font-syne',
@@ -26,7 +29,11 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'BinaryScouts — AI-Native Digital Engineering Studio',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'BinaryScouts — AI-Native Digital Engineering Studio',
+    template: '%s — BinaryScouts',
+  },
   description:
     'BinaryScouts designs, builds, and automates intelligent digital systems for modern businesses. Full-stack engineering, CRM automation, AI integration, and growth infrastructure.',
   keywords: [
@@ -41,15 +48,18 @@ export const metadata: Metadata = {
     'Growth Engineering',
   ],
   authors: [{ name: 'BinaryScouts Studio' }],
+  alternates: {
+    canonical: siteUrl,
+  },
   openGraph: {
     title: 'BinaryScouts — AI-Native Digital Engineering Studio',
     description:
       'We design, build, and automate intelligent digital systems for modern businesses.',
-    url: 'https://binaryscouts.com',
+    url: siteUrl,
     siteName: 'BinaryScouts',
     images: [
       {
-        url: 'https://binaryscouts.com/logo.png',
+        url: '/logo.png',
         width: 1200,
         height: 1200,
         alt: 'BinaryScouts — AI-Native Digital Engineering Studio',
@@ -63,7 +73,7 @@ export const metadata: Metadata = {
     title: 'BinaryScouts — AI-Native Digital Engineering Studio',
     description:
       'We design, build, and automate intelligent digital systems for modern businesses.',
-    images: ['https://binaryscouts.com/logo.png'],
+    images: ['/logo.png'],
   },
   robots: {
     index: true,

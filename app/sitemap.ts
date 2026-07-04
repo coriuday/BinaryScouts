@@ -1,8 +1,9 @@
 import type { MetadataRoute } from 'next';
 import { PROJECTS } from '@/lib/projects';
+import { getSiteUrl } from '@/lib/site';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = 'https://binaryscouts.com';
+  const base = getSiteUrl();
   const now = new Date();
 
   const staticRoutes: MetadataRoute.Sitemap = [

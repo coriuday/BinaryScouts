@@ -20,40 +20,55 @@ type IconId =
   | 'redis'
   | 'aws'
   | 'tailwind'
-  | 'graphql';
+  | 'graphql'
+  | 'mongodb'
+  | 'kubernetes'
+  | 'prisma'
+  | 'stripe'
+  | 'github'
+  | 'langchain';
 
 type Bubble = {
   label: string;
   icon: IconId;
   color: string;
   size: number;
-  /** Center position as % of container */
   cx: number;
   cy: number;
   delay: number;
   duration: number;
-  ampY: number;
-  ampX: number;
+  rotateDuration: number;
+  pathY: number[];
+  pathX: number[];
+  rotate: number[];
 };
 
-/** 4×4 centers — translate(-50%,-50%) keeps bubbles in-bounds */
 const BUBBLES: Bubble[] = [
-  { label: 'Next.js', icon: 'nextjs', color: '#FFFFFF', size: 92, cx: 12, cy: 12, delay: 0, duration: 5.8, ampY: 10, ampX: 5 },
-  { label: 'React', icon: 'react', color: '#61DAFB', size: 86, cx: 38, cy: 10, delay: 0.06, duration: 6.4, ampY: 12, ampX: 6 },
-  { label: 'TypeScript', icon: 'typescript', color: '#3178C6', size: 88, cx: 62, cy: 12, delay: 0.1, duration: 5.5, ampY: 9, ampX: 5 },
-  { label: 'Node.js', icon: 'nodejs', color: '#339933', size: 90, cx: 88, cy: 11, delay: 0.14, duration: 6.8, ampY: 11, ampX: 4 },
-  { label: 'Python', icon: 'python', color: '#3776AB', size: 84, cx: 14, cy: 36, delay: 0.18, duration: 5.2, ampY: 13, ampX: 7 },
-  { label: 'PostgreSQL', icon: 'postgresql', color: '#4169E1', size: 88, cx: 36, cy: 38, delay: 0.22, duration: 7.0, ampY: 10, ampX: 5 },
-  { label: 'Supabase', icon: 'supabase', color: '#3ECF8E', size: 82, cx: 64, cy: 36, delay: 0.26, duration: 5.9, ampY: 12, ampX: 6 },
-  { label: 'Rust', icon: 'rust', color: '#DEA584', size: 78, cx: 86, cy: 38, delay: 0.3, duration: 6.2, ampY: 9, ampX: 5 },
-  { label: 'Docker', icon: 'docker', color: '#2496ED', size: 90, cx: 12, cy: 62, delay: 0.34, duration: 5.6, ampY: 11, ampX: 4 },
-  { label: 'OpenAI', icon: 'openai', color: '#10A37F', size: 86, cx: 38, cy: 64, delay: 0.38, duration: 6.6, ampY: 10, ampX: 7 },
-  { label: 'Vercel', icon: 'vercel', color: '#FFFFFF', size: 80, cx: 62, cy: 62, delay: 0.42, duration: 5.4, ampY: 13, ampX: 5 },
-  { label: 'Framer', icon: 'framer', color: '#0055FF', size: 88, cx: 88, cy: 64, delay: 0.46, duration: 6.9, ampY: 9, ampX: 6 },
-  { label: 'Redis', icon: 'redis', color: '#DC382D', size: 78, cx: 14, cy: 88, delay: 0.5, duration: 5.7, ampY: 12, ampX: 4 },
-  { label: 'AWS', icon: 'aws', color: '#FF9900', size: 84, cx: 36, cy: 86, delay: 0.54, duration: 6.3, ampY: 10, ampX: 6 },
-  { label: 'Tailwind', icon: 'tailwind', color: '#06B6D4', size: 90, cx: 64, cy: 88, delay: 0.58, duration: 5.8, ampY: 11, ampX: 5 },
-  { label: 'GraphQL', icon: 'graphql', color: '#E10098', size: 82, cx: 86, cy: 86, delay: 0.62, duration: 6.5, ampY: 10, ampX: 4 },
+  // Upper-right priority zone
+  { label: 'Next.js', icon: 'nextjs', color: '#FFFFFF', size: 88, cx: 78, cy: 8, delay: 0, duration: 5.8, rotateDuration: 9.2, pathY: [0, -14, 6, -8, 0], pathX: [0, 9, -5, 3, 0], rotate: [0, 3, -2, 2, 0] },
+  { label: 'React', icon: 'react', color: '#61DAFB', size: 82, cx: 55, cy: 18, delay: 0.4, duration: 6.4, rotateDuration: 11.5, pathY: [0, 8, -11, 4, 0], pathX: [0, -7, 11, -3, 0], rotate: [0, -3, 2, -1, 0] },
+  { label: 'TypeScript', icon: 'typescript', color: '#3178C6', size: 86, cx: 91, cy: 22, delay: 0.9, duration: 5.5, rotateDuration: 8.7, pathY: [0, -9, 13, -5, 0], pathX: [0, 6, -9, 4, 0], rotate: [0, 2, -3, 1, 0] },
+  { label: 'Vercel', icon: 'vercel', color: '#FFFFFF', size: 76, cx: 42, cy: 14, delay: 1.3, duration: 7.1, rotateDuration: 10.3, pathY: [0, 11, -7, 9, 0], pathX: [0, -4, 8, -6, 0], rotate: [0, -2, 3, -2, 0] },
+  { label: 'LangChain', icon: 'langchain', color: '#41A688', size: 80, cx: 68, cy: 28, delay: 0.2, duration: 6.9, rotateDuration: 12.1, pathY: [0, -12, 5, -10, 0], pathX: [0, 10, -3, 7, 0], rotate: [0, 3, -1, 2, 0] },
+  { label: 'GitHub', icon: 'github', color: '#FFFFFF', size: 74, cx: 18, cy: 10, delay: 1.7, duration: 5.2, rotateDuration: 9.8, pathY: [0, 7, -13, 6, 0], pathX: [0, -8, 5, -4, 0], rotate: [0, -3, 2, -3, 0] },
+  { label: 'Framer', icon: 'framer', color: '#0055FF', size: 78, cx: 28, cy: 26, delay: 2.1, duration: 6.6, rotateDuration: 11.0, pathY: [0, -10, 8, -6, 0], pathX: [0, 5, -10, 6, 0], rotate: [0, 2, -2, 3, 0] },
+  { label: 'Stripe', icon: 'stripe', color: '#635BFF', size: 72, cx: 85, cy: 32, delay: 0.6, duration: 4.8, rotateDuration: 8.4, pathY: [0, 9, -8, 11, 0], pathX: [0, -6, 9, -5, 0], rotate: [0, -2, 3, -1, 0] },
+  // Mid scatter
+  { label: 'Node.js', icon: 'nodejs', color: '#339933', size: 90, cx: 48, cy: 42, delay: 1.1, duration: 7.4, rotateDuration: 10.6, pathY: [0, -15, 7, -9, 0], pathX: [0, 8, -7, 4, 0], rotate: [0, 3, -3, 2, 0] },
+  { label: 'Python', icon: 'python', color: '#3776AB', size: 84, cx: 72, cy: 48, delay: 1.5, duration: 5.9, rotateDuration: 9.5, pathY: [0, 10, -12, 5, 0], pathX: [0, -9, 6, -8, 0], rotate: [0, -2, 2, -3, 0] },
+  { label: 'Docker', icon: 'docker', color: '#2496ED', size: 88, cx: 22, cy: 52, delay: 2.3, duration: 6.2, rotateDuration: 11.8, pathY: [0, -8, 14, -7, 0], pathX: [0, 11, -4, 9, 0], rotate: [0, 2, -3, 1, 0] },
+  { label: 'Kubernetes', icon: 'kubernetes', color: '#326CE5', size: 80, cx: 58, cy: 58, delay: 0.8, duration: 8.1, rotateDuration: 12.4, pathY: [0, 12, -9, 8, 0], pathX: [0, -5, 10, -6, 0], rotate: [0, -3, 1, -2, 0] },
+  { label: 'OpenAI', icon: 'openai', color: '#10A37F', size: 86, cx: 88, cy: 55, delay: 1.9, duration: 5.4, rotateDuration: 9.1, pathY: [0, -11, 6, -13, 0], pathX: [0, 7, -8, 5, 0], rotate: [0, 3, -2, 3, 0] },
+  { label: 'Prisma', icon: 'prisma', color: '#2DD4BF', size: 76, cx: 38, cy: 65, delay: 2.5, duration: 6.7, rotateDuration: 10.9, pathY: [0, 8, -10, 7, 0], pathX: [0, -10, 4, -7, 0], rotate: [0, -1, 3, -2, 0] },
+  // Lower scatter
+  { label: 'PostgreSQL', icon: 'postgresql', color: '#4169E1', size: 86, cx: 65, cy: 72, delay: 0.3, duration: 7.8, rotateDuration: 11.3, pathY: [0, -13, 9, -6, 0], pathX: [0, 6, -11, 3, 0], rotate: [0, 2, -3, 2, 0] },
+  { label: 'Supabase', icon: 'supabase', color: '#3ECF8E', size: 82, cx: 15, cy: 72, delay: 1.4, duration: 5.6, rotateDuration: 8.9, pathY: [0, 11, -7, 10, 0], pathX: [0, -7, 9, -4, 0], rotate: [0, -3, 2, -1, 0] },
+  { label: 'MongoDB', icon: 'mongodb', color: '#47A248', size: 84, cx: 48, cy: 78, delay: 2.0, duration: 6.5, rotateDuration: 10.2, pathY: [0, -9, 12, -8, 0], pathX: [0, 9, -6, 8, 0], rotate: [0, 3, -1, 3, 0] },
+  { label: 'Rust', icon: 'rust', color: '#DEA584', size: 78, cx: 82, cy: 68, delay: 0.5, duration: 8.5, rotateDuration: 12.7, pathY: [0, 7, -14, 5, 0], pathX: [0, -8, 7, -9, 0], rotate: [0, -2, 3, -3, 0] },
+  { label: 'Redis', icon: 'redis', color: '#DC382D', size: 76, cx: 28, cy: 88, delay: 1.8, duration: 4.2, rotateDuration: 8.2, pathY: [0, -10, 8, -11, 0], pathX: [0, 10, -5, 6, 0], rotate: [0, 2, -2, 1, 0] },
+  { label: 'AWS', icon: 'aws', color: '#FF9900', size: 82, cx: 58, cy: 90, delay: 2.2, duration: 6.0, rotateDuration: 9.6, pathY: [0, 13, -8, 9, 0], pathX: [0, -6, 11, -5, 0], rotate: [0, -3, 1, -2, 0] },
+  { label: 'Tailwind', icon: 'tailwind', color: '#06B6D4', size: 88, cx: 75, cy: 85, delay: 1.0, duration: 7.2, rotateDuration: 11.6, pathY: [0, -12, 10, -7, 0], pathX: [0, 8, -9, 4, 0], rotate: [0, 3, -3, 2, 0] },
+  { label: 'GraphQL', icon: 'graphql', color: '#E10098', size: 80, cx: 92, cy: 82, delay: 2.4, duration: 5.7, rotateDuration: 10.5, pathY: [0, 9, -11, 6, 0], pathX: [0, -11, 5, -7, 0], rotate: [0, -2, 2, -3, 0] },
 ];
 
 function TechIcon({ id, color, size }: { id: IconId; color: string; size: number }) {
@@ -222,6 +237,61 @@ function TechIcon({ id, color, size }: { id: IconId; color: string; size: number
           <circle cx="19.5" cy="16.5" r="1.5" fill={color} />
         </svg>
       );
+    case 'mongodb':
+      return (
+        <svg {...s}>
+          <path
+            fill={color}
+            d="M12 2.5c-3.5 2.5-5.5 6-5.5 10.5 0 4 2 7 5.5 9 3.5-2 5.5-5 5.5-9 0-4.5-2-8-5.5-10.5z"
+          />
+          <path fill={color} opacity="0.5" d="M12 5c-2 1.5-3 4-3 7 0 2.5 1 4.5 3 6 2-1.5 3-3.5 3-6 0-3-1-5.5-3-7z" />
+        </svg>
+      );
+    case 'kubernetes':
+      return (
+        <svg {...s}>
+          <path
+            fill={color}
+            d="M12 3l1.2 3.6h3.8l-3.1 2.2 1.2 3.6L12 10.2l-3.1 2.2 1.2-3.6-3.1-2.2h3.8L12 3z"
+          />
+          <circle cx="12" cy="12" r="8" fill="none" stroke={color} strokeWidth="1.2" />
+          <path fill="none" stroke={color} strokeWidth="1" d="M12 8v8M8 12h8" />
+        </svg>
+      );
+    case 'prisma':
+      return (
+        <svg {...s}>
+          <path fill={color} d="M12 2L4 20h4.5l1-4h5l1 4H20L12 2zm0 6l2.5 6h-5L12 8z" />
+        </svg>
+      );
+    case 'stripe':
+      return (
+        <svg {...s}>
+          <path
+            fill={color}
+            d="M20 10.5c0-2.5-1.5-4.5-5.5-4.5-2 0-3.5.5-3.5 1.5 0 .8 1 1.2 2.5 1.5l1.5.3c3 .6 4.5 1.8 4.5 4.2 0 3-2.5 4.8-6.5 4.8-2 0-4-.3-5.5-1v-3.5c1.5 1 3.5 1.5 5.5 1.5 2 0 3-.5 3-1.5 0-.8-1-1.2-2.5-1.5l-1.5-.3c-3-.6-4.5-1.8-4.5-4.2z"
+          />
+        </svg>
+      );
+    case 'github':
+      return (
+        <svg {...s}>
+          <path
+            fill={color}
+            d="M12 2C6.5 2 2 6.6 2 12.2c0 4.5 2.9 8.3 6.9 9.6.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.3-3.4-1.3-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.7.3-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1.1-2.7-.1-.3-.5-1.3.1-2.7 0 0 .9-.3 2.9 1.1.8-.2 1.7-.3 2.6-.3s1.8.1 2.6.3c2-1.4 2.9-1.1 2.9-1.1.6 1.4.2 2.4.1 2.7.7.7 1.1 1.6 1.1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7 1 .7 2v3c0 .3.2.6.7.5 4-1.3 6.9-5.1 6.9-9.6C22 6.6 17.5 2 12 2z"
+          />
+        </svg>
+      );
+    case 'langchain':
+      return (
+        <svg {...s}>
+          <circle cx="6" cy="12" r="3" fill={color} />
+          <circle cx="18" cy="12" r="3" fill={color} />
+          <path fill="none" stroke={color} strokeWidth="1.5" d="M9 12h6" />
+          <circle cx="12" cy="6" r="2" fill={color} opacity="0.7" />
+          <circle cx="12" cy="18" r="2" fill={color} opacity="0.7" />
+        </svg>
+      );
     default:
       return null;
   }
@@ -232,22 +302,22 @@ const TechBubbles: React.FC = () => {
   const [hovered, setHovered] = useState<string | null>(null);
 
   return (
-    <div className="relative w-full h-full min-h-[520px]" aria-hidden="true">
+    <div className="absolute inset-0" aria-hidden="true">
       <div
         style={{
           position: 'absolute',
           inset: '0%',
           borderRadius: '50%',
           background:
-            'radial-gradient(ellipse 90% 80% at 50% 50%, rgba(0,212,255,0.1) 0%, rgba(99,102,241,0.05) 45%, transparent 70%)',
+            'radial-gradient(ellipse 90% 80% at 55% 35%, rgba(0,212,255,0.1) 0%, rgba(99,102,241,0.05) 45%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
 
       {BUBBLES.map((b) => {
         const isHover = hovered === b.label;
-        const iconPx = b.size >= 90 ? 26 : b.size >= 84 ? 22 : 20;
-        const fontSize = b.size >= 90 ? 10 : 9;
+        const iconPx = b.size >= 88 ? 24 : b.size >= 82 ? 22 : 20;
+        const fontSize = b.size >= 88 ? 10 : 9;
 
         return (
           <motion.div
@@ -255,19 +325,20 @@ const TechBubbles: React.FC = () => {
             initial={{ opacity: 0, scale: 0.65 }}
             animate={
               reduced
-                ? { opacity: 1, scale: 1, x: 0, y: 0 }
+                ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 }
                 : {
                     opacity: 1,
                     scale: isHover ? 1.08 : 1,
-                    y: [0, -b.ampY, b.ampY * 0.4, 0],
-                    x: [0, b.ampX, -b.ampX * 0.6, 0],
+                    y: b.pathY,
+                    x: b.pathX,
+                    rotate: b.rotate,
                   }
             }
             transition={
               reduced
                 ? { duration: 0.4, delay: 0.85 + b.delay }
                 : {
-                    opacity: { duration: 0.45, delay: 0.9 + b.delay },
+                    opacity: { duration: 0.45, delay: 0.9 + b.delay * 0.3 },
                     scale: { duration: 0.22 },
                     y: {
                       duration: b.duration,
@@ -276,8 +347,14 @@ const TechBubbles: React.FC = () => {
                       ease: 'easeInOut',
                     },
                     x: {
-                      duration: b.duration * 1.12,
-                      delay: b.delay + 0.15,
+                      duration: b.duration * 1.18,
+                      delay: b.delay + 0.35,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                    },
+                    rotate: {
+                      duration: b.rotateDuration,
+                      delay: b.delay + 0.5,
                       repeat: Infinity,
                       ease: 'easeInOut',
                     },

@@ -42,7 +42,7 @@ const TEAM: TeamMember[] = [
     emoji: '📈',
     stats: [
       { label: 'Avg ROAS',         value: '4.8x' },
-      { label: 'Campaigns Managed',value: '50+' },
+      { label: 'Campaigns Managed',value: '20+' },
       { label: 'Lead Cost Reduction',value: '45%' },
     ],
     accentColor: 'var(--rose)',

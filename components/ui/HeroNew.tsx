@@ -99,7 +99,7 @@ const HeroNew: React.FC = () => {
       <ParticleCanvas />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-8 items-stretch">
         <div style={{ maxWidth: 700 }}>
           {/* Eyebrow */}
           <motion.div
@@ -285,7 +285,7 @@ const HeroNew: React.FC = () => {
         </div>
 
           {/* Floating tech bubbles — desktop right column */}
-          <div className="hidden lg:flex items-center justify-end min-h-[520px] w-full">
+          <div className="hidden lg:block relative w-full min-h-[560px] self-stretch">
             <TechBubbles />
           </div>
         </div>

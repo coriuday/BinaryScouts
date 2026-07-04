@@ -92,8 +92,8 @@ export default function WorkPage() {
               style={{ borderTop: '1px solid var(--glass-border-1)' }}
             >
               {[
-                { label: '50+', sub: 'Systems shipped' },
-                { label: '$2M+', sub: 'Revenue generated' },
+                { label: '20+', sub: 'Systems shipped' },
+                { label: '1M+ INR', sub: 'Revenue generated' },
                 { label: '98%', sub: 'Client retention' },
                 { label: '3×', sub: 'Avg ROI delivered' },
               ].map(({ label, sub }, i) => (

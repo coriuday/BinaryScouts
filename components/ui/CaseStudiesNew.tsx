@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { ExternalLink, X } from 'lucide-react';
 import { getFeaturedProjects, type Project } from '@/lib/projects';
+import SitePreview from '@/components/ui/SitePreview';
 
 const ACCENTS = [
   { accent: '#00d4ff', accentBg: 'rgba(0,212,255,0.08)' },
@@ -59,27 +60,15 @@ const CaseStudyCard: React.FC<{
       }}
     >
       <div
-        className="w-full md:w-[38%] flex items-center justify-center p-8 md:p-12"
-        style={{ background: accentBg, minHeight: 180 }}
+        className="w-full md:w-[38%] relative"
+        style={{ minHeight: 200, background: accentBg }}
       >
-        <div
-          style={{
-            width: 72,
-            height: 72,
-            borderRadius: 18,
-            background: project.gradient,
-            boxShadow: `0 0 32px ${accent}44`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontFamily: 'var(--font-syne)',
-            fontWeight: 700,
-            fontSize: 22,
-            color: '#fff',
-          }}
-        >
-          {project.title.slice(0, 2).toUpperCase()}
-        </div>
+        <SitePreview
+          url={project.liveUrl}
+          title={project.title}
+          accent={accent}
+          gradient={project.gradient}
+        />
       </div>
 
       <div className="flex-1 p-6 md:p-8 flex flex-col justify-center">
@@ -251,6 +240,18 @@ const ProjectToast: React.FC<{
             <X size={16} />
           </button>
         </div>
+
+        {project.liveUrl && (
+          <div style={{ marginBottom: 16 }}>
+            <SitePreview
+              url={project.liveUrl}
+              title={project.title}
+              accent={accent}
+              gradient={project.gradient}
+              compact
+            />
+          </div>
+        )}
 
         <h2
           id="project-toast-title"

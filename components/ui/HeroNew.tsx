@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import ParticleCanvas from '@/components/ui/ParticleCanvas';
+import TechBubbles from '@/components/ui/TechBubbles';
 
 /* ── Counter-up hook ─────────────────────────────────── */
 function useCountUp(end: number, duration: number, inView: boolean, delay = 0) {
@@ -98,6 +99,7 @@ const HeroNew: React.FC = () => {
       <ParticleCanvas />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-8 items-center">
         <div style={{ maxWidth: 700 }}>
           {/* Eyebrow */}
           <motion.div
@@ -280,6 +282,12 @@ const HeroNew: React.FC = () => {
               </div>
             ))}
           </motion.div>
+        </div>
+
+          {/* Floating tech bubbles — desktop right column */}
+          <div className="hidden lg:flex items-center justify-end min-h-[420px]">
+            <TechBubbles />
+          </div>
         </div>
       </div>
 

@@ -78,4 +78,10 @@ services:
       - key: RESEND_API_KEY
         sync: false
       - key: CONTACT_TO_EMAIL
-        value: hello@binaryscouts.com
+        value: thebinaryscouts@gmail.com
+      - key: NEXT_PUBLIC_CONTACT_EMAIL
+        value: thebinaryscouts@gmail.com
+      - key: NEXT_PUBLIC_WHATSAPP_NUMBER
+        value: "916301464708"
+      - key: NEXT_PUBLIC_WHATSAPP_MESSAGE
+        value: "Hi BinaryScouts! I'd like to discuss a project with you."

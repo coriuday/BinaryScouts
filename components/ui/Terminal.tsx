@@ -147,7 +147,7 @@ const Terminal: React.FC = () => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 font-mono text-xs animate-fade-up">
+    <div className="fixed bottom-6 right-28 z-50 font-mono text-xs animate-fade-up">
       <div
         className="flex flex-col transition-all duration-300 overflow-hidden rounded-2xl"
         style={{

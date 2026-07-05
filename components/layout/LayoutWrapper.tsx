@@ -5,6 +5,7 @@ import { AudioProvider } from '@/components/hooks/AudioProvider';
 import CustomCursor from '@/components/layout/CustomCursor';
 import CrewTicker from '@/components/layout/CrewTicker';
 import Terminal from '@/components/ui/Terminal';
+import WhatsAppFab from '@/components/ui/WhatsAppFab';
 import ScrollProgressBar from '@/components/motion/ScrollProgressBar';
 import ClickRipple from '@/components/motion/ClickRipple';
 
@@ -39,6 +40,7 @@ export default function LayoutWrapper({ children, bodyClass }: LayoutWrapperProp
 
           {children}
 
+          {mounted && <WhatsAppFab />}
           <Terminal />
         </AudioProvider>
     </body>

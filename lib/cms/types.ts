@@ -80,6 +80,13 @@ export type ContactEngagement = {
   discoveryCall: string;
 };
 
+export type ContactInfo = {
+  email: string;
+  whatsappE164: string;
+  whatsappMessage: string;
+  phoneDisplay: string;
+};
+
 export function mapDbProject(row: DbProject): Project {
   return {
     id: row.id,

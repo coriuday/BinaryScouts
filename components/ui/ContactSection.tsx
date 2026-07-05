@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { getContactEmail } from '@/lib/site-contact';
 
 const ContactSection: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -43,7 +44,7 @@ const ContactSection: React.FC = () => {
       setStatus('idle');
     } catch {
       setStatus('error');
-      setError('Network error. Email us at hello@binaryscouts.com.');
+      setError(`Network error. Email us at ${getContactEmail()}.`);
     }
   };
 

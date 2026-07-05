@@ -1,6 +1,9 @@
 'use client';
 
 import LegalPage from '@/components/pages/LegalPage';
+import { getContactEmail } from '@/lib/site-contact';
+
+const contactEmail = getContactEmail();
 
 const PRIVACY_SECTIONS = [
   {
@@ -34,7 +37,7 @@ const PRIVACY_SECTIONS = [
   {
     title: 'Contact',
     paragraphs: [
-      'For privacy requests, email hello@binaryscouts.com. We will respond within a reasonable timeframe.',
+      `For privacy requests, email ${contactEmail}. We will respond within a reasonable timeframe.`,
     ],
   },
 ];

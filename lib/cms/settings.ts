@@ -3,10 +3,12 @@ import {
   DEFAULT_CONTACT_ENGAGEMENT,
   DEFAULT_HERO_STATS,
   type ContactEngagement,
+  type ContactInfo,
   type HeroStats,
 } from '@/lib/cms/types';
+import { DEFAULT_CONTACT_INFO } from '@/lib/site-contact';
 
-export type { HeroStats, ContactEngagement };
+export type { HeroStats, ContactEngagement, ContactInfo };
 
 export async function getHeroStats(): Promise<HeroStats> {
   const db = createServiceClient();
@@ -26,9 +28,26 @@ export async function getContactEngagement(): Promise<ContactEngagement> {
   return { ...DEFAULT_CONTACT_ENGAGEMENT, ...(data.value as ContactEngagement) };
 }
 
-export async function getSiteSettings(): Promise<{ heroStats: HeroStats; contactEngagement: ContactEngagement }> {
-  const [heroStats, contactEngagement] = await Promise.all([getHeroStats(), getContactEngagement()]);
-  return { heroStats, contactEngagement };
+export async function getContactInfo(): Promise<ContactInfo> {
+  const db = createServiceClient();
+  if (!db) return DEFAULT_CONTACT_INFO;
+
+  const { data } = await db.from('site_settings').select('value').eq('key', 'contact_info').maybeSingle();
+  if (!data?.value) return DEFAULT_CONTACT_INFO;
+  return { ...DEFAULT_CONTACT_INFO, ...(data.value as ContactInfo) };
+}
+
+export async function getSiteSettings(): Promise<{
+  heroStats: HeroStats;
+  contactEngagement: ContactEngagement;
+  contactInfo: ContactInfo;
+}> {
+  const [heroStats, contactEngagement, contactInfo] = await Promise.all([
+    getHeroStats(),
+    getContactEngagement(),
+    getContactInfo(),
+  ]);
+  return { heroStats, contactEngagement, contactInfo };
 }
 
 export async function updateSiteSetting(key: string, value: Record<string, unknown>): Promise<boolean> {

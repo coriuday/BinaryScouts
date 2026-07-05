@@ -105,7 +105,7 @@ ADMIN_SESSION_SECRET=another-long-random-string
 
 # Optional: contact form email delivery (Resend)
 RESEND_API_KEY=
-CONTACT_TO_EMAIL=hello@binaryscouts.com
+CONTACT_TO_EMAIL=thebinaryscouts@gmail.com
 
 # Python AI service only (never put this in Next.js client config)
 GEMINI_API_KEY=your_gemini_api_key_here

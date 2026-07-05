@@ -10,7 +10,8 @@ import {
 } from 'lucide-react';
 import { PROJECT_CATEGORIES, type Project, type ProjectStatus } from '@/lib/projects';
 import type { Review } from '@/lib/review-types';
-import type { DbTeamMember, DbContactLead, HeroStats, ContactEngagement } from '@/lib/cms/types';
+import type { DbTeamMember, DbContactLead, HeroStats, ContactEngagement, ContactInfo } from '@/lib/cms/types';
+import { DEFAULT_CONTACT_INFO } from '@/lib/site-contact';
 import { adminLogout } from '@/lib/admin-auth';
 import { ease, dur } from '@/lib/motion';
 import Logo from '@/components/ui/Logo';
@@ -98,6 +99,7 @@ const AdminDashboardPage: React.FC = () => {
   const [leads, setLeads] = useState<DbContactLead[]>([]);
   const [heroStats, setHeroStats] = useState<HeroStats>({ systemsBuilt: 15, revenueLabel: '₹1M+ INR', clientRetention: 98, avgRating: 4.9 });
   const [contactEngagement, setContactEngagement] = useState<ContactEngagement>({ typicalRange: '₹10L – ₹50L', responseTime: '<24 hours', discoveryCall: '30 min, free' });
+  const [contactInfo, setContactInfo] = useState<ContactInfo>(DEFAULT_CONTACT_INFO);
   const [loading, setLoading] = useState({ projects: false, team: false, reviews: false, leads: false, settings: false });
   const [editingProject, setEditingProject] = useState<Project | null | undefined>(undefined);
   const [editingMember, setEditingMember] = useState<DbTeamMember | null | undefined>(undefined);
@@ -170,6 +172,7 @@ const AdminDashboardPage: React.FC = () => {
         const data = await res.json();
         if (data.heroStats) setHeroStats(data.heroStats);
         if (data.contactEngagement) setContactEngagement(data.contactEngagement);
+        if (data.contactInfo) setContactInfo(data.contactInfo);
       }
     } finally {
       setLoading((s) => ({ ...s, settings: false }));
@@ -213,12 +216,13 @@ const AdminDashboardPage: React.FC = () => {
     const res = await fetch('/api/admin/settings', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ heroStats, contactEngagement }),
+      body: JSON.stringify({ heroStats, contactEngagement, contactInfo }),
     });
     if (res.ok) {
       const data = await res.json();
       if (data.heroStats) setHeroStats(data.heroStats);
       if (data.contactEngagement) setContactEngagement(data.contactEngagement);
+      if (data.contactInfo) setContactInfo(data.contactInfo);
     }
     setSettingsSaving(false);
   };
@@ -558,6 +562,25 @@ const AdminDashboardPage: React.FC = () => {
                       <input type="number" step="0.1" className="admin-input" value={heroStats.avgRating} onChange={(e) => setHeroStats((s) => ({ ...s, avgRating: Number(e.target.value) }))} />
                     </label>
                   </div>
+                </div>
+                <div className="p-6 rounded-2xl" style={{ background: 'var(--glass-1)', border: '1px solid var(--glass-border-1)' }}>
+                  <h2 className="font-display font-bold text-base mb-4" style={{ color: 'var(--text-primary)' }}>Contact Info</h2>
+                  <label className="flex flex-col gap-1 mb-4">
+                    <span className="font-sans text-xs" style={{ color: 'var(--text-muted)' }}>Email</span>
+                    <input className="admin-input" value={contactInfo.email} onChange={(e) => setContactInfo((s) => ({ ...s, email: e.target.value }))} />
+                  </label>
+                  <label className="flex flex-col gap-1 mb-4">
+                    <span className="font-sans text-xs" style={{ color: 'var(--text-muted)' }}>Phone display</span>
+                    <input className="admin-input" value={contactInfo.phoneDisplay} onChange={(e) => setContactInfo((s) => ({ ...s, phoneDisplay: e.target.value }))} placeholder="+91 63014 64708" />
+                  </label>
+                  <label className="flex flex-col gap-1 mb-4">
+                    <span className="font-sans text-xs" style={{ color: 'var(--text-muted)' }}>WhatsApp number (E.164, no +)</span>
+                    <input className="admin-input" value={contactInfo.whatsappE164} onChange={(e) => setContactInfo((s) => ({ ...s, whatsappE164: e.target.value.replace(/\D/g, '') }))} placeholder="916301464708" />
+                  </label>
+                  <label className="flex flex-col gap-1">
+                    <span className="font-sans text-xs" style={{ color: 'var(--text-muted)' }}>WhatsApp pre-filled message</span>
+                    <textarea className="admin-input min-h-[80px]" value={contactInfo.whatsappMessage} onChange={(e) => setContactInfo((s) => ({ ...s, whatsappMessage: e.target.value }))} />
+                  </label>
                 </div>
                 <div className="p-6 rounded-2xl" style={{ background: 'var(--glass-1)', border: '1px solid var(--glass-border-1)' }}>
                   <h2 className="font-display font-bold text-base mb-4" style={{ color: 'var(--text-primary)' }}>Contact Engagement</h2>

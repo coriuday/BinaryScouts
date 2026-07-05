@@ -10,6 +10,7 @@ import { PROJECTS } from '../lib/projects';
 import { TEAM_MEMBERS } from '../lib/team';
 import { FLIP_TEAM_MEMBERS } from '../lib/flip-team';
 import { DEFAULT_CONTACT_ENGAGEMENT, DEFAULT_HERO_STATS } from '../lib/cms/types';
+import { DEFAULT_CONTACT_INFO } from '../lib/site-contact';
 
 function loadEnv() {
   const envPath = path.join(process.cwd(), '.env.local');
@@ -97,6 +98,7 @@ async function main() {
   await db.from('site_settings').upsert([
     { key: 'hero_stats', value: DEFAULT_HERO_STATS },
     { key: 'contact_engagement', value: DEFAULT_CONTACT_ENGAGEMENT },
+    { key: 'contact_info', value: DEFAULT_CONTACT_INFO },
   ]);
 
   const reviewsDir = path.join(process.cwd(), 'data', 'reviews');

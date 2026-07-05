@@ -273,7 +273,15 @@ async function main() {
       ...(process.env.RESEND_API_KEY
         ? [{ key: 'RESEND_API_KEY', value: process.env.RESEND_API_KEY }]
         : []),
-      { key: 'CONTACT_TO_EMAIL', value: process.env.CONTACT_TO_EMAIL || 'hello@binaryscouts.com' },
+      { key: 'CONTACT_TO_EMAIL', value: process.env.CONTACT_TO_EMAIL || 'thebinaryscouts@gmail.com' },
+      { key: 'NEXT_PUBLIC_CONTACT_EMAIL', value: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'thebinaryscouts@gmail.com' },
+      { key: 'NEXT_PUBLIC_WHATSAPP_NUMBER', value: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '916301464708' },
+      {
+        key: 'NEXT_PUBLIC_WHATSAPP_MESSAGE',
+        value:
+          process.env.NEXT_PUBLIC_WHATSAPP_MESSAGE ||
+          "Hi BinaryScouts! I'd like to discuss a project with you.",
+      },
     ];
     await upsertEnvVars(webService.id, webVars);
     console.log(`Updated env on ${webService.name}`);

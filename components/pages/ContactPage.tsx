@@ -7,21 +7,37 @@ import Footer from '@/components/layout/Footer';
 import PageTransition from '@/components/motion/PageTransition';
 import { Mail, MessageSquare, Send, Sparkles, CheckCircle, Loader2, MapPin, Clock, Phone } from 'lucide-react';
 import { ease, dur, viewport } from '@/lib/motion';
+import { getContactEmail, getPhoneDisplay, getWhatsAppUrl } from '@/lib/site-contact';
+
+const contactEmail = getContactEmail();
+const phoneDisplay = getPhoneDisplay();
+const whatsAppUrl = getWhatsAppUrl();
 
 const INFO_CARDS = [
   {
     icon: Mail,
     title: 'Email',
-    value: 'hello@binaryscouts.com',
+    value: contactEmail,
+    href: `mailto:${contactEmail}`,
     sub: 'Usually responds within 4 hours',
     gradient: 'linear-gradient(135deg, rgba(139,92,246,0.14), rgba(167,139,250,0.05))',
     iconColor: 'var(--accent)',
     border: 'rgba(139,92,246,0.22)',
   },
   {
+    icon: Phone,
+    title: 'WhatsApp',
+    value: phoneDisplay,
+    href: whatsAppUrl,
+    sub: 'Chat with us instantly',
+    gradient: 'linear-gradient(135deg, rgba(37,211,102,0.14), rgba(16,185,129,0.05))',
+    iconColor: '#25D366',
+    border: 'rgba(37,211,102,0.25)',
+  },
+  {
     icon: Clock,
     title: 'Availability',
-    value: 'Mon – Fri, 9am – 6pm GMT',
+    value: 'Mon – Fri, 9am – 6pm IST',
     sub: 'Emergency support available',
     gradient: 'linear-gradient(135deg, rgba(236,72,153,0.12), rgba(244,114,182,0.05))',
     iconColor: 'var(--rose)',
@@ -66,7 +82,7 @@ export default function ContactPage() {
       setStatus('success');
     } catch {
       setStatus('error');
-      setError('Network error. Email hello@binaryscouts.com.');
+      setError(`Network error. Email ${getContactEmail()}.`);
     }
   };
 
@@ -104,34 +120,53 @@ export default function ContactPage() {
           </motion.div>
 
           {/* Info cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
-            {INFO_CARDS.map((card, i) => (
-              <motion.div
-                key={card.title}
-                initial={{ opacity: 0, y: 20, filter: 'blur(5px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                transition={{ duration: 0.6, delay: 0.1 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
-                className="glass-card rounded-2xl p-5 flex items-center gap-4"
-              >
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: card.gradient, border: `1px solid ${card.border}` }}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+            {INFO_CARDS.map((card, i) => {
+              const inner = (
+                <>
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: card.gradient, border: `1px solid ${card.border}` }}
+                  >
+                    <card.icon size={16} style={{ color: card.iconColor }} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-sans text-[10px] uppercase tracking-wider mb-0.5" style={{ color: 'var(--text-muted)' }}>
+                      {card.title}
+                    </p>
+                    <p className="font-sans text-sm font-semibold truncate" style={{ color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+                      {card.value}
+                    </p>
+                    <p className="font-sans text-[10px]" style={{ color: 'var(--text-muted)' }}>
+                      {card.sub}
+                    </p>
+                  </div>
+                </>
+              );
+              return (
+                <motion.div
+                  key={card.title}
+                  initial={{ opacity: 0, y: 20, filter: 'blur(5px)' }}
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  transition={{ duration: 0.6, delay: 0.1 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                  className="glass-card rounded-2xl p-5 flex items-center gap-4"
                 >
-                  <card.icon size={16} style={{ color: card.iconColor }} />
-                </div>
-                <div className="min-w-0">
-                  <p className="font-sans text-[10px] uppercase tracking-wider mb-0.5" style={{ color: 'var(--text-muted)' }}>
-                    {card.title}
-                  </p>
-                  <p className="font-sans text-sm font-semibold truncate" style={{ color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
-                    {card.value}
-                  </p>
-                  <p className="font-sans text-[10px]" style={{ color: 'var(--text-muted)' }}>
-                    {card.sub}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+                  {'href' in card && card.href ? (
+                    <a
+                      href={card.href}
+                      target={card.href.startsWith('http') ? '_blank' : undefined}
+                      rel={card.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                      className="flex items-center gap-4 w-full no-underline"
+                      style={{ color: 'inherit' }}
+                    >
+                      {inner}
+                    </a>
+                  ) : (
+                    inner
+                  )}
+                </motion.div>
+              );
+            })}
           </div>
 
           {/* Main form card */}

@@ -1,6 +1,9 @@
 'use client';
 
 import LegalPage from '@/components/pages/LegalPage';
+import { getContactEmail } from '@/lib/site-contact';
+
+const contactEmail = getContactEmail();
 
 const TERMS_SECTIONS = [
   {
@@ -34,7 +37,7 @@ const TERMS_SECTIONS = [
   {
     title: 'Contact',
     paragraphs: [
-      'Questions about these terms: hello@binaryscouts.com.',
+      `Questions about these terms: ${contactEmail}.`,
     ],
   },
 ];

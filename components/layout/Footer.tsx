@@ -3,8 +3,9 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { CheckCircle, Sparkles } from 'lucide-react';
+import { CheckCircle, Mail, Phone, Sparkles } from 'lucide-react';
 import Logo from '@/components/ui/Logo';
+import { useContactInfo } from '@/components/hooks/useContactInfo';
 
 const SOLUTIONS = [
   { label: 'AI Systems',         href: '/#services' },
@@ -27,7 +28,19 @@ const SOCIALS = [
   { label: 'Twitter',   href: 'https://x.com', abbr: 'X' },
 ];
 
+const contactLinkStyle: React.CSSProperties = {
+  fontFamily: 'var(--font-inter)',
+  fontSize: 14,
+  color: 'var(--text-2)',
+  textDecoration: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  gap: 8,
+  transition: 'color 0.2s',
+};
+
 const Footer: React.FC = () => {
+  const { email: contactEmail, phoneDisplay, whatsappUrl } = useContactInfo();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [subStatus, setSubStatus] = useState<'idle' | 'loading' | 'error'>('idle');
@@ -124,6 +137,30 @@ const Footer: React.FC = () => {
                   {social.abbr}
                 </a>
               ))}
+            </div>
+
+            <div className="mt-6 space-y-2.5">
+              <a
+                href={`mailto:${contactEmail}`}
+                style={contactLinkStyle}
+                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--indigo)')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-2)')}
+              >
+                <Mail size={14} aria-hidden />
+                {contactEmail}
+              </a>
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Chat on WhatsApp"
+                style={contactLinkStyle}
+                onMouseEnter={(e) => (e.currentTarget.style.color = '#25D366')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-2)')}
+              >
+                <Phone size={14} aria-hidden />
+                {phoneDisplay}
+              </a>
             </div>
           </div>
 

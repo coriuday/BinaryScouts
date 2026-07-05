@@ -1,12 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import {
-  DEFAULT_CONTACT_INFO,
-  mergeContactInfo,
-  type ContactInfo,
-  whatsAppUrlFromInfo,
-} from '@/lib/site-contact';
+import { useContactInfo } from '@/components/hooks/useContactInfo';
 
 function WhatsAppIcon() {
   return (
@@ -17,24 +12,16 @@ function WhatsAppIcon() {
 }
 
 export default function WhatsAppFab() {
-  const [info, setInfo] = useState<ContactInfo>(DEFAULT_CONTACT_INFO);
+  const { whatsappUrl } = useContactInfo();
   const [reduceMotion, setReduceMotion] = useState(false);
 
   useEffect(() => {
     setReduceMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    fetch('/api/cms/settings')
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.contactInfo) setInfo(mergeContactInfo(d.contactInfo));
-      })
-      .catch(() => {});
   }, []);
-
-  const href = whatsAppUrlFromInfo(info);
 
   return (
     <a
-      href={href}
+      href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat on WhatsApp"

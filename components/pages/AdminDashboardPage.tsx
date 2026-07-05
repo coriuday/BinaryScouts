@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, FolderOpen, Users, LogOut, Plus, Edit3, Trash2,
   ExternalLink, Sparkles, ChevronRight, X, CheckCircle, Save,
-  Globe, Zap, MessageSquare, Inbox, Settings,
+  Globe, Zap, MessageSquare, Inbox, Settings, Mail,
 } from 'lucide-react';
 import { PROJECT_CATEGORIES, type Project, type ProjectStatus } from '@/lib/projects';
 import type { Review } from '@/lib/review-types';
@@ -19,6 +19,28 @@ import ProjectFormModal from '@/components/admin/ProjectFormModal';
 import TeamFormModal from '@/components/admin/TeamFormModal';
 
 type Tab = 'overview' | 'projects' | 'team' | 'reviews' | 'leads' | 'settings';
+
+function buildLeadMailto(lead: DbContactLead): string {
+  const subject =
+    lead.type === 'newsletter'
+      ? 'Binary Scouts newsletter — thanks for subscribing'
+      : 'Re: Your Binary Scouts inquiry';
+
+  const params = new URLSearchParams();
+  params.set('subject', subject);
+
+  if (lead.type === 'contact') {
+    const parts: string[] = [];
+    if (lead.name) parts.push(`Hi ${lead.name},`);
+    if (lead.message) {
+      const excerpt = lead.message.length > 200 ? `${lead.message.slice(0, 200)}…` : lead.message;
+      parts.push('', 'Regarding your inquiry:', excerpt);
+    }
+    if (parts.length > 0) params.set('body', parts.join('\n'));
+  }
+
+  return `mailto:${lead.email}?${params.toString()}`;
+}
 
 const NavItem: React.FC<{
   icon: React.ReactNode;
@@ -564,13 +586,18 @@ const AdminDashboardPage: React.FC = () => {
               ) : (
                 <div className="flex flex-col gap-3">
                   {leads.map((lead) => (
-                    <div
+                    <a
                       key={lead.id}
-                      className="p-5 rounded-2xl"
+                      href={buildLeadMailto(lead)}
+                      onClick={() => {
+                        if (!lead.read) void handleMarkLeadRead(lead.id);
+                      }}
+                      className="block p-5 rounded-2xl cursor-pointer transition-colors hover:border-[var(--accent)]/40 no-underline"
                       style={{
                         border: `1px solid ${lead.read ? 'var(--glass-border-1)' : 'var(--accent)'}`,
                         background: lead.read ? 'var(--glass-1)' : 'var(--accent-light)',
                         opacity: lead.read ? 0.85 : 1,
+                        color: 'inherit',
                       }}
                     >
                       <div className="flex items-start justify-between gap-4 mb-2">
@@ -588,12 +615,27 @@ const AdminDashboardPage: React.FC = () => {
                       {lead.budget && <p className="font-sans text-xs mb-1" style={{ color: 'var(--text-secondary)' }}>Budget: {lead.budget}</p>}
                       {lead.timeline && <p className="font-sans text-xs mb-1" style={{ color: 'var(--text-secondary)' }}>Timeline: {lead.timeline}</p>}
                       {lead.message && <p className="font-sans text-sm mt-2" style={{ color: 'var(--text-secondary)', lineHeight: 1.5 }}>{lead.message}</p>}
-                      {!lead.read && (
-                        <button onClick={() => handleMarkLeadRead(lead.id)} className="mt-3 font-sans text-xs font-semibold" style={{ color: 'var(--accent)' }}>
-                          Mark as read
-                        </button>
-                      )}
-                    </div>
+                      <div className="flex items-center justify-between mt-3 gap-3">
+                        <span className="inline-flex items-center gap-1.5 font-sans text-xs font-semibold" style={{ color: 'var(--accent)' }}>
+                          <Mail size={12} />
+                          Click to email
+                        </span>
+                        {!lead.read && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              void handleMarkLeadRead(lead.id);
+                            }}
+                            className="font-sans text-xs font-semibold"
+                            style={{ color: 'var(--text-muted)' }}
+                          >
+                            Mark as read
+                          </button>
+                        )}
+                      </div>
+                    </a>
                   ))}
                 </div>
               )}

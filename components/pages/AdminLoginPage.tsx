@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Lock, Sparkles, AlertCircle } from 'lucide-react';
@@ -13,6 +13,14 @@ const AdminLoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [autofillBlocked, setAutofillBlocked] = useState(true);
+
+  useEffect(() => {
+    setPassword('');
+    setShowPassword(false);
+    setError('');
+    setAutofillBlocked(true);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,6 +31,7 @@ const AdminLoginPage: React.FC = () => {
 
     const result = await adminLogin(password);
     if (result.ok) {
+      setPassword('');
       router.replace('/admin');
       router.refresh();
     } else {
@@ -123,19 +132,22 @@ const AdminLoginPage: React.FC = () => {
             transition={{ duration: dur.base, ease: ease.out, delay: 0.25 }}
             onSubmit={handleSubmit}
             className="flex flex-col gap-4"
+            autoComplete="off"
           >
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
+                name="admin-access-key"
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
                   setError('');
                 }}
+                onFocus={() => setAutofillBlocked(false)}
+                readOnly={autofillBlocked}
                 placeholder="Enter admin password"
                 className="input-cinematic pr-12"
-                autoFocus
-                autoComplete="current-password"
+                autoComplete="new-password"
                 disabled={isLoading}
               />
               <button

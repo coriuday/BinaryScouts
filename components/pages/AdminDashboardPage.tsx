@@ -202,6 +202,16 @@ const AdminDashboardPage: React.FC = () => {
     if (res.ok) await loadReviews();
   };
 
+  const handleDeleteReview = async (id: string, name: string) => {
+    if (!confirm(`Delete review from "${name}"? This cannot be undone.`)) return;
+    const res = await fetch('/api/admin/reviews', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    });
+    if (res.ok) await loadReviews();
+  };
+
   const handleMarkLeadRead = async (id: string) => {
     await fetch('/api/admin/leads', {
       method: 'PATCH',
@@ -209,6 +219,21 @@ const AdminDashboardPage: React.FC = () => {
       body: JSON.stringify({ id, read: true }),
     });
     await loadLeads();
+  };
+
+  const handleMarkAllLeadsRead = async () => {
+    const res = await fetch('/api/admin/leads', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ markAllRead: true }),
+    });
+    if (res.ok) await loadLeads();
+  };
+
+  const handleDeleteAllLeads = async () => {
+    if (!confirm(`Delete all ${leads.length} leads? This cannot be undone.`)) return;
+    const res = await fetch('/api/admin/leads', { method: 'DELETE' });
+    if (res.ok) await loadLeads();
   };
 
   const handleSaveSettings = async () => {
@@ -460,12 +485,23 @@ const AdminDashboardPage: React.FC = () => {
                             {[review.role, review.company].filter(Boolean).join(' · ') || 'No role listed'}
                           </p>
                         </div>
-                        <span className="px-2.5 py-1 rounded-full font-sans text-[10px] font-bold uppercase" style={{
-                          background: review.status === 'approved' ? 'rgba(16,185,129,0.12)' : review.status === 'pending' ? 'rgba(245,158,11,0.12)' : 'rgba(239,68,68,0.12)',
-                          color: review.status === 'approved' ? '#10B981' : review.status === 'pending' ? '#F59E0B' : '#EF4444',
-                        }}>
-                          {review.status}
-                        </span>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <span className="px-2.5 py-1 rounded-full font-sans text-[10px] font-bold uppercase" style={{
+                            background: review.status === 'approved' ? 'rgba(16,185,129,0.12)' : review.status === 'pending' ? 'rgba(245,158,11,0.12)' : 'rgba(239,68,68,0.12)',
+                            color: review.status === 'approved' ? '#10B981' : review.status === 'pending' ? '#F59E0B' : '#EF4444',
+                          }}>
+                            {review.status}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteReview(review.id, review.name)}
+                            className="w-8 h-8 rounded-lg flex items-center justify-center"
+                            style={{ background: 'rgba(239,68,68,0.08)', color: '#EF4444' }}
+                            aria-label={`Delete review from ${review.name}`}
+                          >
+                            <Trash2 size={12} />
+                          </button>
+                        </div>
                       </div>
                       <p style={{ color: 'var(--amber)', fontSize: 12, marginBottom: 8 }}>{'★'.repeat(review.stars)}</p>
                       <p className="font-sans text-sm mb-4" style={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}>&ldquo;{review.quote}&rdquo;</p>
@@ -488,9 +524,38 @@ const AdminDashboardPage: React.FC = () => {
 
           {activeTab === 'leads' && (
             <motion.div key="leads" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: dur.base, ease: ease.out }}>
-              <div className="mb-8">
-                <h1 className="font-display font-bold text-3xl mb-1" style={{ color: 'var(--text-primary)', letterSpacing: '-0.04em' }}>Leads Inbox</h1>
-                <p className="font-sans text-sm" style={{ color: 'var(--text-muted)' }}>{unreadLeads} unread · {leads.length} total</p>
+              <div className="flex items-center justify-between mb-8 gap-4 flex-wrap">
+                <div>
+                  <h1 className="font-display font-bold text-3xl mb-1" style={{ color: 'var(--text-primary)', letterSpacing: '-0.04em' }}>Leads Inbox</h1>
+                  <p className="font-sans text-sm" style={{ color: 'var(--text-muted)' }}>{unreadLeads} unread · {leads.length} total</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={handleMarkAllLeadsRead}
+                    disabled={unreadLeads === 0}
+                    className="btn-secondary text-sm px-5 py-2.5"
+                    style={{ opacity: unreadLeads === 0 ? 0.5 : 1, cursor: unreadLeads === 0 ? 'not-allowed' : 'pointer' }}
+                  >
+                    Mark all as read
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleDeleteAllLeads}
+                    disabled={leads.length === 0}
+                    className="text-sm px-5 py-2.5 rounded-xl font-sans font-semibold"
+                    style={{
+                      border: '1px solid rgba(239,68,68,0.35)',
+                      color: '#EF4444',
+                      background: 'rgba(239,68,68,0.08)',
+                      opacity: leads.length === 0 ? 0.5 : 1,
+                      cursor: leads.length === 0 ? 'not-allowed' : 'pointer',
+                    }}
+                  >
+                    Clear all leads
+                  </button>
+                  <button type="button" onClick={loadLeads} className="btn-secondary text-sm px-5 py-2.5">Refresh</button>
+                </div>
               </div>
               {loading.leads ? (
                 <p className="font-sans text-sm" style={{ color: 'var(--text-muted)' }}>Loading…</p>

@@ -40,3 +40,25 @@ export async function markLeadRead(id: string, read = true): Promise<boolean> {
   const { error } = await db.from('contact_leads').update({ read }).eq('id', id);
   return !error;
 }
+
+export async function markAllLeadsRead(): Promise<number> {
+  const db = createServiceClient();
+  if (!db) return 0;
+
+  const { data, error } = await db
+    .from('contact_leads')
+    .update({ read: true })
+    .eq('read', false)
+    .select('id');
+
+  if (error) return 0;
+  return data?.length ?? 0;
+}
+
+export async function deleteAllLeads(): Promise<boolean> {
+  const db = createServiceClient();
+  if (!db) return false;
+
+  const { error } = await db.from('contact_leads').delete().gte('created_at', '1970-01-01');
+  return !error;
+}

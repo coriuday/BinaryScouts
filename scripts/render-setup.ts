@@ -77,19 +77,48 @@ async function listServices(): Promise<Service[]> {
   for (;;) {
     const q = new URLSearchParams({ limit: '100' });
     if (cursor) q.set('cursor', cursor);
-    const page = await api<{ cursor?: string; items: { service: Service }[] }>(
+    const page = await api<{ service: Service; cursor?: string }[]>(
       'GET',
       `/services?${q}`
     );
-    for (const item of page.items ?? []) out.push(item.service);
-    if (!page.cursor) break;
-    cursor = page.cursor;
+    if (!Array.isArray(page) || page.length === 0) break;
+    for (const item of page) {
+      if (item.service) out.push(item.service);
+    }
+    const next = page[page.length - 1]?.cursor;
+    if (!next || next === cursor) break;
+    cursor = next;
   }
   return out;
 }
 
-function serviceUrl(s: Service): string | undefined {
-  return s.serviceDetails?.url ?? (s.slug ? `https://${s.slug}.onrender.com` : undefined);
+async function resolveOwnerId(services: Service[]): Promise<string> {
+  const fromService = services.find((s) => s.ownerId)?.ownerId;
+  if (fromService) return fromService;
+  if (process.env.RENDER_OWNER_ID) return process.env.RENDER_OWNER_ID;
+
+  const owners = await api<{ owner: { id: string }; cursor?: string }[]>('GET', '/owners?limit=20');
+  const id = owners[0]?.owner?.id;
+  if (!id) {
+    throw new Error(
+      'Could not resolve Render ownerId. Set RENDER_OWNER_ID in .env.local (Workspace Settings → ID).'
+    );
+  }
+  return id;
+}
+
+function unwrapService(res: { service?: Service } | Service): Service {
+  if (res && typeof res === 'object' && 'service' in res && res.service) return res.service;
+  return res as Service;
+}
+
+function serviceUrl(s: Service | undefined): string | undefined {
+  if (!s) return undefined;
+  const details = s.serviceDetails as { url?: string } | undefined;
+  if (details?.url) return details.url.replace(/\/$/, '');
+  if (s.slug) return `https://${s.slug}.onrender.com`;
+  if (s.name) return `https://${s.name}.onrender.com`;
+  return undefined;
 }
 
 async function createWebService(
@@ -101,7 +130,7 @@ async function createWebService(
   startCommand: string,
   envVars: { key: string; value: string }[]
 ): Promise<Service> {
-  const created = await api<{ service: Service }>('POST', '/services', {
+  const created = await api<{ service: Service } | Service>('POST', '/services', {
     type: 'web_service',
     name,
     ownerId,
@@ -116,11 +145,13 @@ async function createWebService(
       plan: 'free',
     },
   });
-  return created.service;
+  return unwrapService(created);
 }
 
-async function putEnvVars(serviceId: string, vars: { key: string; value: string }[]) {
-  await api('PUT', `/services/${serviceId}/env-vars`, vars);
+async function upsertEnvVars(serviceId: string, vars: { key: string; value: string }[]) {
+  for (const { key, value } of vars) {
+    await api('PUT', `/services/${serviceId}/env-vars/${encodeURIComponent(key)}`, { value });
+  }
 }
 
 async function deploy(serviceId: string) {
@@ -128,8 +159,8 @@ async function deploy(serviceId: string) {
 }
 
 async function refreshService(id: string): Promise<Service> {
-  const res = await api<{ service: Service }>('GET', `/services/${id}`);
-  return res.service;
+  const res = await api<{ service: Service } | Service>('GET', `/services/${id}`);
+  return unwrapService(res);
 }
 
 async function main() {
@@ -144,17 +175,16 @@ async function main() {
   }
 
   const services = await listServices();
-  if (!services.length) {
-    throw new Error('No Render services on this account. Apply render.yaml blueprint first.');
-  }
-
-  const ownerId = services.find((s) => s.ownerId)?.ownerId;
-  if (!ownerId) throw new Error('Could not resolve Render ownerId from existing services.');
+  const ownerId = await resolveOwnerId(services);
+  console.log(`Found ${services.length} service(s), ownerId ${ownerId.slice(0, 8)}…`);
 
   const byName: Record<string, Service> = Object.fromEntries(services.map((s) => [s.name, s]));
   const pythonName = 'binaryscouts-python';
   const rustName = 'binaryscouts-rust';
-  const webName = 'binaryscouts';
+  const webService =
+    byName.binaryscouts ??
+    services.find((s) => s.slug === 'binaryscouts' || s.name?.toLowerCase() === 'binaryscouts');
+  const webName = webService?.name;
 
   if (!byName[pythonName]) {
     console.log(`Creating ${pythonName}…`);
@@ -173,7 +203,7 @@ async function main() {
       ]
     );
   } else if (process.env.GEMINI_API_KEY) {
-    await putEnvVars(byName[pythonName].id, [
+    await upsertEnvVars(byName[pythonName].id, [
       { key: 'GEMINI_API_KEY', value: process.env.GEMINI_API_KEY },
     ]);
   }
@@ -208,17 +238,23 @@ async function main() {
       { key: 'VAULT_DIR', value: 'vault' },
     ];
     if (pythonUrl) vars.push({ key: 'PYTHON_AI_BASE_URL', value: pythonUrl });
-    await putEnvVars(byName[rustName].id, vars);
+    await upsertEnvVars(byName[rustName].id, vars);
   }
 
   byName[rustName] = await refreshService(byName[rustName].id);
   const rustUrl = serviceUrl(byName[rustName]);
 
-  if (byName[webName]) {
+  if (webService) {
     const webVars = [
       { key: 'NEXT_PUBLIC_SITE_URL', value: 'https://binaryscouts.onrender.com' },
       { key: 'INTERNAL_API_KEY', value: internalKey },
-      ...(rustUrl ? [{ key: 'RUST_API_BASE_URL', value: rustUrl }] : []),
+      ...(rustUrl
+        ? [
+            { key: 'RUST_API_BASE_URL', value: rustUrl },
+            { key: 'RUST_API_URL', value: `${rustUrl}/api/chat` },
+            { key: 'RUST_API_URL_HEIST', value: `${rustUrl}/api/heist` },
+          ]
+        : []),
       ...(process.env.NEXT_PUBLIC_SUPABASE_URL
         ? [{ key: 'NEXT_PUBLIC_SUPABASE_URL', value: process.env.NEXT_PUBLIC_SUPABASE_URL }]
         : []),
@@ -239,11 +275,15 @@ async function main() {
         : []),
       { key: 'CONTACT_TO_EMAIL', value: process.env.CONTACT_TO_EMAIL || 'hello@binaryscouts.com' },
     ];
-    await putEnvVars(byName[webName].id, webVars);
-    console.log(`Updated env on ${webName}`);
+    await upsertEnvVars(webService.id, webVars);
+    console.log(`Updated env on ${webService.name}`);
+    byName[webService.name] = webService;
+  } else {
+    console.warn('Web service binaryscouts not found — set RUST_API_BASE_URL manually on Render.');
   }
 
-  for (const name of [pythonName, rustName, webName]) {
+  const deployNames = [pythonName, rustName, ...(webName ? [webName] : [])];
+  for (const name of deployNames) {
     if (byName[name]) {
       console.log(`Deploying ${name}…`);
       await deploy(byName[name].id);

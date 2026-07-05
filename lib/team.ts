@@ -38,6 +38,27 @@ export interface TeamMember {
 export const TEAM_MEMBERS: TeamMember[] = [
   {
     id: '1',
+    name: 'Mohammad Raashad',
+    role: 'Founder · Manager',
+    bio: 'Founder and manager overseeing delivery, client operations, and Python-based backend systems that power BinaryScouts projects.',
+    avatar: '/team/mohammad-raashad.jpg',
+    skills: [
+      { name: 'Python', level: 90, category: 'backend' },
+      { name: 'Django', level: 85, category: 'backend' },
+      { name: 'PostgreSQL', level: 82, category: 'backend' },
+      { name: 'Project Management', level: 92, category: 'other' },
+      { name: 'Client Operations', level: 90, category: 'other' },
+      { name: 'REST APIs', level: 84, category: 'backend' },
+    ],
+    socials: {
+      linkedin: 'https://www.linkedin.com/in/mohammed-raashad/',
+    },
+    badges: ['Founder', 'Manager', 'Python'],
+    experience: 4,
+    projectsShipped: 20,
+  },
+  {
+    id: '2',
     name: 'Uday Kumar Kori',
     role: 'Co-Founder · Lead & Senior Developer',
     bio: 'Full-stack and AI systems builder. Co-founder leading architecture, ML pipelines, and production-grade applications at BinaryScouts.',
@@ -61,7 +82,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     projectsShipped: 50,
   },
   {
-    id: '2',
+    id: '3',
     name: 'Ashish Kumar',
     role: 'Junior Developer · Generative AI Full Stack',
     bio: 'Generative AI full-stack developer shipping TypeScript, Next.js, Python, and modern ML-integrated products at BinaryScouts.',
@@ -82,27 +103,6 @@ export const TEAM_MEMBERS: TeamMember[] = [
     badges: ['Gen AI', 'Full Stack', 'Next.js'],
     experience: 2,
     projectsShipped: 8,
-  },
-  {
-    id: '3',
-    name: 'Mohammad Raashad',
-    role: 'Founder · Manager',
-    bio: 'Founder and manager overseeing delivery, client operations, and Python-based backend systems that power BinaryScouts projects.',
-    avatar: '/team/mohammad-raashad.jpg',
-    skills: [
-      { name: 'Python', level: 90, category: 'backend' },
-      { name: 'Django', level: 85, category: 'backend' },
-      { name: 'PostgreSQL', level: 82, category: 'backend' },
-      { name: 'Project Management', level: 92, category: 'other' },
-      { name: 'Client Operations', level: 90, category: 'other' },
-      { name: 'REST APIs', level: 84, category: 'backend' },
-    ],
-    socials: {
-      linkedin: 'https://www.linkedin.com/in/mohammed-raashad/',
-    },
-    badges: ['Founder', 'Manager', 'Python'],
-    experience: 4,
-    projectsShipped: 20,
   },
 ];
 

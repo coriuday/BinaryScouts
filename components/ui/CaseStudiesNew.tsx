@@ -412,8 +412,17 @@ const ProjectToast: React.FC<{
 
 /* ── Case Studies Section ────────────────────────────── */
 const CaseStudiesNew: React.FC = () => {
-  const projects = getFeaturedProjects();
+  const [projects, setProjects] = useState<Project[]>(() => getFeaturedProjects());
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch('/api/cms/projects?featured=true')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.projects?.length) setProjects(d.projects);
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <section id="work" style={{ backgroundColor: 'var(--space-2)', padding: '140px 0' }}>

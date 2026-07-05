@@ -7,9 +7,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "npx tsx scripts/seed-supabase.ts",
+    "migrate:pg": "npx tsx scripts/run-migration-pg.ts"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.110.0",
     "framer-motion": "^11.15.0",
     "lucide-react": "^0.563.0",
     "next": "^15.1.4",
@@ -23,8 +26,10 @@
     "autoprefixer": "^10.4.23",
     "eslint": "^9.19.0",
     "eslint-config-next": "^15.1.4",
+    "pg": "^8.22.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.4",
     "typescript": "~5.8.2"
   }
 }

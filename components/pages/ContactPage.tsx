@@ -41,7 +41,7 @@ const INFO_CARDS = [
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: '', email: '', message: '', budget: '', website: '' });
+  const [form, setForm] = useState({ name: '', email: '', message: '', budget: '', timeline: '', website: '' });
   const [status, setStatus] = useState<FormStatus>('idle');
   const [error, setError] = useState('');
 
@@ -184,7 +184,7 @@ export default function ContactPage() {
                       We&apos;ll be in touch within one business day with a tailored response.
                     </p>
                     <button
-                      onClick={() => { setStatus('idle'); setError(''); setForm({ name: '', email: '', message: '', budget: '', website: '' }); }}
+                      onClick={() => { setStatus('idle'); setError(''); setForm({ name: '', email: '', message: '', budget: '', timeline: '', website: '' }); }}
                       className="btn-secondary px-8 py-3 text-sm mt-8"
                     >
                       Send another message
@@ -239,24 +239,31 @@ export default function ContactPage() {
 
                     <div className="flex flex-col gap-2">
                       <label htmlFor="page-contact-budget" className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-                        Project Budget
+                        Budget (INR)
                       </label>
-                      <select
+                      <input
                         id="page-contact-budget"
+                        type="text"
                         value={form.budget}
                         onChange={(e) => setForm({ ...form, budget: e.target.value })}
+                        placeholder="e.g. ₹5,00,000 or 10 lakhs"
                         className="input-cinematic"
-                        style={{ cursor: 'pointer' }}
-                      >
-                        <option value="" disabled>Select a range...</option>
-                        <option value="under-5k">Under $5,000</option>
-                        <option value="5k-15k">$5,000 – $15,000</option>
-                        <option value="15k-50k">$15,000 – $50,000</option>
-                        <option value="50k-plus">$50,000+</option>
-                      </select>
+                      />
                     </div>
 
-                    <div className="hidden md:block" />
+                    <div className="flex flex-col gap-2">
+                      <label htmlFor="page-contact-timeline" className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+                        Expected Timeline
+                      </label>
+                      <input
+                        id="page-contact-timeline"
+                        type="text"
+                        value={form.timeline}
+                        onChange={(e) => setForm({ ...form, timeline: e.target.value })}
+                        placeholder="e.g. 3 months, 6 weeks"
+                        className="input-cinematic"
+                      />
+                    </div>
 
                     <div className="md:col-span-2 flex flex-col gap-2">
                       <label htmlFor="page-contact-message" className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>

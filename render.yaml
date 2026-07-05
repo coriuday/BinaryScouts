@@ -1,0 +1,80 @@
+# BinaryScouts — Render Blueprint (3 Web Services)
+# Deploy: Render Dashboard → New → Blueprint → connect coriuday/BinaryScouts
+# Set sync:false secrets in the dashboard after first deploy.
+
+services:
+  # 1. Python AI (deploy first — Rust depends on this URL)
+  - type: web
+    name: binaryscouts-python
+    runtime: python
+    rootDir: backend-python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.11"
+      - key: GEMINI_API_KEY
+        sync: false
+
+  # 2. Rust API gateway
+  - type: web
+    name: binaryscouts-rust
+    runtime: rust
+    rootDir: backend-rust
+    buildCommand: cargo build --release
+    startCommand: ./target/release/backend-rust
+    plan: free
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: PYTHON_AI_BASE_URL
+        fromService:
+          type: web
+          name: binaryscouts-python
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: PYTHON_CHAT_PATH
+        value: /ai/chat
+      - key: PYTHON_HEIST_PATH
+        value: /ai/analyze-brief
+      - key: VAULT_DIR
+        value: vault
+      - key: INTERNAL_API_KEY
+        sync: false
+
+  # 3. Next.js website + admin + Supabase CMS
+  - type: web
+    name: binaryscouts-web
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NEXT_PUBLIC_SITE_URL
+        fromService:
+          type: web
+          name: binaryscouts-web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_SESSION_SECRET
+        sync: false
+      - key: RUST_API_BASE_URL
+        fromService:
+          type: web
+          name: binaryscouts-rust
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: INTERNAL_API_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: CONTACT_TO_EMAIL
+        value: hello@binaryscouts.com

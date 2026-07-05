@@ -1,11 +1,21 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import FlipCard from '@/components/ui/FlipCard';
-import { FLIP_TEAM_MEMBERS } from '@/lib/flip-team';
+import { FLIP_TEAM_MEMBERS, type FlipCardData } from '@/lib/flip-team';
 
 const TeamNew: React.FC = () => {
+  const [team, setTeam] = useState<FlipCardData[]>(FLIP_TEAM_MEMBERS);
+
+  useEffect(() => {
+    fetch('/api/cms/team?homepage=true')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.team?.length) setTeam(d.team);
+      })
+      .catch(() => {});
+  }, []);
   return (
     <section id="team" style={{ backgroundColor: 'var(--space)', padding: '140px 0' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -24,7 +34,7 @@ const TeamNew: React.FC = () => {
         </motion.h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto lg:max-w-none">
-          {FLIP_TEAM_MEMBERS.map((member, i) => (
+          {team.map((member, i) => (
             <FlipCard key={member.name} data={member} index={i} />
           ))}
         </div>

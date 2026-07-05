@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getProjectBySlug, getAllProjects } from '@/lib/projects';
+import { getProjectBySlug, getAllProjects } from '@/lib/cms/projects';
 import CaseStudyPage from '@/components/pages/CaseStudyPage';
 
 interface Props {
@@ -8,13 +8,13 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  const projects = getAllProjects();
+  const projects = await getAllProjects();
   return projects.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
+  const project = await getProjectBySlug(slug);
   if (!project) return { title: 'Project Not Found — BinaryScouts' };
 
   return {
@@ -25,8 +25,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
+  const project = await getProjectBySlug(slug);
   if (!project) notFound();
 
-  return <CaseStudyPage slug={slug} />;
+  const allProjects = await getAllProjects();
+
+  return <CaseStudyPage slug={slug} project={project} allProjects={allProjects} />;
 }

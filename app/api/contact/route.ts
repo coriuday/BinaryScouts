@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { mkdir, writeFile } from 'fs/promises';
 import path from 'path';
 import { clientIp, rateLimit } from '@/lib/rate-limit';
+import { saveContactLead } from '@/lib/cms/leads';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_MESSAGE = 5000;
@@ -13,6 +14,7 @@ type ContactBody = {
   email?: string;
   company?: string;
   budget?: string;
+  timeline?: string;
   message?: string;
   website?: string; // honeypot
 };
@@ -90,6 +92,7 @@ export async function POST(req: Request) {
     };
     try {
       await persistLead('newsletter', record);
+      await saveContactLead({ type: 'newsletter', email });
     } catch (e) {
       console.error('Failed to persist newsletter lead', e);
       return NextResponse.json({ error: 'Could not save subscription' }, { status: 500 });
@@ -105,7 +108,8 @@ export async function POST(req: Request) {
   const name = (body.name || '').trim();
   const message = (body.message || '').trim();
   const company = (body.company || '').trim().slice(0, 200);
-  const budget = (body.budget || '').trim().slice(0, 80);
+  const budget = (body.budget || '').trim().slice(0, 120);
+  const timeline = (body.timeline || '').trim().slice(0, 120);
 
   if (!name || name.length > MAX_NAME) {
     return NextResponse.json({ error: 'Name is required' }, { status: 400 });
@@ -120,6 +124,7 @@ export async function POST(req: Request) {
     email,
     company,
     budget,
+    timeline,
     message,
     ip,
     receivedAt: new Date().toISOString(),
@@ -127,6 +132,15 @@ export async function POST(req: Request) {
 
   try {
     await persistLead('contact', record);
+    await saveContactLead({
+      type: 'contact',
+      name,
+      email,
+      company,
+      budget,
+      timeline,
+      message,
+    });
   } catch (e) {
     console.error('Failed to persist contact lead', e);
     return NextResponse.json({ error: 'Could not save message' }, { status: 500 });
@@ -139,6 +153,7 @@ export async function POST(req: Request) {
       `Email: ${email}`,
       company ? `Company: ${company}` : '',
       budget ? `Budget: ${budget}` : '',
+      timeline ? `Timeline: ${timeline}` : '',
       '',
       message,
     ]

@@ -1,14 +1,28 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
-import { getAllProjects, getProjectsByCategory, PROJECT_CATEGORIES, type Project } from '@/lib/projects';
+import { getAllProjects, PROJECT_CATEGORIES, type Project } from '@/lib/projects';
 import ProjectCard from '@/components/ui/ProjectCard';
 import { ease, dur } from '@/lib/motion';
 
 const ProjectGallery: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
-  const projects = getProjectsByCategory(activeCategory);
+  const [allProjects, setAllProjects] = useState<Project[]>(() => getAllProjects());
+
+  useEffect(() => {
+    fetch('/api/cms/projects')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.projects?.length) setAllProjects(d.projects);
+      })
+      .catch(() => {});
+  }, []);
+
+  const projects = useMemo(() => {
+    if (activeCategory === 'All') return allProjects;
+    return allProjects.filter((p) => p.category === activeCategory);
+  }, [allProjects, activeCategory]);
 
   return (
     <div>

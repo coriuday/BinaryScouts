@@ -1,14 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft, ExternalLink, Github, CheckCircle,
   Zap, Layers, TrendingUp, ChevronRight,
 } from 'lucide-react';
-import { getProjectBySlug, getAllProjects, type Project } from '@/lib/projects';
+import { type Project } from '@/lib/projects';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { ease, dur } from '@/lib/motion';
@@ -48,13 +47,11 @@ const AnimatedMetric: React.FC<{ value: string; label: string; delay?: number }>
 /* ─── Case Study Page Content ──────────────────────── */
 interface CaseStudyPageProps {
   slug: string;
+  project: Project;
+  allProjects: Project[];
 }
 
-const CaseStudyPage: React.FC<CaseStudyPageProps> = ({ slug }) => {
-  const project = getProjectBySlug(slug);
-  if (!project) return notFound();
-
-  const allProjects = getAllProjects();
+const CaseStudyPage: React.FC<CaseStudyPageProps> = ({ slug, project, allProjects }) => {
   const relatedProjects = allProjects.filter((p) => p.id !== project.id).slice(0, 2);
 
   return (

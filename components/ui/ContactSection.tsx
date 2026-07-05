@@ -1,13 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const ContactSection: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const [error, setError] = useState('');
-  const [formData, setFormData] = useState({ name: '', email: '', company: '', budget: '', message: '', website: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', company: '', budget: '', timeline: '', message: '', website: '' });
+  const [engagement, setEngagement] = useState({ typicalRange: '₹10L – ₹50L', responseTime: '<24 hours', discoveryCall: '30 min, free' });
+
+  useEffect(() => {
+    fetch('/api/cms/settings')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.contactEngagement) setEngagement(d.contactEngagement);
+      })
+      .catch(() => {});
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -74,9 +84,9 @@ const ContactSection: React.FC = () => {
             {/* Engagement info */}
             <div className="space-y-5">
               {[
-                { label: 'Avg. Response Time', value: '<24 hours', icon: '⏱' },
-                { label: 'Discovery Call', value: '30 min, free', icon: '📞' },
-                { label: 'Typical Engagement', value: '$15K – $80K', icon: '💰' },
+                { label: 'Avg. Response Time', value: engagement.responseTime, icon: '⏱' },
+                { label: 'Discovery Call', value: engagement.discoveryCall, icon: '📞' },
+                { label: 'Typical Engagement', value: engagement.typicalRange, icon: '💰' },
               ].map((info) => (
                 <div key={info.label} className="flex items-center gap-4">
                   <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--space-3)', border: '0.5px solid var(--border-v2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>
@@ -144,15 +154,14 @@ const ContactSection: React.FC = () => {
                     <input id="contact-company" name="company" value={formData.company} onChange={handleChange} autoComplete="organization" placeholder="Company Inc." className="input-cinematic" style={{ fontSize: 14, padding: '12px 16px', borderRadius: 12 }} />
                   </div>
                   <div>
-                    <label htmlFor="contact-budget" style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: 'var(--text-3)', display: 'block', marginBottom: 6, fontWeight: 500 }}>Budget Range</label>
-                    <select id="contact-budget" name="budget" value={formData.budget} onChange={handleChange} className="select-cinematic" style={{ fontSize: 14, padding: '12px 16px', borderRadius: 12 }}>
-                      <option value="">Select range...</option>
-                      <option value="15k-25k">$15K – $25K</option>
-                      <option value="25k-50k">$25K – $50K</option>
-                      <option value="50k-80k">$50K – $80K</option>
-                      <option value="80k+">$80K+</option>
-                    </select>
+                    <label htmlFor="contact-budget" style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: 'var(--text-3)', display: 'block', marginBottom: 6, fontWeight: 500 }}>Budget (INR)</label>
+                    <input id="contact-budget" name="budget" value={formData.budget} onChange={handleChange} placeholder="e.g. ₹5,00,000 or 10 lakhs" className="input-cinematic" style={{ fontSize: 14, padding: '12px 16px', borderRadius: 12 }} />
                   </div>
+                </div>
+
+                <div className="mb-4">
+                  <label htmlFor="contact-timeline" style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: 'var(--text-3)', display: 'block', marginBottom: 6, fontWeight: 500 }}>Expected Timeline</label>
+                  <input id="contact-timeline" name="timeline" value={formData.timeline} onChange={handleChange} placeholder="e.g. 3 months, 6 weeks" className="input-cinematic" style={{ fontSize: 14, padding: '12px 16px', borderRadius: 12 }} />
                 </div>
 
                 <div className="mb-6">

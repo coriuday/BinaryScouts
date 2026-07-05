@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Users, Sparkles, Code2, ChevronDown, ChevronUp } from 'lucide-react';
 import { getTeamMembers, SKILL_CATEGORY_COLORS, type TeamMember } from '@/lib/team';
@@ -197,7 +197,16 @@ const MemberCard: React.FC<{ member: TeamMember; index: number }> = ({ member, i
    TEAM SECTION
 ══════════════════════════════════════════════════════════ */
 const TeamSection: React.FC = () => {
-  const members = getTeamMembers();
+  const [members, setMembers] = useState<TeamMember[]>(() => getTeamMembers());
+
+  useEffect(() => {
+    fetch('/api/cms/team')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.members?.length) setMembers(d.members);
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <section

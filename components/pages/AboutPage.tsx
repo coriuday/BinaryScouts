@@ -1,68 +1,48 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageTransition from '@/components/motion/PageTransition';
 import { Sparkles, Zap, ShieldCheck, Target, Users, Code, ChevronDown } from 'lucide-react';
+import { getTeamMembers, type TeamMember as CmsTeamMember } from '@/lib/team';
 import { ease, dur, viewport } from '@/lib/motion';
 
-interface TeamMember {
+const ACCENTS = ['var(--accent)', 'var(--rose)', 'var(--sage)'];
+const GRADIENTS = [
+  'linear-gradient(135deg, rgba(139,92,246,0.14), rgba(167,139,250,0.05))',
+  'linear-gradient(135deg, rgba(236,72,153,0.12), rgba(244,114,182,0.05))',
+  'linear-gradient(135deg, rgba(16,185,129,0.12), rgba(110,231,183,0.05))',
+];
+
+interface DisplayMember {
   name: string;
   role: string;
   specialty: string;
   description: string;
-  emoji: string;
+  avatar?: string;
   stats: { label: string; value: string }[];
   accentColor: string;
   gradient: string;
 }
 
-const TEAM: TeamMember[] = [
-  {
-    name: 'Agent Green',
-    role: 'Lead System Architect',
-    specialty: 'Infrastructure & Backend',
-    description: 'Specialises in low-latency infrastructure design, server-side optimisation, and scalable deployment architecture. Keeps pipelines clean and systems bulletproof.',
-    emoji: '🏗️',
+function mapTeamMember(m: CmsTeamMember, i: number): DisplayMember {
+  return {
+    name: m.name,
+    role: m.role,
+    specialty: m.badges[0] || m.role,
+    description: m.bio,
+    avatar: m.avatar,
     stats: [
-      { label: 'Delivery Rate',    value: '100%' },
-      { label: 'Systems Built',    value: '28+' },
-      { label: 'Avg Load Time',    value: '< 0.4s' },
+      { label: 'Experience', value: `${m.experience}+ Yrs` },
+      { label: 'Projects', value: `${m.projectsShipped}+` },
+      { label: 'Skills', value: `${m.skills.length}+` },
     ],
-    accentColor: 'var(--accent)',
-    gradient: 'linear-gradient(135deg, rgba(139,92,246,0.14), rgba(167,139,250,0.05))',
-  },
-  {
-    name: 'Agent Orange',
-    role: 'Growth & Acquisition Lead',
-    specialty: 'PPC & Paid Channels',
-    description: 'Masters search algorithms and bid optimisation pipelines. Routes high-intent traffic to precisely engineered conversion paths with measurable ROI.',
-    emoji: '📈',
-    stats: [
-      { label: 'Avg ROAS',         value: '4.8x' },
-      { label: 'Campaigns Managed',value: '20+' },
-      { label: 'Lead Cost Reduction',value: '45%' },
-    ],
-    accentColor: 'var(--rose)',
-    gradient: 'linear-gradient(135deg, rgba(236,72,153,0.12), rgba(244,114,182,0.05))',
-  },
-  {
-    name: 'Agent Blue',
-    role: 'Automation Architect',
-    specialty: 'CRM & AI Systems',
-    description: 'Engineers automated lead railways and webhook pipelines that connect businesses with their customers instantly. Replaces manual workflows with elegant, reliable systems.',
-    emoji: '⚙️',
-    stats: [
-      { label: 'Workflows Built',  value: '120+' },
-      { label: 'Avg Response Time', value: '< 60s' },
-      { label: 'Uptime',           value: '99.9%' },
-    ],
-    accentColor: 'var(--sage)',
-    gradient: 'linear-gradient(135deg, rgba(16,185,129,0.12), rgba(110,231,183,0.05))',
-  },
-];
+    accentColor: ACCENTS[i % ACCENTS.length],
+    gradient: GRADIENTS[i % GRADIENTS.length],
+  };
+}
 
 const VALUES = [
   {
@@ -101,6 +81,16 @@ const VALUES = [
 
 export default function AboutPage() {
   const [activeMember, setActiveMember] = useState<string | null>(null);
+  const [team, setTeam] = useState<DisplayMember[]>(() => getTeamMembers().map(mapTeamMember));
+
+  useEffect(() => {
+    fetch('/api/cms/team')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.members?.length) setTeam(d.members.map((m: CmsTeamMember, i: number) => mapTeamMember(m, i)));
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <PageTransition>
@@ -189,7 +179,7 @@ export default function AboutPage() {
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {TEAM.map((member, i) => {
+              {team.map((member, i) => {
                 const isActive = activeMember === member.name;
                 return (
                   <motion.div
@@ -208,10 +198,14 @@ export default function AboutPage() {
                     {/* Avatar */}
                     <div className="mb-5 flex items-center gap-4">
                       <div
-                        className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl"
+                        className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl overflow-hidden"
                         style={{ background: member.gradient, border: `1px solid ${member.accentColor}33` }}
                       >
-                        {member.emoji}
+                        {member.avatar ? (
+                          <img src={member.avatar} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          member.name.split(' ').map((w) => w[0]).join('').slice(0, 2)
+                        )}
                       </div>
                       <div>
                         <h3

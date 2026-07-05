@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { clientIp, rateLimit } from '@/lib/rate-limit';
+import { getRustChatUrl } from '@/lib/rust-api';
 
 const MAX_MESSAGE = 2000;
 const MAX_HISTORY = 20;
@@ -44,7 +45,7 @@ export async function POST(req: Request) {
     : [];
 
   try {
-    const rustUrl = process.env.RUST_API_URL || 'http://127.0.0.1:8081/api/chat';
+    const rustUrl = getRustChatUrl();
     const response = await fetch(rustUrl, {
       method: 'POST',
       headers: {

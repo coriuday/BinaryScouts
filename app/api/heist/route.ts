@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { clientIp, rateLimit } from '@/lib/rate-limit';
+import { getRustHeistUrl } from '@/lib/rust-api';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_BRIEF = 4000;
@@ -59,7 +60,7 @@ export async function POST(req: Request) {
   };
 
   try {
-    const rustUrl = process.env.RUST_API_URL_HEIST || 'http://127.0.0.1:8081/api/heist';
+    const rustUrl = getRustHeistUrl();
     const response = await fetch(rustUrl, {
       method: 'POST',
       headers: {

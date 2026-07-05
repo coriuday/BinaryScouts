@@ -4,7 +4,7 @@
  * Single source of truth for portfolio / case study projects.
  */
 
-export type ProjectStatus = 'live' | 'in-progress' | 'coming-soon';
+export type ProjectStatus = 'live' | 'in-progress' | 'coming-soon' | 'draft';
 
 export interface ProjectMetric {
   value: string;

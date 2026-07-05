@@ -66,15 +66,21 @@ const StatusPill: React.FC<{ label: string; value: string; jitter?: boolean }> =
 const HeroNew: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
+  const [heroStats, setHeroStats] = useState({ systemsBuilt: 15, revenueLabel: '₹1M+ INR', clientRetention: 98, avgRating: 4.9 });
 
   useEffect(() => {
     setInView(true);
+    fetch('/api/cms/settings')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.heroStats) setHeroStats(d.heroStats);
+      })
+      .catch(() => {});
   }, []);
 
-  const stat1 = useCountUp(50, 1500, inView, 1500);
-  const stat2 = useCountUp(2, 1500, inView, 1500);
-  const stat3 = useCountUp(98, 1500, inView, 1500);
-  const stat4 = useCountUp(49, 1500, inView, 1500); // 4.9 rendered as 49/10
+  const stat1 = useCountUp(heroStats.systemsBuilt, 1500, inView, 1500);
+  const stat3 = useCountUp(heroStats.clientRetention, 1500, inView, 1500);
+  const stat4 = useCountUp(Math.round(heroStats.avgRating * 10), 1500, inView, 1500);
 
   const words1 = ['We', 'build', 'systems'];
   const words2 = ['that', 'scale'];
@@ -272,7 +278,7 @@ const HeroNew: React.FC = () => {
           >
             {[
               { value: `${stat1}+`, label: 'Systems Built' },
-              { value: `$${stat2}M+`, label: 'Revenue Generated' },
+              { value: heroStats.revenueLabel, label: 'Revenue Generated' },
               { value: `${stat3}%`, label: 'Client Retention' },
               { value: `${(stat4 / 10).toFixed(1)}★`, label: 'Avg Client Rating' },
             ].map((s, i) => (

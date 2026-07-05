@@ -19,6 +19,22 @@ export interface FlipCardData {
 
 export const FLIP_TEAM_MEMBERS: FlipCardData[] = [
   {
+    name: 'Mohammad Raashad',
+    username: '@mohammed-raashad',
+    titles: ['Founder', 'Manager'],
+    role: 'Manager / Python Developer',
+    image: '/team/mohammad-raashad.jpg',
+    bio: 'Founder and manager overseeing delivery, client operations, and Python-based backend systems that power BinaryScouts projects.',
+    stats: [
+      { label: 'Role', value: 'Founder' },
+      { label: 'Stack', value: 'Python' },
+      { label: 'Focus', value: 'Manager' },
+    ],
+    socialLinks: {
+      linkedin: 'https://www.linkedin.com/in/mohammed-raashad/',
+    },
+  },
+  {
     name: 'Uday Kumar Kori',
     username: '@coriuday',
     titles: ['Co-Founder', 'Lead & Senior Developer'],
@@ -49,22 +65,6 @@ export const FLIP_TEAM_MEMBERS: FlipCardData[] = [
     ],
     socialLinks: {
       github: 'https://github.com/ashuisalluneed',
-    },
-  },
-  {
-    name: 'Mohammad Raashad',
-    username: '@mohammed-raashad',
-    titles: ['Founder', 'Manager'],
-    role: 'Manager / Python Developer',
-    image: '/team/mohammad-raashad.jpg',
-    bio: 'Founder and manager overseeing delivery, client operations, and Python-based backend systems that power BinaryScouts projects.',
-    stats: [
-      { label: 'Role', value: 'Founder' },
-      { label: 'Stack', value: 'Python' },
-      { label: 'Focus', value: 'Manager' },
-    ],
-    socialLinks: {
-      linkedin: 'https://www.linkedin.com/in/mohammed-raashad/',
     },
   },
 ];

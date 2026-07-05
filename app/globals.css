@@ -476,6 +476,22 @@ body {
 }
 .btn-secondary:active { transform: translateY(-1px); }
 
+.admin-input {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  font-family: var(--font-inter), 'Inter', sans-serif;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border-1);
+  border-radius: 0.75rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.admin-input:focus {
+  border-color: var(--accent);
+}
+
 /* ═══════════════════════════════════════════════════════════
    EYEBROW BADGE — Cinematic Section Labels
 ═══════════════════════════════════════════════════════════ */

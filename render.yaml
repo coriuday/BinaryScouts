@@ -1,5 +1,6 @@
 # BinaryScouts — Render Blueprint (3 Web Services)
 # Deploy: Render Dashboard → New → Blueprint → connect coriuday/BinaryScouts
+# Or: RENDER_API_KEY=rnd_... npm run render:setup (creates Python/Rust if missing)
 # Set sync:false secrets in the dashboard after first deploy.
 
 services:

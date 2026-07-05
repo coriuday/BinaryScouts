@@ -9,7 +9,10 @@
     "start": "next start",
     "lint": "next lint",
     "seed": "npx tsx scripts/seed-supabase.ts",
-    "migrate:pg": "npx tsx scripts/run-migration-pg.ts"
+    "migrate:pg": "npx tsx scripts/run-migration-pg.ts",
+    "render:setup": "npx tsx scripts/render-setup.ts",
+    "verify:production": "npx tsx scripts/verify-production.ts",
+    "rotate:secrets": "npx tsx scripts/rotate-secrets.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.0",

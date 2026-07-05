@@ -17,6 +17,7 @@ export default function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', message: '', budget: '', timeline: '', website: '' });
   const [status, setStatus] = useState<FormStatus>('idle');
   const [error, setError] = useState('');
+  const [emailDelivered, setEmailDelivered] = useState(true);
 
   const INFO_CARDS = useMemo(
     () => [
@@ -80,6 +81,7 @@ export default function ContactPage() {
         setError(data.error || 'Could not send message.');
         return;
       }
+      setEmailDelivered(data.delivered !== false);
       setStatus('success');
     } catch {
       setStatus('error');
@@ -214,10 +216,12 @@ export default function ContactPage() {
                       className="font-display font-bold text-3xl mb-3"
                       style={{ color: 'var(--text-primary)', letterSpacing: '-0.04em' }}
                     >
-                      Message sent!
+                      {emailDelivered ? 'Message sent!' : 'Message saved!'}
                     </h3>
                     <p className="font-sans text-lg" style={{ color: 'var(--text-secondary)' }}>
-                      We&apos;ll be in touch within one business day with a tailored response.
+                      {emailDelivered
+                        ? "We'll be in touch within one business day with a tailored response."
+                        : "We've saved your message and will follow up within one business day."}
                     </p>
                     <button
                       onClick={() => { setStatus('idle'); setError(''); setForm({ name: '', email: '', message: '', budget: '', timeline: '', website: '' }); }}

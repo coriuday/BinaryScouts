@@ -67,6 +67,7 @@ export default function CareersPage() {
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [form, setForm] = useState({ name: '', email: '', portfolio: '', message: '', website: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [emailDelivered, setEmailDelivered] = useState(true);
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const [error, setError] = useState('');
 
@@ -103,6 +104,7 @@ export default function CareersPage() {
         setError(data.error || 'Could not submit application. Please try again.');
         return;
       }
+      setEmailDelivered(data.delivered !== false);
       setSubmitted(true);
       setForm({ name: '', email: '', portfolio: '', message: '', website: '' });
       setStatus('idle');
@@ -277,10 +279,12 @@ export default function CareersPage() {
                           <CheckCircle size={26} className="text-white" />
                         </motion.div>
                         <h3 className="font-display font-bold text-2xl mb-2" style={{ color: 'var(--text-primary)', letterSpacing: '-0.04em' }}>
-                          Application sent!
+                          {emailDelivered ? 'Application sent!' : 'Application saved!'}
                         </h3>
                         <p className="font-sans text-sm" style={{ color: 'var(--text-muted)' }}>
-                          We&apos;ll review your profile and be in touch within 3 business days.
+                          {emailDelivered
+                            ? "We'll review your profile and be in touch within 3 business days."
+                            : "We've saved your application and will be in touch within 3 business days."}
                         </p>
                         <button
                           onClick={() => { setSubmitted(false); setSelectedRole(null); }}

@@ -103,15 +103,19 @@ Copy `.env.example` to `.env.local` and fill in values:
 ADMIN_PASSWORD=change-me-to-a-long-random-string
 ADMIN_SESSION_SECRET=another-long-random-string
 
-# Optional: contact form email delivery (Resend)
-RESEND_API_KEY=
+# Optional: contact form email delivery
+# Gmail SMTP (recommended until Resend domain is verified):
+GMAIL_USER=thebinaryscouts@gmail.com
+GMAIL_APP_PASSWORD=
 CONTACT_TO_EMAIL=thebinaryscouts@gmail.com
+# Resend (optional; sandbox sender cannot deliver to arbitrary Gmail):
+RESEND_API_KEY=
 
 # Python AI service only (never put this in Next.js client config)
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-Contact and newsletter submissions are saved under `data/contacts/` and `data/newsletter/` (gitignored). When `RESEND_API_KEY` and `CONTACT_TO_EMAIL` are set, leads are also emailed.
+Contact and newsletter submissions are saved under `data/contacts/` and `data/newsletter/` (gitignored) and in the admin Leads inbox when Supabase is configured. Set `GMAIL_USER` + `GMAIL_APP_PASSWORD` (Google App Password) to email notifications to `CONTACT_TO_EMAIL`. Resend works after you verify a custom domain.
 
 Admin login uses an httpOnly signed cookie — never put `ADMIN_PASSWORD` in client code.
 

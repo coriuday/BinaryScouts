@@ -43,6 +43,7 @@ const Footer: React.FC = () => {
   const { email: contactEmail, phoneDisplay, whatsappUrl } = useContactInfo();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [emailDelivered, setEmailDelivered] = useState(true);
   const [subStatus, setSubStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const [subError, setSubError] = useState('');
 
@@ -63,6 +64,7 @@ const Footer: React.FC = () => {
         setSubError(data.error || 'Something went wrong. Try again.');
         return;
       }
+      setEmailDelivered(data.delivered !== false);
       setSubscribed(true);
       setEmail('');
       setSubStatus('idle');
@@ -236,7 +238,7 @@ const Footer: React.FC = () => {
                 aria-live="polite"
               >
                 <CheckCircle size={15} />
-                <span>You&apos;re subscribed!</span>
+                <span>{emailDelivered ? "You're subscribed!" : "You're on the list!"}</span>
               </motion.div>
             ) : (
               <form onSubmit={handleSubscribe} className="flex flex-col gap-2.5">

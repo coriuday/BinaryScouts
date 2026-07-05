@@ -6,6 +6,7 @@ import { getContactEmail } from '@/lib/site-contact';
 
 const ContactSection: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
+  const [emailDelivered, setEmailDelivered] = useState(true);
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({ name: '', email: '', company: '', budget: '', timeline: '', message: '', website: '' });
@@ -40,6 +41,7 @@ const ContactSection: React.FC = () => {
         setError(data.error || 'Could not send message. Please try again.');
         return;
       }
+      setEmailDelivered(data.delivered !== false);
       setSubmitted(true);
       setStatus('idle');
     } catch {
@@ -124,10 +126,12 @@ const ContactSection: React.FC = () => {
                 }}
               >
                 <h3 style={{ fontFamily: 'var(--font-syne)', fontWeight: 700, fontSize: 28, color: 'var(--text-1)', marginBottom: 12 }}>
-                  Message received!
+                  {emailDelivered ? 'Message received!' : 'Message saved!'}
                 </h3>
                 <p style={{ fontFamily: 'var(--font-inter)', fontSize: 15, color: 'var(--text-2)', lineHeight: 1.6 }}>
-                  We&apos;ll review your project details and respond within 24 hours.
+                  {emailDelivered
+                    ? "We'll review your project details and respond within 24 hours."
+                    : "We've saved your details and will follow up within 24 hours."}
                 </p>
               </motion.div>
             ) : (

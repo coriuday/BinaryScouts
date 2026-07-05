@@ -77,6 +77,10 @@ services:
         sync: false
       - key: RESEND_API_KEY
         sync: false
+      - key: GMAIL_USER
+        sync: false
+      - key: GMAIL_APP_PASSWORD
+        sync: false
       - key: CONTACT_TO_EMAIL
         value: thebinaryscouts@gmail.com
       - key: NEXT_PUBLIC_CONTACT_EMAIL

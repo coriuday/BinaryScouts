@@ -3,6 +3,7 @@ import { mkdir, writeFile } from 'fs/promises';
 import path from 'path';
 import { clientIp, rateLimit } from '@/lib/rate-limit';
 import { saveContactLead } from '@/lib/cms/leads';
+import { sendContactNotification } from '@/lib/contact-email';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_MESSAGE = 5000;
@@ -25,37 +26,6 @@ async function persistLead(filename: string, data: Record<string, unknown>) {
   const file = path.join(dir, `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.json`);
   await writeFile(file, JSON.stringify(data, null, 2), 'utf8');
   return file;
-}
-
-async function sendViaResend(payload: {
-  subject: string;
-  text: string;
-  replyTo?: string;
-}) {
-  const key = process.env.RESEND_API_KEY;
-  const to = process.env.CONTACT_TO_EMAIL;
-  const from = process.env.CONTACT_FROM_EMAIL || 'BinaryScouts <onboarding@resend.dev>';
-  if (!key || !to) return false;
-
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${key}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from,
-      to: [to],
-      subject: payload.subject,
-      text: payload.text,
-      reply_to: payload.replyTo,
-    }),
-  });
-  if (!res.ok) {
-    const errBody = await res.text().catch(() => '');
-    console.error('Resend API error:', res.status, errBody.slice(0, 500));
-  }
-  return res.ok;
 }
 
 export async function POST(req: Request) {
@@ -101,12 +71,16 @@ export async function POST(req: Request) {
       console.error('Failed to persist newsletter lead', e);
       return NextResponse.json({ error: 'Could not save subscription' }, { status: 500 });
     }
-    const emailed = await sendViaResend({
+    const emailResult = await sendContactNotification({
       subject: `Newsletter signup: ${email}`,
       text: `New newsletter subscription\nEmail: ${email}\nIP: ${ip}`,
       replyTo: email,
     });
-    return NextResponse.json({ ok: true, delivered: emailed });
+    return NextResponse.json({
+      ok: true,
+      delivered: emailResult.delivered,
+      ...(emailResult.error && !emailResult.delivered ? { emailError: emailResult.error } : {}),
+    });
   }
 
   const name = (body.name || '').trim();
@@ -150,7 +124,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Could not save message' }, { status: 500 });
   }
 
-  const emailed = await sendViaResend({
+  const emailResult = await sendContactNotification({
     subject: `Contact form: ${name}`,
     text: [
       `Name: ${name}`,
@@ -168,6 +142,7 @@ export async function POST(req: Request) {
 
   return NextResponse.json({
     ok: true,
-    delivered: emailed,
+    delivered: emailResult.delivered,
+    ...(emailResult.error && !emailResult.delivered ? { emailError: emailResult.error } : {}),
   });
 }

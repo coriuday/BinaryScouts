@@ -55,8 +55,8 @@ function main() {
   console.log('\n--- Manual rotation required (dashboards) ---');
   console.log('1. Supabase → Settings → API → Regenerate anon + service_role keys');
   console.log('   Update .env.local + Render binaryscouts env vars, then redeploy.');
-  console.log('2. Resend → API Keys → rotate if key was exposed');
-  console.log('   Update RESEND_API_KEY on Render binaryscouts.');
+  console.log('2. Google Cloud → Credentials → rotate OAuth client secret if exposed');
+  console.log('   Update GMAIL_CLIENT_SECRET + re-run npm run gmail:setup for new refresh token.');
   console.log('3. Render → binaryscouts + binaryscouts-rust → paste new INTERNAL_API_KEY');
   console.log('4. Render → binaryscouts → paste new ADMIN_PASSWORD + ADMIN_SESSION_SECRET');
   console.log('\nThen run: RENDER_API_KEY=rnd_... npm run render:setup');

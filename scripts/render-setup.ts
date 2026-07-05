@@ -270,8 +270,15 @@ async function main() {
       ...(process.env.ADMIN_SESSION_SECRET
         ? [{ key: 'ADMIN_SESSION_SECRET', value: process.env.ADMIN_SESSION_SECRET }]
         : []),
-      ...(process.env.RESEND_API_KEY
-        ? [{ key: 'RESEND_API_KEY', value: process.env.RESEND_API_KEY }]
+      ...(process.env.GMAIL_USER ? [{ key: 'GMAIL_USER', value: process.env.GMAIL_USER }] : []),
+      ...(process.env.GMAIL_CLIENT_ID
+        ? [{ key: 'GMAIL_CLIENT_ID', value: process.env.GMAIL_CLIENT_ID }]
+        : []),
+      ...(process.env.GMAIL_CLIENT_SECRET
+        ? [{ key: 'GMAIL_CLIENT_SECRET', value: process.env.GMAIL_CLIENT_SECRET }]
+        : []),
+      ...(process.env.GMAIL_REFRESH_TOKEN
+        ? [{ key: 'GMAIL_REFRESH_TOKEN', value: process.env.GMAIL_REFRESH_TOKEN }]
         : []),
       { key: 'CONTACT_TO_EMAIL', value: process.env.CONTACT_TO_EMAIL || 'thebinaryscouts@gmail.com' },
       { key: 'NEXT_PUBLIC_CONTACT_EMAIL', value: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'thebinaryscouts@gmail.com' },

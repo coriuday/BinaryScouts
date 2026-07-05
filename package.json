@@ -12,20 +12,20 @@
     "migrate:pg": "npx tsx scripts/run-migration-pg.ts",
     "render:setup": "npx tsx scripts/render-setup.ts",
     "verify:production": "npx tsx scripts/verify-production.ts",
-    "rotate:secrets": "npx tsx scripts/rotate-secrets.ts"
+    "rotate:secrets": "npx tsx scripts/rotate-secrets.ts",
+    "gmail:setup": "node scripts/gmail-oauth-setup.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.0",
     "framer-motion": "^11.15.0",
+    "googleapis": "^173.0.0",
     "lucide-react": "^0.563.0",
     "next": "^15.1.4",
-    "nodemailer": "^9.0.3",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
-    "@types/nodemailer": "^8.0.1",
     "@types/react": "^19.0.9",
     "@types/react-dom": "^19.0.5",
     "autoprefixer": "^10.4.23",

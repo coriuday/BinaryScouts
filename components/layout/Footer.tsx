@@ -23,8 +23,8 @@ const COMPANY = [
 ];
 
 const SOCIALS = [
-  { label: 'GitHub',    href: 'https://github.com', abbr: 'GH' },
-  { label: 'LinkedIn',  href: 'https://linkedin.com', abbr: 'in' },
+  { label: 'GitHub',    href: 'https://github.com/coriuday', abbr: 'GH' },
+  { label: 'LinkedIn',  href: 'https://www.linkedin.com/in/uday-kumar-kori-784678210', abbr: 'in' },
   { label: 'Twitter',   href: 'https://x.com', abbr: 'X' },
 ];
 

@@ -51,6 +51,10 @@ async function sendViaResend(payload: {
       reply_to: payload.replyTo,
     }),
   });
+  if (!res.ok) {
+    const errBody = await res.text().catch(() => '');
+    console.error('Resend API error:', res.status, errBody.slice(0, 500));
+  }
   return res.ok;
 }
 
@@ -97,12 +101,12 @@ export async function POST(req: Request) {
       console.error('Failed to persist newsletter lead', e);
       return NextResponse.json({ error: 'Could not save subscription' }, { status: 500 });
     }
-    await sendViaResend({
+    const emailed = await sendViaResend({
       subject: `Newsletter signup: ${email}`,
       text: `New newsletter subscription\nEmail: ${email}\nIP: ${ip}`,
       replyTo: email,
     });
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, delivered: emailed });
   }
 
   const name = (body.name || '').trim();

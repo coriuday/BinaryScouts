@@ -101,6 +101,31 @@ async function main() {
     { key: 'contact_info', value: DEFAULT_CONTACT_INFO },
   ]);
 
+  console.log('Seeding sample approved review…');
+  const sampleReview = {
+    name: 'BinaryScouts Client',
+    role: 'Founder',
+    company: 'Startup',
+    quote: 'BinaryScouts delivered a production-grade platform on time. Clear communication, strong engineering, and real ownership of outcomes.',
+    stars: 5,
+    status: 'approved',
+  };
+  const { data: existingReview } = await db
+    .from('reviews')
+    .select('id')
+    .eq('name', sampleReview.name)
+    .eq('company', sampleReview.company)
+    .maybeSingle();
+  if (existingReview?.id) {
+    const { error } = await db.from('reviews').update({ status: 'approved', stars: 5 }).eq('id', existingReview.id);
+    if (error) console.error('  sample review update:', error.message);
+    else console.log('  ✓ sample review updated');
+  } else {
+    const { error } = await db.from('reviews').insert(sampleReview);
+    if (error) console.error('  sample review:', error.message);
+    else console.log('  ✓ sample review seeded');
+  }
+
   const reviewsDir = path.join(process.cwd(), 'data', 'reviews');
   if (existsSync(reviewsDir)) {
     console.log('Migrating filesystem reviews…');

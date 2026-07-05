@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { AudioProvider } from '@/components/hooks/AudioProvider';
+import { ContactInfoProvider } from '@/components/hooks/ContactInfoProvider';
 import CustomCursor from '@/components/layout/CustomCursor';
 import CrewTicker from '@/components/layout/CrewTicker';
 import Terminal from '@/components/ui/Terminal';
@@ -30,6 +31,7 @@ export default function LayoutWrapper({ children, bodyClass }: LayoutWrapperProp
       }}
     >
       <AudioProvider>
+        <ContactInfoProvider>
           {mounted && <ScrollProgressBar />}
           {mounted && <CustomCursor />}
           {mounted && <ClickRipple />}
@@ -42,6 +44,7 @@ export default function LayoutWrapper({ children, bodyClass }: LayoutWrapperProp
 
           {mounted && <WhatsAppFab />}
           <Terminal />
+        </ContactInfoProvider>
         </AudioProvider>
     </body>
   );

@@ -65,14 +65,51 @@ const PERKS = [
 
 export default function CareersPage() {
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
-  const [form, setForm] = useState({ name: '', email: '', portfolio: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', portfolio: '', message: '', website: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name || !form.email) return;
-    setSubmitted(true);
-    setForm({ name: '', email: '', portfolio: '', message: '' });
+    if (!form.name || !form.email || !selectedRole) return;
+
+    setStatus('loading');
+    setError('');
+    const messageParts = [
+      '[Careers application]',
+      `Role: ${selectedRole.title}`,
+      form.portfolio ? `Portfolio: ${form.portfolio}` : '',
+      '',
+      form.message || '(No additional message)',
+    ].filter((line, i, arr) => line !== '' || i === arr.length - 2);
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'contact',
+          name: form.name.trim(),
+          email: form.email.trim(),
+          company: selectedRole.title,
+          message: messageParts.join('\n'),
+          website: form.website,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setStatus('error');
+        setError(data.error || 'Could not submit application. Please try again.');
+        return;
+      }
+      setSubmitted(true);
+      setForm({ name: '', email: '', portfolio: '', message: '', website: '' });
+      setStatus('idle');
+    } catch {
+      setStatus('error');
+      setError('Network error. Please try again.');
+    }
   };
 
   const handleSelectRole = (role: Role) => {
@@ -269,6 +306,16 @@ export default function CareersPage() {
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-4">
+                          <input
+                            type="text"
+                            name="website"
+                            value={form.website}
+                            onChange={(e) => setForm({ ...form, website: e.target.value })}
+                            className="sr-only"
+                            tabIndex={-1}
+                            autoComplete="off"
+                            aria-hidden
+                          />
                           <div className="flex flex-col gap-1.5">
                             <label className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
                               Full Name *
@@ -324,9 +371,20 @@ export default function CareersPage() {
                             />
                           </div>
 
-                          <button type="submit" className="btn-primary w-full justify-center gap-2 text-sm py-3.5 mt-2">
+                          {error && (
+                            <p role="alert" className="font-sans text-sm" style={{ color: '#f87171' }}>
+                              {error}
+                            </p>
+                          )}
+
+                          <button
+                            type="submit"
+                            disabled={status === 'loading'}
+                            className="btn-primary w-full justify-center gap-2 text-sm py-3.5 mt-2"
+                            style={{ opacity: status === 'loading' ? 0.7 : 1, cursor: status === 'loading' ? 'wait' : 'pointer' }}
+                          >
                             <Send size={14} />
-                            Submit Application
+                            {status === 'loading' ? 'Submitting…' : 'Submit Application'}
                           </button>
                         </form>
                       </motion.div>

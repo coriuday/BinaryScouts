@@ -40,7 +40,20 @@ export function getWhatsAppMessage(): string {
   );
 }
 
+export function formatPhoneDisplay(e164: string): string {
+  const digits = e164.replace(/\D/g, '');
+  if (digits.length === 12 && digits.startsWith('91')) {
+    return `+91 ${digits.slice(2, 7)} ${digits.slice(7)}`;
+  }
+  if (digits.length === 10) {
+    return `+91 ${digits.slice(0, 5)} ${digits.slice(5)}`;
+  }
+  return digits ? `+${digits}` : DEFAULT_PHONE_DISPLAY;
+}
+
 export function getPhoneDisplay(): string {
+  const raw = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.trim();
+  if (raw) return formatPhoneDisplay(raw);
   return DEFAULT_PHONE_DISPLAY;
 }
 

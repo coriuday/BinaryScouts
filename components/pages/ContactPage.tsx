@@ -1,65 +1,66 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageTransition from '@/components/motion/PageTransition';
 import { Mail, MessageSquare, Send, Sparkles, CheckCircle, Loader2, MapPin, Clock, Phone } from 'lucide-react';
 import { ease, dur, viewport } from '@/lib/motion';
-import { getContactEmail, getPhoneDisplay, getWhatsAppUrl } from '@/lib/site-contact';
-
-const contactEmail = getContactEmail();
-const phoneDisplay = getPhoneDisplay();
-const whatsAppUrl = getWhatsAppUrl();
-
-const INFO_CARDS = [
-  {
-    icon: Mail,
-    title: 'Email',
-    value: contactEmail,
-    href: `mailto:${contactEmail}`,
-    sub: 'Usually responds within 4 hours',
-    gradient: 'linear-gradient(135deg, rgba(139,92,246,0.14), rgba(167,139,250,0.05))',
-    iconColor: 'var(--accent)',
-    border: 'rgba(139,92,246,0.22)',
-  },
-  {
-    icon: Phone,
-    title: 'WhatsApp',
-    value: phoneDisplay,
-    href: whatsAppUrl,
-    sub: 'Chat with us instantly',
-    gradient: 'linear-gradient(135deg, rgba(37,211,102,0.14), rgba(16,185,129,0.05))',
-    iconColor: '#25D366',
-    border: 'rgba(37,211,102,0.25)',
-  },
-  {
-    icon: Clock,
-    title: 'Availability',
-    value: 'Mon – Fri, 9am – 6pm IST',
-    sub: 'Emergency support available',
-    gradient: 'linear-gradient(135deg, rgba(236,72,153,0.12), rgba(244,114,182,0.05))',
-    iconColor: 'var(--rose)',
-    border: 'rgba(236,72,153,0.20)',
-  },
-  {
-    icon: MapPin,
-    title: 'Studio',
-    value: 'Remote-first, globally distributed',
-    sub: 'Serving clients worldwide',
-    gradient: 'linear-gradient(135deg, rgba(16,185,129,0.12), rgba(110,231,183,0.05))',
-    iconColor: 'var(--sage)',
-    border: 'rgba(16,185,129,0.20)',
-  },
-];
+import { useContactInfo } from '@/components/hooks/useContactInfo';
+import { getContactEmail } from '@/lib/site-contact';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
 export default function ContactPage() {
+  const { email: contactEmail, phoneDisplay, whatsappUrl } = useContactInfo();
   const [form, setForm] = useState({ name: '', email: '', message: '', budget: '', timeline: '', website: '' });
   const [status, setStatus] = useState<FormStatus>('idle');
   const [error, setError] = useState('');
+
+  const INFO_CARDS = useMemo(
+    () => [
+      {
+        icon: Mail,
+        title: 'Email',
+        value: contactEmail,
+        href: `mailto:${contactEmail}`,
+        sub: 'Usually responds within 4 hours',
+        gradient: 'linear-gradient(135deg, rgba(139,92,246,0.14), rgba(167,139,250,0.05))',
+        iconColor: 'var(--accent)',
+        border: 'rgba(139,92,246,0.22)',
+      },
+      {
+        icon: Phone,
+        title: 'WhatsApp',
+        value: phoneDisplay,
+        href: whatsappUrl,
+        sub: 'Chat with us instantly',
+        gradient: 'linear-gradient(135deg, rgba(37,211,102,0.14), rgba(16,185,129,0.05))',
+        iconColor: '#25D366',
+        border: 'rgba(37,211,102,0.25)',
+      },
+      {
+        icon: Clock,
+        title: 'Availability',
+        value: 'Mon – Fri, 9am – 6pm IST',
+        sub: 'Emergency support available',
+        gradient: 'linear-gradient(135deg, rgba(236,72,153,0.12), rgba(244,114,182,0.05))',
+        iconColor: 'var(--rose)',
+        border: 'rgba(236,72,153,0.20)',
+      },
+      {
+        icon: MapPin,
+        title: 'Studio',
+        value: 'Remote-first, globally distributed',
+        sub: 'Serving clients worldwide',
+        gradient: 'linear-gradient(135deg, rgba(16,185,129,0.12), rgba(110,231,183,0.05))',
+        iconColor: 'var(--sage)',
+        border: 'rgba(16,185,129,0.20)',
+      },
+    ],
+    [contactEmail, phoneDisplay, whatsappUrl]
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

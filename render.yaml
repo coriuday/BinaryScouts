@@ -44,7 +44,7 @@ services:
 
   # 3. Next.js website + admin + Supabase CMS
   - type: web
-    name: binaryscouts-web
+    name: binaryscouts
     runtime: node
     buildCommand: npm install && npm run build
     startCommand: npm start
@@ -55,7 +55,7 @@ services:
       - key: NEXT_PUBLIC_SITE_URL
         fromService:
           type: web
-          name: binaryscouts-web
+          name: binaryscouts
           envVarKey: RENDER_EXTERNAL_URL
       - key: NEXT_PUBLIC_SUPABASE_URL
         sync: false

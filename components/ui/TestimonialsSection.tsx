@@ -4,7 +4,15 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { reviewInitials, type Review } from '@/lib/review-types';
 
-type DisplayReview = Pick<Review, 'name' | 'role' | 'company' | 'quote' | 'stars'>;
+type DisplayReview = Pick<Review, 'id' | 'name' | 'role' | 'company' | 'quote' | 'stars'>;
+
+function duplicateForLoop<T>(items: T[]): T[] {
+  return items.length > 0 ? [...items, ...items] : [];
+}
+
+function reviewCardKey(t: DisplayReview, prefix: string, index: number): string {
+  return t.id ? `${prefix}-${t.id}-${index}` : `${prefix}-${t.name}-${t.quote.slice(0, 20)}-${index}`;
+}
 
 const TestimonialCard: React.FC<{ t: DisplayReview }> = ({ t }) => {
   const initials = reviewInitials(t.name);
@@ -102,12 +110,10 @@ const TestimonialsSection: React.FC = () => {
   };
 
   const hasReviews = reviews.length > 0;
-  const row1 = hasReviews
-    ? [...reviews.slice(0, Math.ceil(reviews.length / 2)), ...reviews.slice(0, Math.ceil(reviews.length / 2))]
-    : [];
-  const row2 = hasReviews
-    ? [...reviews.slice(Math.ceil(reviews.length / 2)), ...reviews.slice(Math.ceil(reviews.length / 2))]
-    : [];
+  const useTicker = reviews.length >= 3;
+  const splitAt = Math.ceil(reviews.length / 2);
+  const row1 = duplicateForLoop(reviews.slice(0, splitAt));
+  const row2 = duplicateForLoop(reviews.slice(splitAt));
 
   return (
     <section style={{ backgroundColor: 'var(--space-2)', padding: '140px 0', overflow: 'hidden' }}>
@@ -133,12 +139,20 @@ const TestimonialsSection: React.FC = () => {
         )}
       </div>
 
-      {hasReviews && (
+      {hasReviews && !useTicker && (
+        <div className="flex flex-wrap justify-center gap-5 mb-12 px-4 sm:px-6 lg:px-8">
+          {reviews.map((t, i) => (
+            <TestimonialCard key={reviewCardKey(t, 'static', i)} t={t} />
+          ))}
+        </div>
+      )}
+
+      {hasReviews && useTicker && (
         <>
           <div className="v2-ticker-row mb-4" style={{ overflow: 'hidden' }}>
             <div className="v2-ticker-track flex gap-5" style={{ animation: 'scroll-testimonial 55s linear infinite', width: 'max-content' }}>
               {row1.map((t, i) => (
-                <TestimonialCard key={`r1-${t.name}-${i}`} t={t} />
+                <TestimonialCard key={reviewCardKey(t, 'r1', i)} t={t} />
               ))}
             </div>
           </div>
@@ -146,7 +160,7 @@ const TestimonialsSection: React.FC = () => {
             <div className="v2-ticker-row mb-12" style={{ overflow: 'hidden' }}>
               <div className="v2-ticker-track flex gap-5" style={{ animation: 'scroll-testimonial-reverse 55s linear infinite', width: 'max-content' }}>
                 {row2.map((t, i) => (
-                  <TestimonialCard key={`r2-${t.name}-${i}`} t={t} />
+                  <TestimonialCard key={reviewCardKey(t, 'r2', i)} t={t} />
                 ))}
               </div>
             </div>

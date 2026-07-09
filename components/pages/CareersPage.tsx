@@ -1,16 +1,14 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useSearchParams } from 'next/navigation';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageTransition from '@/components/motion/PageTransition';
-import { Briefcase, Send, Sparkles, CheckCircle, Globe, Clock, Layers, Cpu, TrendingUp, Share2 } from 'lucide-react';
+import { Briefcase, Send, Sparkles, CheckCircle, Globe, Clock, Layers, Cpu, TrendingUp } from 'lucide-react';
 import { ease, dur, viewport } from '@/lib/motion';
 
 interface Role {
-  slug: string;
   title: string;
   department: string;
   location: string;
@@ -24,7 +22,6 @@ interface Role {
 
 const ROLES: Role[] = [
   {
-    slug: 'frontend-engineer',
     title: 'Frontend Engineer',
     department: 'Engineering',
     location: 'Remote',
@@ -36,7 +33,6 @@ const ROLES: Role[] = [
     icon: Layers,
   },
   {
-    slug: 'ai-backend-engineer',
     title: 'AI / Backend Engineer',
     department: 'Infrastructure',
     location: 'Remote',
@@ -48,7 +44,6 @@ const ROLES: Role[] = [
     icon: Cpu,
   },
   {
-    slug: 'growth-engineer',
     title: 'Growth Engineer',
     department: 'Growth',
     location: 'Remote',
@@ -69,55 +64,12 @@ const PERKS = [
 ];
 
 export default function CareersPage() {
-  const searchParams = useSearchParams();
-  const formPanelRef = useRef<HTMLDivElement>(null);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [form, setForm] = useState({ name: '', email: '', portfolio: '', message: '', website: '' });
   const [submitted, setSubmitted] = useState(false);
   const [emailDelivered, setEmailDelivered] = useState(true);
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const [error, setError] = useState('');
-  const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
-
-  useEffect(() => {
-    const slug = searchParams.get('role');
-    if (!slug) return;
-    const role = ROLES.find((r) => r.slug === slug);
-    if (role) {
-      setSelectedRole(role);
-      setSubmitted(false);
-      requestAnimationFrame(() => {
-        formPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    }
-  }, [searchParams]);
-
-  const handleShareRole = useCallback(async (e: React.MouseEvent, role: Role) => {
-    e.stopPropagation();
-    const url = `${window.location.origin}/careers?role=${role.slug}`;
-    const shareData = {
-      title: `${role.title} at BinaryScouts`,
-      text: `Check out this role at BinaryScouts: ${role.title}`,
-      url,
-    };
-
-    try {
-      if (typeof navigator.share === 'function') {
-        await navigator.share(shareData);
-        return;
-      }
-    } catch (err) {
-      if (err instanceof DOMException && err.name === 'AbortError') return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopiedSlug(role.slug);
-      window.setTimeout(() => setCopiedSlug(null), 2000);
-    } catch {
-      window.prompt('Copy this link:', url);
-    }
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -285,19 +237,9 @@ export default function CareersPage() {
                     </div>
 
                     <div
-                      className="mt-4 pt-4 flex items-center justify-between gap-3"
+                      className="mt-4 pt-4 flex justify-end"
                       style={{ borderTop: '1px solid var(--glass-border-1)' }}
                     >
-                      <button
-                        type="button"
-                        onClick={(e) => void handleShareRole(e, role)}
-                        className="inline-flex items-center gap-1.5 font-sans text-xs font-semibold transition-colors duration-200"
-                        style={{ color: copiedSlug === role.slug ? role.accentColor : 'var(--text-muted)' }}
-                        aria-label={`Share ${role.title} role`}
-                      >
-                        <Share2 size={14} />
-                        {copiedSlug === role.slug ? 'Link copied!' : 'Share'}
-                      </button>
                       <span className="font-sans text-sm font-semibold" style={{ color: isSelected ? role.accentColor : 'var(--text-muted)' }}>
                         {isSelected ? 'Selected — fill in the form →' : 'Apply for this role →'}
                       </span>
@@ -309,7 +251,6 @@ export default function CareersPage() {
 
             {/* Application form panel */}
             <motion.div
-              ref={formPanelRef}
               className="lg:col-span-5"
               initial={{ opacity: 0, x: 16, filter: 'blur(6px)' }}
               animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}

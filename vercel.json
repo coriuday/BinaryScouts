@@ -1,9 +1,12 @@
 {
-  "redirects": [
+  "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "https://binaryscouts.onrender.com/$1",
-      "permanent": true
+      "source": "/api/chat",
+      "destination": "https://binaryscouts-rust.onrender.com/api/chat"
+    },
+    {
+      "source": "/api/heist",
+      "destination": "https://binaryscouts-rust.onrender.com/api/heist"
     }
   ]
 }

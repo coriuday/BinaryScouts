@@ -1,7 +1,7 @@
 /**
  * Extended API matrix for QA — run: node scripts/qa-api-matrix.mjs [baseUrl]
  */
-const BASE = process.argv[2] || 'https://binaryscouts.onrender.com';
+const BASE = process.argv[2] || 'https://binary-scouts.vercel.app';
 const TIMEOUT = 60_000;
 let passed = 0;
 let failed = 0;

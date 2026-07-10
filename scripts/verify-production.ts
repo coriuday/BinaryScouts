@@ -1,10 +1,9 @@
 /**
- * Smoke-test production endpoints on Render.
+ * Smoke-test production endpoints on Vercel + Render backends.
  * Run: npm run verify:production
  */
-const BASE = process.env.PRODUCTION_URL || 'https://binaryscouts.onrender.com';
+const BASE = process.env.PRODUCTION_URL || 'https://binary-scouts.vercel.app';
 const RUST = process.env.RUST_URL || 'https://binaryscouts-rust.onrender.com';
-const PYTHON = process.env.PYTHON_URL || 'https://binaryscouts-python.onrender.com';
 
 type Check = { name: string; url: string; ok: (status: number, body: string) => boolean };
 
@@ -38,11 +37,6 @@ const checks: Check[] = [
     name: 'Rust gateway status',
     url: `${RUST}/api/status`,
     ok: (s, b) => s === 200 && b.includes('ONLINE'),
-  },
-  {
-    name: 'Python health',
-    url: `${PYTHON}/health`,
-    ok: (s, b) => s === 200 && b.includes('key_configured'),
   },
 ];
 

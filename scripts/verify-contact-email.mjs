@@ -2,7 +2,7 @@
  * Verify production contact email delivery.
  * Run: node scripts/verify-contact-email.mjs
  */
-const BASE = process.env.PRODUCTION_URL || 'https://binaryscouts.onrender.com';
+const BASE = process.env.PRODUCTION_URL || 'https://binary-scouts.vercel.app';
 
 const payload = {
   type: 'contact',

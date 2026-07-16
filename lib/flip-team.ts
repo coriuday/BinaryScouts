@@ -48,7 +48,7 @@ export const FLIP_TEAM_MEMBERS: FlipCardData[] = [
     ],
     socialLinks: {
       github: 'https://github.com/coriuday',
-      linkedin: 'https://www.linkedin.com/in/uday-kumar-kori-784678210',
+      linkedin: 'https://www.linkedin.com/in/uday-kumar-kori-784678210/',
     },
   },
   {

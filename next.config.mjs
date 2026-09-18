@@ -20,6 +20,14 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
+      {
+        protocol: 'https',
+        hostname: '**.supabase.co',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.supabase.in',
+      },
     ],
   },
 
@@ -43,9 +51,9 @@ const nextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: https://images.unsplash.com https://api.microlink.io https://*.microlink.io",
+              "img-src 'self' data: blob: https://images.unsplash.com https://api.microlink.io https://*.microlink.io https://*.supabase.co https://*.supabase.in",
               "font-src 'self' data:",
-              "connect-src 'self'",
+              "connect-src 'self' https://*.supabase.co https://*.supabase.in",
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",

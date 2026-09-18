@@ -193,14 +193,14 @@ export function mapDbReview(row: DbReview): Review {
 }
 
 export const DEFAULT_HERO_STATS: HeroStats = {
-  systemsBuilt: 15,
-  revenueLabel: '₹1M+ INR',
-  clientRetention: 98,
-  avgRating: 4.9,
+  systemsBuilt: 0,
+  revenueLabel: '—',
+  clientRetention: 0,
+  avgRating: 0,
 };
 
 export const DEFAULT_CONTACT_ENGAGEMENT: ContactEngagement = {
-  typicalRange: '₹10L – ₹50L',
+  typicalRange: 'Scoped per engagement',
   responseTime: '<24 hours',
   discoveryCall: '30 min, free',
 };

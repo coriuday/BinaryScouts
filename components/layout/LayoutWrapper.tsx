@@ -17,30 +17,37 @@ interface LayoutWrapperProps {
 
 export default function LayoutWrapper({ children, bodyClass }: LayoutWrapperProps) {
   const [mounted, setMounted] = useState(false);
+  const [enableCursor, setEnableCursor] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    const coarse = window.matchMedia('(pointer: coarse)').matches;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setEnableCursor(!coarse && !reduced);
   }, []);
 
   return (
     <body
-      className={`${bodyClass} antialiased min-h-screen`}
+      className={`${bodyClass} antialiased min-h-screen overflow-x-hidden`}
       style={{
         backgroundColor: 'var(--bg-primary)',
         color: 'var(--text-primary)',
       }}
     >
+      <a href="#main-content" className="skip-to-content">
+        Skip to content
+      </a>
       <AudioProvider>
         <ContactInfoProvider>
           {mounted && <ScrollProgressBar />}
-          {mounted && <CustomCursor />}
+          {mounted && enableCursor && <CustomCursor />}
           {mounted && <ClickRipple />}
 
           <div className="hidden md:block">
             <CrewTicker />
           </div>
 
-          {children}
+          <div id="main-content">{children}</div>
 
           {mounted && <WhatsAppFab />}
           <Terminal />

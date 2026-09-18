@@ -15,10 +15,11 @@ const TiltCard: React.FC<{
 
   const handleMove = useCallback((e: React.MouseEvent) => {
     if (!ref.current || window.innerWidth < 1024) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const rect = ref.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    ref.current.style.transform = `perspective(1000px) rotateY(${x * 20}deg) rotateX(${-y * 20}deg) scale(1.02)`;
+    ref.current.style.transform = `perspective(1000px) rotateY(${x * 12}deg) rotateX(${-y * 12}deg) scale(1.01)`;
     ref.current.style.transition = 'transform 0.1s ease';
   }, []);
 
@@ -98,8 +99,11 @@ const AISystemsCard: React.FC = () => {
         </div>
 
         <h3 style={{ fontFamily: 'var(--font-syne)', fontWeight: 600, fontSize: 22, color: 'var(--text-1)', marginBottom: 8 }}>AI Systems</h3>
-        <p style={{ fontFamily: 'var(--font-inter)', fontSize: 14, color: 'var(--text-2)', lineHeight: 1.6, marginBottom: 16 }}>
-          Custom AI pipelines, intelligent agents, and deep integrations built on state-of-the-art models.
+        <p style={{ fontFamily: 'var(--font-inter)', fontSize: 14, color: 'var(--text-2)', lineHeight: 1.6, marginBottom: 8 }}>
+          Automate knowledge work with agents and RAG pipelines grounded in your data — not demos that fall apart in production.
+        </p>
+        <p style={{ fontFamily: 'var(--font-inter)', fontSize: 13, color: 'var(--text-3)', lineHeight: 1.55, marginBottom: 16 }}>
+          Models & tooling: GPT-4, Gemini, Claude, LangChain.
         </p>
 
         {hovered && (
@@ -114,7 +118,7 @@ const AISystemsCard: React.FC = () => {
 
         <div className="mt-auto flex items-center gap-2" style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-3)' }}>
           <span className="v2-live-dot" style={{ background: '#6366f1', width: 5, height: 5, animation: 'pulse-live 2s infinite' }} />
-          Avg inference: 45ms
+          Production-ready pipelines
         </div>
       </div>
     </TiltCard>
@@ -150,8 +154,11 @@ const SaaSCard: React.FC = () => {
         </div>
 
         <h3 style={{ fontFamily: 'var(--font-syne)', fontWeight: 600, fontSize: 22, color: 'var(--text-1)', marginBottom: 8 }}>SaaS Development</h3>
-        <p style={{ fontFamily: 'var(--font-inter)', fontSize: 14, color: 'var(--text-2)', lineHeight: 1.6, marginBottom: 16 }}>
-          Full-stack web platforms engineered for performance and scale — from design systems to Rust API gateways.
+        <p style={{ fontFamily: 'var(--font-inter)', fontSize: 14, color: 'var(--text-2)', lineHeight: 1.6, marginBottom: 8 }}>
+          Turn a product idea into a production SaaS — auth, billing, dashboards, and APIs that scale with your users.
+        </p>
+        <p style={{ fontFamily: 'var(--font-inter)', fontSize: 13, color: 'var(--text-3)', lineHeight: 1.55, marginBottom: 16 }}>
+          Stack highlights: Next.js, TypeScript, Rust gateways, Postgres.
         </p>
 
         {hovered && (
@@ -304,7 +311,7 @@ const GrowthCard: React.FC = () => {
 
         {hovered && (
           <div className="flex flex-wrap gap-2 mb-3">
-            {['DA 72 ↑', '+127% organic', '3.2× traffic'].map((m, i) => (
+            {['Technical SEO', 'Acquisition systems', 'Conversion loops'].map((m, i) => (
               <motion.span
                 key={m}
                 initial={{ opacity: 0, x: -12 }}
@@ -478,7 +485,7 @@ const DevOpsCard: React.FC = () => {
             />
           </svg>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--text-2)' }}>
-            99.98% · 247 day streak
+            CI/CD · monitored deploys
           </span>
         </div>
       </div>

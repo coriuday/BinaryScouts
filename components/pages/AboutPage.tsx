@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -202,7 +203,13 @@ export default function AboutPage() {
                         style={{ background: member.gradient, border: `1px solid ${member.accentColor}33` }}
                       >
                         {member.avatar ? (
-                          <img src={member.avatar} alt="" className="w-full h-full object-cover" />
+                          <Image
+                            src={member.avatar}
+                            alt={member.name}
+                            width={56}
+                            height={56}
+                            className="w-full h-full object-cover"
+                          />
                         ) : (
                           member.name.split(' ').map((w) => w[0]).join('').slice(0, 2)
                         )}

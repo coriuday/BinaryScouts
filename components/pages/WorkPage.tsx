@@ -92,10 +92,10 @@ export default function WorkPage() {
               style={{ borderTop: '1px solid var(--glass-border-1)' }}
             >
               {[
-                { label: '20+', sub: 'Systems shipped' },
-                { label: '1M+ INR', sub: 'Revenue generated' },
-                { label: '98%', sub: 'Client retention' },
-                { label: '3×', sub: 'Avg ROI delivered' },
+                { label: 'AI-native', sub: 'Systems & automation' },
+                { label: 'Full-stack', sub: 'Product engineering' },
+                { label: 'Partnered', sub: 'Embedded delivery' },
+                { label: 'Documented', sub: 'Handoffs that last' },
               ].map(({ label, sub }, i) => (
                 <motion.div
                   key={label}

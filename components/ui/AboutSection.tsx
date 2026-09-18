@@ -1,30 +1,16 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
 /* ── Studio Dashboard Widget ─────────────────────────── */
 const StudioDashboard: React.FC = () => {
-  const [lastDeploy, setLastDeploy] = useState(2);
-  const [nps, setNps] = useState(91);
-  const [velocity, setVelocity] = useState(92);
-  const [coverage, setCoverage] = useState(94);
   const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Last deploy counter
-    const deployTimer = setInterval(() => setLastDeploy((p) => p + 1), 60000);
-    // Jitter other values
-    const jitterTimer = setInterval(() => {
-      setNps((p) => p + (Math.random() > 0.5 ? 1 : -1));
-      setVelocity((p) => Math.max(88, Math.min(96, p + (Math.random() > 0.5 ? 1 : -1))));
-      setCoverage((p) => Math.max(92, Math.min(96, p + (Math.random() > 0.5 ? 1 : -1))));
-    }, 10000);
-    return () => { clearInterval(deployTimer); clearInterval(jitterTimer); };
-  }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!ref.current) return;
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const rect = ref.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
@@ -39,12 +25,12 @@ const StudioDashboard: React.FC = () => {
   };
 
   const rows = [
-    { label: 'Active Projects', value: '3 / 5' },
-    { label: 'Sprint Velocity', value: `${velocity} pts/week` },
-    { label: 'Avg Delivery Time', value: '6.2 weeks' },
-    { label: 'Client NPS Score', value: String(nps) },
-    { label: 'Code Coverage (avg)', value: `${coverage}%` },
-    { label: 'Last Deploy', value: `${lastDeploy} min ago` },
+    { label: 'Engagement model', value: 'Embedded team' },
+    { label: 'Delivery cadence', value: 'Bi-weekly demos' },
+    { label: 'Typical timeline', value: '4 – 8 weeks' },
+    { label: 'Support after ship', value: '30-day warranty' },
+    { label: 'Stack focus', value: 'AI + full-stack' },
+    { label: 'Availability', value: 'Discovery open' },
   ];
 
   return (
@@ -131,7 +117,7 @@ const AboutSection: React.FC = () => {
               {[
                 'BinaryScouts was founded on one belief: great software is never built by vendors — it\'s built by engineers who care about the outcome as much as the client does.',
                 'Every system we build is designed to outlast the engagement. We don\'t do handoffs that need handholding. We document everything, we train your team, and we are still on call when it matters.',
-                'We have generated over $2M in measurable revenue impact for our clients. Not traffic. Not impressions. Actual revenue.',
+                'We measure success by what ships and what lasts — not vanity traffic metrics. If it doesn\'t move the business, it doesn\'t ship.',
               ].map((p, i) => (
                 <p
                   key={i}

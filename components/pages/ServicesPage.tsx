@@ -47,7 +47,7 @@ const SERVICES_DATA: ServiceDetail[] = [
     category: 'marketing',
     priceRange: '$5,000 – $20,000',
     timeframe: '2 – 4 weeks',
-    description: 'Deploy custom automated ad funnels on search and social channels, using custom bid engines to decrease lead costs by up to 45%.',
+    description: 'Deploy custom automated ad funnels on search and social channels with instrumentation that ties spend to qualified pipeline.',
     specs: ['Paid traffic funnels', 'Bid optimisation engines', 'Pixel analytics tracking', 'Dynamic retargeting'],
     gradient: 'linear-gradient(135deg, rgba(236,72,153,0.12), rgba(244,114,182,0.05))',
     iconColor: 'var(--rose)',

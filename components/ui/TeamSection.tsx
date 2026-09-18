@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Users, Sparkles, Code2, ChevronDown, ChevronUp } from 'lucide-react';
 import { getTeamMembers, SKILL_CATEGORY_COLORS, type TeamMember } from '@/lib/team';
@@ -75,10 +76,11 @@ const MemberCard: React.FC<{ member: TeamMember; index: number }> = ({ member, i
           {/* Avatar + info row */}
           <div className="flex items-start gap-4 mb-5">
             {member.avatar ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 src={member.avatar}
                 alt={member.name}
+                width={56}
+                height={56}
                 className="w-14 h-14 rounded-2xl object-cover flex-shrink-0"
                 style={{ border: '2px solid var(--glass-border-2)' }}
               />

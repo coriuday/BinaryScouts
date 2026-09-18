@@ -1,45 +1,12 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import ParticleCanvas from '@/components/ui/ParticleCanvas';
 import TechBubbles from '@/components/ui/TechBubbles';
 
-/* ── Counter-up hook ─────────────────────────────────── */
-function useCountUp(end: number, duration: number, inView: boolean, delay = 0) {
-  const [val, setVal] = useState(0);
-  useEffect(() => {
-    if (!inView) return;
-    const t = setTimeout(() => {
-      const start = performance.now();
-      const tick = (now: number) => {
-        const p = Math.min((now - start) / duration, 1);
-        const eased = 1 - Math.pow(1 - p, 3);
-        setVal(Math.round(eased * end));
-        if (p < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-    }, delay);
-    return () => clearTimeout(t);
-  }, [inView, end, duration, delay]);
-  return val;
-}
-
 /* ── Status pill component ───────────────────────────── */
-const StatusPill: React.FC<{ label: string; value: string; jitter?: boolean }> = ({ label, value, jitter }) => {
-  const [display, setDisplay] = useState(value);
-
-  useEffect(() => {
-    if (!jitter) return;
-    const interval = setInterval(() => {
-      const base = parseInt(value);
-      if (isNaN(base)) return;
-      const offset = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
-      setDisplay(String(base + offset));
-    }, 8000 + Math.random() * 7000);
-    return () => clearInterval(interval);
-  }, [jitter, value]);
-
+const StatusPill: React.FC<{ label: string; value: string }> = ({ label, value }) => {
   return (
     <div
       style={{
@@ -57,30 +24,19 @@ const StatusPill: React.FC<{ label: string; value: string; jitter?: boolean }> =
       }}
     >
       <span className="v2-live-dot" style={{ width: 5, height: 5 }} />
-      {display} {label}
+      {value} {label}
     </div>
   );
 };
 
 /* ── Hero Section ────────────────────────────────────── */
 const HeroNew: React.FC = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [inView, setInView] = useState(false);
-  const [heroStats, setHeroStats] = useState({ systemsBuilt: 15, revenueLabel: '₹1M+ INR', clientRetention: 98, avgRating: 4.9 });
-
-  useEffect(() => {
-    setInView(true);
-    fetch('/api/cms/settings')
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.heroStats) setHeroStats(d.heroStats);
-      })
-      .catch(() => {});
-  }, []);
-
-  const stat1 = useCountUp(heroStats.systemsBuilt, 1500, inView, 1500);
-  const stat3 = useCountUp(heroStats.clientRetention, 1500, inView, 1500);
-  const stat4 = useCountUp(Math.round(heroStats.avgRating * 10), 1500, inView, 1500);
+  const CAPABILITY_PILLARS = [
+    { value: 'Full-stack', label: 'Product engineering' },
+    { value: 'AI-native', label: 'Systems & automation' },
+    { value: 'Hands-on', label: 'Engineering partnership' },
+    { value: 'Outcome-led', label: 'Delivery focus' },
+  ];
 
   const words1 = ['We', 'build', 'systems'];
   const words2 = ['that', 'scale'];
@@ -98,7 +54,6 @@ const HeroNew: React.FC = () => {
 
   return (
     <section
-      ref={sectionRef}
       className="relative w-full flex items-center overflow-hidden"
       style={{ minHeight: '100dvh', backgroundColor: 'var(--space)' }}
     >
@@ -192,9 +147,9 @@ const HeroNew: React.FC = () => {
             transition={{ delay: 1.1, duration: 0.5 }}
             className="flex flex-wrap gap-3 mb-8"
           >
-            <StatusPill label="Active Projects" value="3" />
-            <StatusPill label="Uptime" value="99.98%" />
-            <StatusPill label="Engineers Online" value="6" jitter />
+            <StatusPill label="studio" value="Remote-first" />
+            <StatusPill label="now" value="Accepting projects" />
+            <StatusPill label="call" value="30-min discovery" />
           </motion.div>
 
           {/* CTA Buttons */}
@@ -276,14 +231,9 @@ const HeroNew: React.FC = () => {
             className="flex items-start gap-8 flex-wrap"
             style={{ borderTop: '0.5px solid var(--border-v2)', paddingTop: 24 }}
           >
-            {[
-              { value: `${stat1}+`, label: 'Systems Built' },
-              { value: heroStats.revenueLabel, label: 'Revenue Generated' },
-              { value: `${stat3}%`, label: 'Client Retention' },
-              { value: `${(stat4 / 10).toFixed(1)}★`, label: 'Avg Client Rating' },
-            ].map((s, i) => (
-              <div key={i} style={{ borderLeft: i > 0 ? '0.5px solid var(--border-v2)' : 'none', paddingLeft: i > 0 ? 24 : 0 }}>
-                <div style={{ fontFamily: 'var(--font-syne)', fontWeight: 700, fontSize: 38, color: 'var(--text-1)', lineHeight: 1 }}>{s.value}</div>
+            {CAPABILITY_PILLARS.map((s, i) => (
+              <div key={s.label} style={{ borderLeft: i > 0 ? '0.5px solid var(--border-v2)' : 'none', paddingLeft: i > 0 ? 24 : 0 }}>
+                <div style={{ fontFamily: 'var(--font-syne)', fontWeight: 700, fontSize: 28, color: 'var(--text-1)', lineHeight: 1.1 }}>{s.value}</div>
                 <div style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: 'var(--text-3)', marginTop: 4 }}>{s.label}</div>
               </div>
             ))}

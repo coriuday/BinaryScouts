@@ -422,7 +422,7 @@ body {
   background: var(--gradient-primary);
   background-size: 200% 200%;
   color: #fff;
-  font-family: var(--font-inter), 'Inter', sans-serif;
+  font-family: var(--font-inter), 'Manrope', system-ui, sans-serif;
   font-weight: 600;
   font-size: 0.9375rem;
   border-radius: 100px;
@@ -456,7 +456,7 @@ body {
   padding: 0.8125rem 1.875rem;
   background: var(--glass-2);
   color: var(--text-primary);
-  font-family: var(--font-inter), 'Inter', sans-serif;
+  font-family: var(--font-inter), 'Manrope', system-ui, sans-serif;
   font-weight: 600;
   font-size: 0.9375rem;
   border-radius: 100px;
@@ -479,7 +479,7 @@ body {
 .admin-input {
   width: 100%;
   padding: 0.625rem 0.875rem;
-  font-family: var(--font-inter), 'Inter', sans-serif;
+  font-family: var(--font-inter), 'Manrope', system-ui, sans-serif;
   font-size: 0.875rem;
   color: var(--text-primary);
   background: var(--glass-1);
@@ -568,7 +568,7 @@ body {
   border-radius: 16px;
   color: var(--text-primary);
   font-size: 0.9375rem;
-  font-family: var(--font-inter), 'Inter', sans-serif;
+  font-family: var(--font-inter), 'Manrope', system-ui, sans-serif;
   transition: border-color 0.25s ease, box-shadow 0.25s ease;
   outline: none;
   box-shadow: var(--glass-inner);
@@ -590,7 +590,7 @@ body {
   border-radius: 16px;
   color: var(--text-primary);
   font-size: 0.9375rem;
-  font-family: var(--font-inter), 'Inter', sans-serif;
+  font-family: var(--font-inter), 'Manrope', system-ui, sans-serif;
   transition: border-color 0.25s ease, box-shadow 0.25s ease;
   outline: none;
   box-shadow: var(--glass-inner);
@@ -928,13 +928,9 @@ body {
    useReducedMotion() hook.
 ═══════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  .v2-ticker-track,
+  .v2-live-dot {
+    animation: none !important;
   }
 }
 
@@ -1079,7 +1075,7 @@ a:focus-visible {
 
 /* V2 eyebrow label */
 .v2-eyebrow {
-  font-family: var(--font-inter), 'Inter', sans-serif;
+  font-family: var(--font-inter), 'Manrope', system-ui, sans-serif;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.09em;

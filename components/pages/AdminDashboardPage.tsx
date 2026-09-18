@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useEffect } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -119,8 +120,8 @@ const AdminDashboardPage: React.FC = () => {
   const [team, setTeam] = useState<DbTeamMember[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [leads, setLeads] = useState<DbContactLead[]>([]);
-  const [heroStats, setHeroStats] = useState<HeroStats>({ systemsBuilt: 15, revenueLabel: '₹1M+ INR', clientRetention: 98, avgRating: 4.9 });
-  const [contactEngagement, setContactEngagement] = useState<ContactEngagement>({ typicalRange: '₹10L – ₹50L', responseTime: '<24 hours', discoveryCall: '30 min, free' });
+  const [heroStats, setHeroStats] = useState<HeroStats>({ systemsBuilt: 0, revenueLabel: '—', clientRetention: 0, avgRating: 0 });
+  const [contactEngagement, setContactEngagement] = useState<ContactEngagement>({ typicalRange: 'Scoped per engagement', responseTime: '<24 hours', discoveryCall: '30 min, free' });
   const [contactInfo, setContactInfo] = useState<ContactInfo>(DEFAULT_CONTACT_INFO);
   const [loading, setLoading] = useState({ projects: false, team: false, reviews: false, leads: false, settings: false });
   const [editingProject, setEditingProject] = useState<Project | null | undefined>(undefined);
@@ -455,7 +456,13 @@ const AdminDashboardPage: React.FC = () => {
                     return (
                       <div key={member.id} className="flex items-center gap-4 p-5 rounded-2xl group" style={{ border: '1px solid var(--glass-border-1)', background: 'var(--glass-1)' }}>
                         {member.image_url ? (
-                          <img src={member.image_url} alt="" className="w-12 h-12 rounded-2xl object-cover flex-shrink-0" />
+                          <Image
+                            src={member.image_url}
+                            alt={member.name}
+                            width={48}
+                            height={48}
+                            className="w-12 h-12 rounded-2xl object-cover flex-shrink-0"
+                          />
                         ) : (
                           <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 font-display font-bold text-sm text-white" style={{ background: 'var(--gradient-primary)' }}>
                             {initials}
@@ -658,7 +665,7 @@ const AdminDashboardPage: React.FC = () => {
                     </label>
                     <label className="flex flex-col gap-1">
                       <span className="font-sans text-xs" style={{ color: 'var(--text-muted)' }}>Revenue Label</span>
-                      <input className="admin-input" value={heroStats.revenueLabel} onChange={(e) => setHeroStats((s) => ({ ...s, revenueLabel: e.target.value }))} placeholder="₹1M+ INR" />
+                      <input className="admin-input" value={heroStats.revenueLabel} onChange={(e) => setHeroStats((s) => ({ ...s, revenueLabel: e.target.value }))} placeholder="Only if verified — e.g. client outcome note" />
                     </label>
                     <label className="flex flex-col gap-1">
                       <span className="font-sans text-xs" style={{ color: 'var(--text-muted)' }}>Client Retention %</span>
@@ -693,7 +700,7 @@ const AdminDashboardPage: React.FC = () => {
                   <h2 className="font-display font-bold text-base mb-4" style={{ color: 'var(--text-primary)' }}>Contact Engagement</h2>
                   <label className="flex flex-col gap-1 mb-4">
                     <span className="font-sans text-xs" style={{ color: 'var(--text-muted)' }}>Typical Engagement Range</span>
-                    <input className="admin-input" value={contactEngagement.typicalRange} onChange={(e) => setContactEngagement((s) => ({ ...s, typicalRange: e.target.value }))} />
+                    <input className="admin-input" value={contactEngagement.typicalRange} onChange={(e) => setContactEngagement((s) => ({ ...s, typicalRange: e.target.value }))} placeholder="Scoped per engagement" />
                   </label>
                   <label className="flex flex-col gap-1 mb-4">
                     <span className="font-sans text-xs" style={{ color: 'var(--text-muted)' }}>Response Time</span>

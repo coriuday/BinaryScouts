@@ -118,6 +118,6 @@ ON CONFLICT (id) DO NOTHING;
 
 -- Default site settings
 INSERT INTO site_settings (key, value) VALUES
-  ('hero_stats', '{"systemsBuilt": 15, "revenueLabel": "₹1M+ INR", "clientRetention": 98, "avgRating": 4.9}'),
-  ('contact_engagement', '{"typicalRange": "₹10L – ₹50L", "responseTime": "<24 hours", "discoveryCall": "30 min, free"}')
+  ('hero_stats', '{"systemsBuilt": 0, "revenueLabel": "—", "clientRetention": 0, "avgRating": 0}'),
+  ('contact_engagement', '{"typicalRange": "Scoped per engagement", "responseTime": "<24 hours", "discoveryCall": "30 min, free"}')
 ON CONFLICT (key) DO NOTHING;

@@ -28,7 +28,7 @@ const ProcessSection: React.FC = () => {
           style={{ fontFamily: 'var(--font-syne)', fontWeight: 700, fontSize: 'clamp(32px, 4vw, 54px)', color: 'var(--text-1)', lineHeight: 1.15, marginBottom: 48 }}
         >
           From brief to <span className="v2-gradient-word">deployment</span><br />
-          in 6 weeks.
+          with clear milestones.
         </motion.h2>
 
         <div ref={ref} className="relative">
@@ -74,7 +74,7 @@ const ProcessSection: React.FC = () => {
           className="text-center mt-12"
           style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--text-3)' }}
         >
-          Average engagement length: 8.4 weeks · Projects delivered on-time: 100%
+          Typical engagements: 4 – 8 weeks · Bi-weekly demos · 30-day support after ship
         </motion.div>
       </div>
     </section>

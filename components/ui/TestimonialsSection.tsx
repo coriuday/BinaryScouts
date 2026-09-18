@@ -133,9 +133,23 @@ const TestimonialsSection: React.FC = () => {
         </motion.h2>
 
         {!loading && !hasReviews && (
-          <p style={{ fontFamily: 'var(--font-inter)', fontSize: 16, color: 'var(--text-2)', marginBottom: 8 }}>
-            No reviews yet. Be the first to share your experience.
-          </p>
+          <div
+            style={{
+              background: 'var(--space-3)',
+              border: '0.5px solid var(--border-v2)',
+              borderRadius: 16,
+              padding: '28px 32px',
+              maxWidth: 560,
+              marginBottom: 8,
+            }}
+          >
+            <p style={{ fontFamily: 'var(--font-inter)', fontSize: 16, color: 'var(--text-2)', lineHeight: 1.65, marginBottom: 8 }}>
+              Client reviews appear here after verification. We don&apos;t publish placeholder testimonials.
+            </p>
+            <p style={{ fontFamily: 'var(--font-inter)', fontSize: 14, color: 'var(--text-3)', lineHeight: 1.55 }}>
+              Worked with us? Share your experience below — honest feedback helps the next founder decide.
+            </p>
+          </div>
         )}
       </div>
 
@@ -150,7 +164,13 @@ const TestimonialsSection: React.FC = () => {
       {hasReviews && useTicker && (
         <>
           <div className="v2-ticker-row mb-4" style={{ overflow: 'hidden' }}>
-            <div className="v2-ticker-track flex gap-5" style={{ animation: 'scroll-testimonial 55s linear infinite', width: 'max-content' }}>
+            <div
+              className="v2-ticker-track flex gap-5"
+              style={{
+                animation: 'scroll-testimonial 55s linear infinite',
+                width: 'max-content',
+              }}
+            >
               {row1.map((t, i) => (
                 <TestimonialCard key={reviewCardKey(t, 'r1', i)} t={t} />
               ))}
@@ -158,7 +178,13 @@ const TestimonialsSection: React.FC = () => {
           </div>
           {row2.length > 0 && (
             <div className="v2-ticker-row mb-12" style={{ overflow: 'hidden' }}>
-              <div className="v2-ticker-track flex gap-5" style={{ animation: 'scroll-testimonial-reverse 55s linear infinite', width: 'max-content' }}>
+              <div
+                className="v2-ticker-track flex gap-5"
+                style={{
+                  animation: 'scroll-testimonial-reverse 55s linear infinite',
+                  width: 'max-content',
+                }}
+              >
                 {row2.map((t, i) => (
                   <TestimonialCard key={reviewCardKey(t, 'r2', i)} t={t} />
                 ))}

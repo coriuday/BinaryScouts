@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Syne, Inter, JetBrains_Mono } from 'next/font/google';
+import { Space_Grotesk, Manrope, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/hooks/ThemeProvider';
 import LayoutWrapper from '@/components/layout/LayoutWrapper';
@@ -7,17 +7,19 @@ import { getSiteUrl } from '@/lib/site';
 
 const siteUrl = getSiteUrl();
 
-const syne = Syne({
+/** Display headings — Space Grotesk (kept as --font-syne for component compatibility) */
+const spaceGrotesk = Space_Grotesk({
   variable: '--font-syne',
   subsets: ['latin'],
-  weight: ['600', '700', '800'],
+  weight: ['500', '600', '700'],
   display: 'swap',
 });
 
-const inter = Inter({
+/** Body / UI — Manrope (kept as --font-inter for component compatibility) */
+const manrope = Manrope({
   variable: '--font-inter',
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
 });
 
@@ -90,7 +92,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${syne.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+      className={`${spaceGrotesk.variable} ${manrope.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
       {/* Dark theme — always. No light mode. */}
@@ -102,7 +104,7 @@ export default function RootLayout({
         />
       </head>
       <ThemeProvider>
-        <LayoutWrapper bodyClass={inter.className}>{children}</LayoutWrapper>
+        <LayoutWrapper bodyClass={manrope.className}>{children}</LayoutWrapper>
       </ThemeProvider>
     </html>
   );

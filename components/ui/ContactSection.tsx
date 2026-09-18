@@ -10,7 +10,7 @@ const ContactSection: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({ name: '', email: '', company: '', budget: '', timeline: '', message: '', website: '' });
-  const [engagement, setEngagement] = useState({ typicalRange: '₹10L – ₹50L', responseTime: '<24 hours', discoveryCall: '30 min, free' });
+  const [engagement, setEngagement] = useState({ typicalRange: 'Scoped per engagement', responseTime: '<24 hours', discoveryCall: '30 min, free' });
 
   useEffect(() => {
     fetch('/api/cms/settings')

@@ -48,32 +48,32 @@ function mapTeamMember(m: CmsTeamMember, i: number): DisplayMember {
 const VALUES = [
   {
     icon: Code,
-    label: 'Pure Engineering',
-    desc: 'No templates, no shortcuts. Every system is handcrafted to specification with clean, maintainable code.',
+    label: 'Engineering ownership',
+    desc: 'We design, build, and ship production systems — documented, maintainable, and ready for your team to run.',
     color: 'var(--accent)',
     gradient: 'linear-gradient(135deg, rgba(139,92,246,0.14), rgba(167,139,250,0.05))',
     border: 'rgba(139,92,246,0.22)',
   },
   {
     icon: Zap,
-    label: 'Speed + Precision',
-    desc: 'Every millisecond shaved increases conversion. We optimise for performance at every layer of the stack.',
+    label: 'Clear milestones',
+    desc: 'Iterative delivery with regular demos. You see working software throughout the engagement, not only at the end.',
     color: 'var(--rose)',
     gradient: 'linear-gradient(135deg, rgba(236,72,153,0.12), rgba(244,114,182,0.05))',
     border: 'rgba(236,72,153,0.20)',
   },
   {
     icon: Target,
-    label: 'ROI-Obsessed',
-    desc: 'Every decision is tied to measurable outcomes. We build systems that justify themselves in the numbers.',
+    label: 'Outcomes over theatre',
+    desc: 'We prioritize what ships and what lasts. If a feature does not serve the business problem, it does not ship.',
     color: 'var(--sage)',
     gradient: 'linear-gradient(135deg, rgba(16,185,129,0.12), rgba(110,231,183,0.05))',
     border: 'rgba(16,185,129,0.20)',
   },
   {
     icon: ShieldCheck,
-    label: 'Security-First',
-    desc: 'Enterprise-grade security practices baked into every architecture decision from day one.',
+    label: 'Practical security',
+    desc: 'Auth, access control, and secure defaults where they matter — sized to the product, not a compliance checklist for show.',
     color: 'var(--accent)',
     gradient: 'linear-gradient(135deg, rgba(139,92,246,0.14), rgba(167,139,250,0.05))',
     border: 'rgba(139,92,246,0.22)',
@@ -109,26 +109,28 @@ export default function AboutPage() {
           >
             <div className="eyebrow-badge mb-6">
               <Users size={11} />
-              <span>The Studio</span>
+              <span>About BinaryScouts</span>
             </div>
             <h1
               className="font-display font-bold text-5xl md:text-7xl leading-tight tracking-tight mb-6"
               style={{ color: 'var(--text-primary)', letterSpacing: '-0.05em' }}
             >
-              We build systems{' '}
+              A lean team that{' '}
               <span className="gradient-text">
-                that scale.
+                ships software.
               </span>
             </h1>
             <p
               className="font-sans text-xl leading-relaxed max-w-2xl"
               style={{ color: 'var(--text-secondary)', letterSpacing: '-0.01em' }}
             >
-              BinaryScouts is an AI-native engineering studio. We partner with ambitious founders and growth-stage companies to design and build the automated, intelligent systems that power modern business operations.
+              BinaryScouts is a technology startup building production software — AI systems, SaaS products,
+              automation, and digital infrastructure — for founders and growing businesses that need serious
+              engineering without agency theatre.
             </p>
           </motion.div>
 
-          {/* ── Manifesto glass card ──────────────────────── */}
+          {/* ── Story ──────────────────────── */}
           <motion.div
             initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }}
             whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
@@ -144,15 +146,22 @@ export default function AboutPage() {
               className="absolute inset-x-0 top-0 h-0.5 rounded-t-[2rem]"
               style={{ background: 'var(--gradient-dreamy)', opacity: 0.4 }}
             />
-            <div className="max-w-3xl relative z-10">
+            <div className="max-w-3xl relative z-10 space-y-5">
               <p
-                className="font-display font-bold text-2xl md:text-3xl leading-relaxed mb-6"
+                className="font-display font-bold text-2xl md:text-3xl leading-relaxed"
                 style={{ color: 'var(--text-primary)', letterSpacing: '-0.03em' }}
               >
-                &ldquo;In a market of generic agency models, we operate as a precision-focused engineering team. We combine creative design, intelligent automation, and robust code architectures to build systems that actually move the needle.&rdquo;
+                We are not an agency. We are your engineering team.
               </p>
-              <p className="font-sans text-base" style={{ color: 'var(--text-secondary)' }}>
-                — BinaryScouts Studio Manifesto
+              <p className="font-sans text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                Too many digital agencies sell slides and hand off unfinished systems. BinaryScouts was
+                started to own the engineering end-to-end: understand the problem, architect the system,
+                ship to production, and stay accountable after go-live.
+              </p>
+              <p className="font-sans text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                We work as a small embedded team — clear milestones, bi-weekly demos, documented handoffs.
+                What we&apos;re building toward: a reputation for shipping reliable production software,
+                not vanity decks.
               </p>
             </div>
           </motion.div>

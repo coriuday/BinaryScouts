@@ -11,7 +11,6 @@ const ServicesBento = dynamic(() => import('@/components/ui/ServicesBento'));
 const CaseStudiesNew = dynamic(() => import('@/components/ui/CaseStudiesNew'));
 const TeamNew = dynamic(() => import('@/components/ui/TeamNew'));
 const ProcessSection = dynamic(() => import('@/components/ui/ProcessSection'));
-const TechStackGrid = dynamic(() => import('@/components/ui/TechStackGrid'));
 const TestimonialsSection = dynamic(() => import('@/components/ui/TestimonialsSection'));
 const ContactSection = dynamic(() => import('@/components/ui/ContactSection'));
 const Footer = dynamic(() => import('@/components/layout/Footer'));
@@ -95,10 +94,6 @@ export default function Home() {
 
           <div className="section-lazy">
             <ProcessSection />
-          </div>
-
-          <div className="section-lazy">
-            <TechStackGrid />
           </div>
 
           <div className="section-lazy">

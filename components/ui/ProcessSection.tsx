@@ -1,13 +1,44 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
 const STEPS = [
-  { num: '01', title: 'Discovery', color: '#6366f1', items: ['30-min call', 'Define scope', 'Review past work'], tip: 'We come prepared. Expect pointed questions, not a sales pitch.' },
-  { num: '02', title: 'Architecture', color: '#22d3ee', items: ['System design', '+ tech stack', 'selection'], tip: 'Our architecture docs double as your technical knowledge base.' },
-  { num: '03', title: 'Engineering', color: '#a78bfa', items: ['Bi-weekly sprints', '+ daily async', 'updates + demos'], tip: 'You see working code every 2 weeks. No surprises at delivery.' },
-  { num: '04', title: 'Delivery', color: '#10b981', items: ['Ship, monitor', 'iterate + SLA', '30-day support'], tip: 'We don\'t disappear after handoff. 30-day warranty is standard.' },
+  {
+    num: '01',
+    title: 'Discover',
+    color: '#6366f1',
+    items: ['Business & user context', 'Requirements & constraints', 'Scope alignment'],
+    tip: 'A focused discovery call — pointed questions, not a sales pitch.',
+  },
+  {
+    num: '02',
+    title: 'Architect',
+    color: '#22d3ee',
+    items: ['System design', 'Tech stack selection', 'Delivery plan'],
+    tip: 'Architecture docs double as your technical knowledge base.',
+  },
+  {
+    num: '03',
+    title: 'Build',
+    color: '#a78bfa',
+    items: ['Iterative development', 'Bi-weekly demos', 'Continuous feedback'],
+    tip: 'You see working software every two weeks. No end-of-project surprises.',
+  },
+  {
+    num: '04',
+    title: 'Deploy',
+    color: '#10b981',
+    items: ['Production release', 'Monitoring basics', 'Handoff docs'],
+    tip: 'We ship to production with a clear runbook, not a zip file.',
+  },
+  {
+    num: '05',
+    title: 'Support',
+    color: '#f59e0b',
+    items: ['30-day warranty', 'Issue triage', 'Optional retainers'],
+    tip: 'We don\'t disappear after launch. Stabilization is part of delivery.',
+  },
 ];
 
 const ProcessSection: React.FC = () => {
@@ -25,21 +56,26 @@ const ProcessSection: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          style={{ fontFamily: 'var(--font-syne)', fontWeight: 700, fontSize: 'clamp(32px, 4vw, 54px)', color: 'var(--text-1)', lineHeight: 1.15, marginBottom: 48 }}
+          style={{ fontFamily: 'var(--font-syne)', fontWeight: 700, fontSize: 'clamp(32px, 4vw, 54px)', color: 'var(--text-1)', lineHeight: 1.15, marginBottom: 16 }}
         >
           From brief to <span className="v2-gradient-word">deployment</span><br />
           with clear milestones.
         </motion.h2>
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.15 }}
+          style={{ fontFamily: 'var(--font-inter)', fontSize: 16, color: 'var(--text-2)', lineHeight: 1.65, maxWidth: '60ch', marginBottom: 48 }}
+        >
+          A straightforward engagement path so you always know what happens next —
+          and what you&apos;ll see before you pay for more work.
+        </motion.p>
 
         <div ref={ref} className="relative">
-          {/* Connecting line (desktop) */}
           <div className="hidden lg:block absolute top-16 left-0 right-0" style={{ height: 2, zIndex: 0 }}>
-            <svg width="100%" height="2">
-              <line
-                x1="0" y1="1" x2="100%" y2="1"
-                stroke="var(--border-v2)"
-                strokeWidth="2"
-              />
+            <svg width="100%" height="2" aria-hidden>
+              <line x1="0" y1="1" x2="100%" y2="1" stroke="var(--border-v2)" strokeWidth="2" />
               <line
                 x1="0" y1="1" x2="100%" y2="1"
                 stroke="var(--indigo)"
@@ -51,13 +87,13 @@ const ProcessSection: React.FC = () => {
             </svg>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 relative z-10">
             {STEPS.map((step, i) => (
               <motion.div
                 key={step.num}
                 initial={{ opacity: 0, y: 28 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.55, delay: i * 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                transition={{ duration: 0.55, delay: i * 0.12, ease: [0.25, 0.46, 0.45, 0.94] }}
               >
                 <StepCard step={step} />
               </motion.div>
@@ -65,7 +101,6 @@ const ProcessSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Bottom metrics */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -92,10 +127,12 @@ const StepCard: React.FC<{ step: typeof STEPS[0] }> = ({ step }) => {
         background: 'var(--space-3)',
         border: '0.5px solid var(--border-v2)',
         borderRadius: 16,
-        padding: 24,
-        transition: 'transform 0.3s, box-shadow 0.3s',
-        transform: hovered ? 'translateY(-8px)' : 'translateY(0)',
+        padding: 22,
+        height: '100%',
+        transition: 'transform 0.3s, box-shadow 0.3s, border-color 0.3s',
+        transform: hovered ? 'translateY(-6px)' : 'translateY(0)',
         boxShadow: hovered ? '0 12px 40px rgba(0,0,0,0.3)' : 'none',
+        borderColor: hovered ? `${step.color}55` : 'var(--border-v2)',
         cursor: 'default',
       }}
     >
@@ -103,15 +140,15 @@ const StepCard: React.FC<{ step: typeof STEPS[0] }> = ({ step }) => {
         style={{
           fontFamily: 'var(--font-syne)',
           fontWeight: 800,
-          fontSize: 32,
+          fontSize: 28,
           color: hovered ? step.color : 'var(--text-3)',
           transition: 'color 0.3s',
-          marginBottom: 12,
+          marginBottom: 10,
         }}
       >
         {step.num}
       </div>
-      <h3 style={{ fontFamily: 'var(--font-syne)', fontWeight: 600, fontSize: 20, color: 'var(--text-1)', marginBottom: 12 }}>
+      <h3 style={{ fontFamily: 'var(--font-syne)', fontWeight: 600, fontSize: 18, color: 'var(--text-1)', marginBottom: 10 }}>
         {step.title}
       </h3>
       {step.items.map((item) => (
@@ -119,15 +156,9 @@ const StepCard: React.FC<{ step: typeof STEPS[0] }> = ({ step }) => {
           {item}
         </p>
       ))}
-      {hovered && (
-        <motion.p
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: step.color, marginTop: 12, fontStyle: 'italic' }}
-        >
-          {step.tip}
-        </motion.p>
-      )}
+      <p style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: step.color, marginTop: 12, lineHeight: 1.45 }}>
+        {step.tip}
+      </p>
     </div>
   );
 };

@@ -3,9 +3,35 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
+import { TechLogo, TICKER_ROW_1, TICKER_ROW_2, type TickerTech } from '@/components/ui/TechLogo';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 const ParticleCanvas = dynamic(() => import('@/components/ui/ParticleCanvas'), { ssr: false });
 const TechBubbles = dynamic(() => import('@/components/ui/TechBubbles'), { ssr: false });
+
+const tickerPillStyle: React.CSSProperties = {
+  background: 'var(--space-3)',
+  border: '0.5px solid var(--border-v2)',
+  borderRadius: 8,
+  padding: '10px 16px',
+  fontFamily: 'var(--font-mono)',
+  fontSize: 12,
+  color: 'var(--text-2)',
+  whiteSpace: 'nowrap',
+  flexShrink: 0,
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 10,
+};
+
+function TickerPill({ tech }: { tech: TickerTech }) {
+  return (
+    <span style={tickerPillStyle}>
+      <TechLogo id={tech.icon} color={tech.color} size={18} />
+      {tech.label}
+    </span>
+  );
+}
 
 /* ── Status pill component ───────────────────────────── */
 const StatusPill: React.FC<{ label: string; value: string }> = ({ label, value }) => {
@@ -33,6 +59,8 @@ const StatusPill: React.FC<{ label: string; value: string }> = ({ label, value }
 
 /* ── Hero Section ────────────────────────────────────── */
 const HeroNew: React.FC = () => {
+  const reducedMotion = useReducedMotion();
+
   const CAPABILITY_PILLARS = [
     { value: 'Full-stack', label: 'Product engineering' },
     { value: 'AI-native', label: 'Systems & automation' },
@@ -43,16 +71,8 @@ const HeroNew: React.FC = () => {
   const words1 = ['We', 'build', 'systems'];
   const words2 = ['that', 'scale'];
 
-  const TICKER_ROW_1 = [
-    'AI Agent Systems', 'Next.js SaaS', 'WhatsApp CRM', 'GPT-4 Pipelines',
-    'Revenue Dashboards', 'Rust APIs', 'RAG Systems', 'Stripe Billing',
-    'CI/CD DevOps', 'Supabase DB',
-  ];
-  const TICKER_ROW_2 = [
-    'LangChain Agents', 'Framer Motion', 'TypeScript', 'Docker + K8s',
-    'PostgreSQL', 'Redis Cache', 'Vercel Deploy', 'Twilio SMS',
-    'OpenAI API', 'Growth SEO',
-  ];
+  const row1 = [...TICKER_ROW_1, ...TICKER_ROW_1];
+  const row2 = [...TICKER_ROW_2, ...TICKER_ROW_2];
 
   return (
     <section
@@ -138,18 +158,18 @@ const HeroNew: React.FC = () => {
               marginBottom: 32,
             }}
           >
-            We engineer AI systems, automate business operations, and build
-            scalable SaaS products for startups that refuse to move slowly.
+            We design and build production software — AI systems, SaaS products,
+            automation, and digital infrastructure — for teams that need to ship.
           </motion.p>
 
-          {/* Studio Status Bar */}
+          {/* Status Bar */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1.1, duration: 0.5 }}
             className="flex flex-wrap gap-3 mb-8"
           >
-            <StatusPill label="studio" value="Remote-first" />
+            <StatusPill label="team" value="Remote-first" />
             <StatusPill label="now" value="Accepting projects" />
             <StatusPill label="call" value="30-min discovery" />
           </motion.div>
@@ -249,63 +269,38 @@ const HeroNew: React.FC = () => {
         </div>
       </div>
 
-      {/* Live Ticker */}
+      {/* Live tech logo ticker */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.7, duration: 0.5 }}
         className="absolute bottom-0 left-0 right-0 pb-8 overflow-hidden hidden md:block"
         style={{ zIndex: 10 }}
+        aria-label="Technologies we work with"
       >
-        {/* Row 1 → */}
         <div className="v2-ticker-row mb-3" style={{ overflow: 'hidden' }}>
           <div
             className="v2-ticker-track flex gap-3"
-            style={{ animation: 'ticker-scroll-left 38s linear infinite', width: 'max-content' }}
+            style={{
+              animation: reducedMotion ? 'none' : 'ticker-scroll-left 38s linear infinite',
+              width: 'max-content',
+            }}
           >
-            {[...TICKER_ROW_1, ...TICKER_ROW_1].map((tag, i) => (
-              <span
-                key={`r1-${i}`}
-                style={{
-                  background: 'var(--space-3)',
-                  border: '0.5px solid var(--border-v2)',
-                  borderRadius: 8,
-                  padding: '10px 18px',
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 12,
-                  color: 'var(--text-2)',
-                  whiteSpace: 'nowrap',
-                  flexShrink: 0,
-                }}
-              >
-                {tag}
-              </span>
+            {row1.map((tech, i) => (
+              <TickerPill key={`r1-${tech.label}-${i}`} tech={tech} />
             ))}
           </div>
         </div>
-        {/* Row 2 ← */}
         <div className="v2-ticker-row" style={{ overflow: 'hidden' }}>
           <div
             className="v2-ticker-track flex gap-3"
-            style={{ animation: 'ticker-scroll-right 38s linear infinite', width: 'max-content' }}
+            style={{
+              animation: reducedMotion ? 'none' : 'ticker-scroll-right 38s linear infinite',
+              width: 'max-content',
+            }}
           >
-            {[...TICKER_ROW_2, ...TICKER_ROW_2].map((tag, i) => (
-              <span
-                key={`r2-${i}`}
-                style={{
-                  background: 'var(--space-3)',
-                  border: '0.5px solid var(--border-v2)',
-                  borderRadius: 8,
-                  padding: '10px 18px',
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 12,
-                  color: 'var(--text-2)',
-                  whiteSpace: 'nowrap',
-                  flexShrink: 0,
-                }}
-              >
-                {tag}
-              </span>
+            {row2.map((tech, i) => (
+              <TickerPill key={`r2-${tech.label}-${i}`} tech={tech} />
             ))}
           </div>
         </div>

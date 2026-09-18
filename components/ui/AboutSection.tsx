@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
+import Link from 'next/link';
 import { motion, useInView } from 'framer-motion';
 
 /* ── Studio Dashboard Widget ─────────────────────────── */
@@ -48,7 +49,7 @@ const StudioDashboard: React.FC = () => {
       }}
     >
       <div className="flex items-center justify-between mb-5">
-        <span style={{ color: 'var(--text-2)', fontWeight: 500 }}>Studio Status</span>
+        <span style={{ color: 'var(--text-2)', fontWeight: 500 }}>Engagement snapshot</span>
         <span className="flex items-center gap-2" style={{ color: 'var(--emerald)', fontSize: 12, fontWeight: 500 }}>
           <span className="v2-live-dot" />
           LIVE
@@ -65,6 +66,12 @@ const StudioDashboard: React.FC = () => {
   );
 };
 
+const BUILD_FOR = [
+  { title: 'What we build', body: 'AI systems, SaaS products, CRM automation, dashboards, and full-stack web platforms — shipping to production, not demos.' },
+  { title: 'Who we work with', body: 'Founders, startups, and growing businesses that need a lean engineering partner instead of a slow agency process.' },
+  { title: 'How we operate', body: 'Small team, clear milestones, bi-weekly demos, documented handoffs. We embed like your engineering team.' },
+];
+
 /* ── About Section ───────────────────────────────────── */
 const AboutSection: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -75,7 +82,6 @@ const AboutSection: React.FC = () => {
   return (
     <section id="about" style={{ backgroundColor: 'var(--space-2)', padding: '140px 0' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Eyebrow */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -83,10 +89,9 @@ const AboutSection: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="mb-4"
         >
-          <span className="v2-eyebrow">THE STUDIO</span>
+          <span className="v2-eyebrow">ABOUT</span>
         </motion.div>
 
-        {/* Headline */}
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -98,16 +103,33 @@ const AboutSection: React.FC = () => {
             fontSize: 'clamp(32px, 4vw, 54px)',
             color: 'var(--text-1)',
             lineHeight: 1.15,
-            marginBottom: 48,
+            marginBottom: 24,
           }}
         >
           We are not an agency.<br />
           We are your <span className="v2-gradient-word">engineering team.</span>
         </motion.h2>
 
-        {/* Two-column layout */}
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          style={{
+            fontFamily: 'var(--font-inter)',
+            fontSize: 16,
+            color: 'var(--text-2)',
+            lineHeight: 1.65,
+            maxWidth: '68ch',
+            marginBottom: 40,
+          }}
+        >
+          BinaryScouts is a lean technology startup. We design and ship production software —
+          AI systems, SaaS products, automation, and digital infrastructure — for teams that need
+          serious engineering without enterprise theater.
+        </motion.p>
+
         <div ref={ref} className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-          {/* Left column — copy */}
           <div className="lg:col-span-7">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -115,8 +137,8 @@ const AboutSection: React.FC = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               {[
-                'BinaryScouts was founded on one belief: great software is never built by vendors — it\'s built by engineers who care about the outcome as much as the client does.',
-                'Every system we build is designed to outlast the engagement. We don\'t do handoffs that need handholding. We document everything, we train your team, and we are still on call when it matters.',
+                'Too many “digital agencies” sell slides and hand off unfinished systems. We started BinaryScouts to do the opposite: own the engineering, ship working software, and stay accountable after go-live.',
+                'Every system we build is designed to outlast the engagement. We document what we ship, train your team where needed, and remain available when production issues matter.',
                 'We measure success by what ships and what lasts — not vanity traffic metrics. If it doesn\'t move the business, it doesn\'t ship.',
               ].map((p, i) => (
                 <p
@@ -135,14 +157,37 @@ const AboutSection: React.FC = () => {
               ))}
             </motion.div>
 
-            {/* Philosophy pills */}
-            <div className="flex flex-wrap gap-3 mt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 mb-8">
+              {BUILD_FOR.map((item, i) => (
+                <motion.div
+                  key={item.title}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: 0.35 + i * 0.06, duration: 0.4 }}
+                  style={{
+                    background: 'var(--space-3)',
+                    border: '0.5px solid var(--border-v2)',
+                    borderRadius: 14,
+                    padding: 16,
+                  }}
+                >
+                  <p style={{ fontFamily: 'var(--font-syne)', fontWeight: 600, fontSize: 14, color: 'var(--text-1)', marginBottom: 8 }}>
+                    {item.title}
+                  </p>
+                  <p style={{ fontFamily: 'var(--font-inter)', fontSize: 13, color: 'var(--text-3)', lineHeight: 1.55 }}>
+                    {item.body}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap gap-3 mt-2 items-center">
               {philosophyPills.map((pill, i) => (
                 <motion.span
                   key={pill}
                   initial={{ opacity: 0, y: 12 }}
                   animate={inView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ delay: 0.4 + i * 0.08, duration: 0.4 }}
+                  transition={{ delay: 0.45 + i * 0.08, duration: 0.4 }}
                   style={{
                     background: 'var(--indigo-dim)',
                     border: '0.5px solid var(--border-hover)',
@@ -157,10 +202,22 @@ const AboutSection: React.FC = () => {
                   {pill}
                 </motion.span>
               ))}
+              <Link
+                href="/about"
+                style={{
+                  fontFamily: 'var(--font-inter)',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  color: 'var(--indigo)',
+                  textDecoration: 'none',
+                  marginLeft: 4,
+                }}
+              >
+                Meet the team →
+              </Link>
             </div>
           </div>
 
-          {/* Right column — Studio Dashboard */}
           <motion.div
             className="lg:col-span-5"
             initial={{ opacity: 0, y: 20 }}

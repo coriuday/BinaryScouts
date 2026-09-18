@@ -59,7 +59,7 @@ export const PROJECTS: Project[] = [
       solution:
         'We designed and built Jobsrow as a modern web product — fast search, clear listings, and a focused UX that prioritizes discovery and conversion over noise.',
       results:
-        'A live, production-ready platform at jobsrow.com that positions candidates and opportunities in one streamlined experience.',
+        'Production system delivered and live at jobsrow.com — a full-stack product BinaryScouts engineered end-to-end.',
     },
     techStack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Node.js', 'Vercel'],
     tags: ['SaaS', 'Full Stack', 'Product'],
@@ -87,16 +87,16 @@ export const PROJECTS: Project[] = [
       problem:
         'Students needed trusted guidance across destinations, universities, and visas, but fragmented information made it hard to take the next step.',
       solution:
-        'We delivered a marketing and tools-forward website: destinations, services, scholarships, and clear CTAs for free consultations — optimized for trust and lead capture.',
+        'We delivered a marketing and tools-forward website: destinations, services, scholarships, and clear CTAs for consultations — optimized for trust and lead capture.',
       results:
-        'A polished live presence at mvrconsultants.org that showcases 10+ years of expertise, partner universities, and student success pathways.',
+        'Production website delivered and live at mvrconsultants.org — a polished presence for an education consultancy.',
     },
     techStack: ['Next.js', 'React', 'Tailwind CSS', 'SEO', 'Vercel'],
     tags: ['Web Platform', 'Education', 'Growth'],
     metrics: [
-      { value: '10+', label: 'Years trust' },
-      { value: '100+', label: 'Universities' },
-      { value: 'Global', label: 'Destinations' },
+      { value: 'Live', label: 'Production' },
+      { value: 'Lead', label: 'Capture UX' },
+      { value: 'SEO', label: 'Structured' },
     ],
     liveUrl: 'https://www.mvrconsultants.org/',
     images: [],

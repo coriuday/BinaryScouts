@@ -452,9 +452,9 @@ const CaseStudiesNew: React.FC = () => {
             marginBottom: 48,
           }}
         >
-          Two projects.
+          Two shipped products.
           <br />
-          <span className="v2-gradient-word">Real</span> results.
+          <span className="v2-gradient-word">Real</span> systems.
         </motion.h2>
 
         <div className="space-y-6">

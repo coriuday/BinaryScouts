@@ -130,8 +130,8 @@ const TestimonialsSection: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.1 }}
           style={{ fontFamily: 'var(--font-syne)', fontWeight: 700, fontSize: 'clamp(32px, 4vw, 54px)', color: 'var(--text-1)', lineHeight: 1.15, marginBottom: 24 }}
         >
-          What founders say<br />
-          after we <span className="v2-gradient-word">deliver.</span>
+          What clients say<br />
+          after we <span className="v2-gradient-word">ship.</span>
         </motion.h2>
 
         {!loading && !hasReviews && (

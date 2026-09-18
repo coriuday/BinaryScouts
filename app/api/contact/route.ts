@@ -16,6 +16,7 @@ type ContactBody = {
   company?: string;
   budget?: string;
   timeline?: string;
+  projectType?: string;
   message?: string;
   website?: string; // honeypot
 };
@@ -88,6 +89,7 @@ export async function POST(req: Request) {
   const company = (body.company || '').trim().slice(0, 200);
   const budget = (body.budget || '').trim().slice(0, 120);
   const timeline = (body.timeline || '').trim().slice(0, 120);
+  const projectType = (body.projectType || '').trim().slice(0, 120);
 
   if (!name || name.length > MAX_NAME) {
     return NextResponse.json({ error: 'Name is required' }, { status: 400 });
@@ -103,6 +105,7 @@ export async function POST(req: Request) {
     company,
     budget,
     timeline,
+    projectType,
     message,
     ip,
     receivedAt: new Date().toISOString(),
@@ -117,7 +120,7 @@ export async function POST(req: Request) {
       company,
       budget,
       timeline,
-      message,
+      message: projectType ? `[${projectType}] ${message}` : message,
     });
   } catch (e) {
     console.error('Failed to persist contact lead', e);
@@ -130,6 +133,7 @@ export async function POST(req: Request) {
       `Name: ${name}`,
       `Email: ${email}`,
       company ? `Company: ${company}` : '',
+      projectType ? `Project type: ${projectType}` : '',
       budget ? `Budget: ${budget}` : '',
       timeline ? `Timeline: ${timeline}` : '',
       '',

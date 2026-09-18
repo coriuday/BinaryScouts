@@ -6,22 +6,32 @@ import { motion } from 'framer-motion';
 import { CheckCircle, Mail, Phone, Sparkles } from 'lucide-react';
 import Logo from '@/components/ui/Logo';
 import { useContactInfo } from '@/components/hooks/useContactInfo';
+import {
+  COMPANY_POSITIONING,
+  COMPANY_REGISTRATION,
+  getFilledCompanyFields,
+} from '@/lib/company';
 
-const SOLUTIONS = [
-  { label: 'AI Systems',         href: '/#services' },
-  { label: 'SaaS Development',   href: '/#services' },
-  { label: 'CRM Automation',     href: '/#services' },
-  { label: 'Growth Engineering',  href: '/#services' },
+const COMPANY_LINKS = [
+  { label: 'About', href: '/about' },
+  { label: 'Services', href: '/services' },
+  { label: 'Projects', href: '/#work' },
+  { label: 'How we work', href: '/#process' },
+  { label: 'Contact', href: '/contact' },
+  { label: 'Careers', href: '/careers' },
 ];
 
-const COMPANY = [
-  { label: 'Our Work',      href: '/#work' },
-  { label: 'About Studio',  href: '/#about' },
-  { label: 'Careers',       href: '/careers' },
-  { label: 'Contact',       href: '/#contact' },
-  { label: 'Legal',         href: '/terms' },
+const RESOURCE_LINKS = [
+  { label: 'Case studies', href: '/#work' },
+  { label: 'Project planner', href: '/planner' },
 ];
 
+const LEGAL_LINKS = [
+  { label: 'Privacy Policy', href: '/privacy' },
+  { label: 'Terms of Service', href: '/terms' },
+];
+
+/** Only real, public profiles — no company LinkedIn until it exists. */
 const SOCIALS = [
   { label: 'GitHub', href: 'https://github.com/coriuday', abbr: 'GH' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/uday-kori-784678210/', abbr: 'in' },
@@ -40,12 +50,21 @@ const contactLinkStyle: React.CSSProperties = {
 
 const Footer: React.FC = () => {
   const { email: contactEmail, phoneDisplay, whatsappUrl } = useContactInfo();
+  const filledFields = getFilledCompanyFields();
+  const companyLinkedIn = COMPANY_REGISTRATION.companyLinkedIn?.trim();
   const [email, setEmail] = useState('');
   const [honeypot, setHoneypot] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [emailDelivered, setEmailDelivered] = useState(true);
   const [subStatus, setSubStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const [subError, setSubError] = useState('');
+
+  const socials = companyLinkedIn
+    ? [
+        SOCIALS[0],
+        { label: 'Company LinkedIn', href: companyLinkedIn, abbr: 'in' as const },
+      ]
+    : SOCIALS;
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,18 +93,24 @@ const Footer: React.FC = () => {
     }
   };
 
+  const linkStyle = (el: HTMLElement, hover: boolean) => {
+    el.style.color = hover ? 'var(--indigo)' : 'var(--text-2)';
+  };
+
   return (
     <footer className="relative pt-20 pb-10 overflow-hidden" style={{ backgroundColor: 'var(--space)' }}>
-      {/* Gradient top border */}
-      <div className="absolute inset-x-0 top-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, var(--indigo), transparent)', opacity: 0.4 }} />
-
-      {/* Atmospheric gradient */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 0%, var(--orb-violet) 0%, transparent 70%)' }} />
+      <div
+        className="absolute inset-x-0 top-0 h-px"
+        style={{ background: 'linear-gradient(90deg, transparent, var(--indigo), transparent)', opacity: 0.4 }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 0%, var(--orb-violet) 0%, transparent 70%)' }}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Main grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-16">
-          {/* Brand column */}
+          {/* Brand */}
           <div className="lg:col-span-1">
             <Link
               href="/"
@@ -97,13 +122,30 @@ const Footer: React.FC = () => {
               <Logo variant="wordmark" size={22} />
             </Link>
 
-            <p style={{ fontFamily: 'var(--font-inter)', fontSize: 14, color: 'var(--text-2)', lineHeight: 1.6, marginBottom: 20 }}>
-              AI-native digital engineering studio building intelligent systems for modern businesses.
+            <p
+              style={{
+                fontFamily: 'var(--font-inter)',
+                fontSize: 14,
+                color: 'var(--text-2)',
+                lineHeight: 1.6,
+                marginBottom: 8,
+              }}
+            >
+              {COMPANY_POSITIONING}
+            </p>
+            <p
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                color: 'var(--text-3)',
+                marginBottom: 20,
+              }}
+            >
+              Technology startup
             </p>
 
-            {/* Social icons */}
             <div className="flex flex-wrap gap-2">
-              {SOCIALS.map((social) => (
+              {socials.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
@@ -164,52 +206,79 @@ const Footer: React.FC = () => {
                 {phoneDisplay}
               </a>
             </div>
-          </div>
 
-          {/* Solutions */}
-          <div>
-            <h5 style={{ fontFamily: 'var(--font-syne)', fontWeight: 600, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-1)', marginBottom: 20 }}>
-              Solutions
-            </h5>
-            <ul className="space-y-3">
-              {SOLUTIONS.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.href}
-                    style={{ fontFamily: 'var(--font-inter)', fontSize: 14, color: 'var(--text-2)', textDecoration: 'none', transition: 'color 0.2s' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--indigo)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-2)')}
+            {filledFields.length > 0 && (
+              <div className="mt-6 space-y-1.5">
+                <p
+                  style={{
+                    fontFamily: 'var(--font-syne)',
+                    fontWeight: 600,
+                    fontSize: 11,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                    color: 'var(--text-3)',
+                    marginBottom: 8,
+                  }}
+                >
+                  Official company information
+                </p>
+                {filledFields.map((row) => (
+                  <p
+                    key={row.label}
+                    style={{ fontFamily: 'var(--font-inter)', fontSize: 12, color: 'var(--text-3)', lineHeight: 1.5 }}
                   >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+                    <span style={{ color: 'var(--text-2)' }}>{row.label}:</span> {row.value}
+                  </p>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Company */}
           <div>
-            <h5 style={{ fontFamily: 'var(--font-syne)', fontWeight: 600, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-1)', marginBottom: 20 }}>
+            <h5
+              style={{
+                fontFamily: 'var(--font-syne)',
+                fontWeight: 600,
+                fontSize: 12,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                color: 'var(--text-1)',
+                marginBottom: 20,
+              }}
+            >
               Company
             </h5>
             <ul className="space-y-3">
-              {COMPANY.map((link) => (
+              {COMPANY_LINKS.map((link) => (
                 <li key={link.label}>
-                  {link.href.startsWith('#') ? (
+                  {link.href.startsWith('/#') || link.href.startsWith('#') ? (
                     <a
                       href={link.href}
-                      style={{ fontFamily: 'var(--font-inter)', fontSize: 14, color: 'var(--text-2)', textDecoration: 'none', transition: 'color 0.2s' }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--indigo)')}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-2)')}
+                      style={{
+                        fontFamily: 'var(--font-inter)',
+                        fontSize: 14,
+                        color: 'var(--text-2)',
+                        textDecoration: 'none',
+                        transition: 'color 0.2s',
+                      }}
+                      onMouseEnter={(e) => linkStyle(e.currentTarget, true)}
+                      onMouseLeave={(e) => linkStyle(e.currentTarget, false)}
                     >
                       {link.label}
                     </a>
                   ) : (
                     <Link
                       href={link.href}
-                      style={{ fontFamily: 'var(--font-inter)', fontSize: 14, color: 'var(--text-2)', textDecoration: 'none', transition: 'color 0.2s' }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--indigo)')}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-2)')}
+                      style={{
+                        fontFamily: 'var(--font-inter)',
+                        fontSize: 14,
+                        color: 'var(--text-2)',
+                        textDecoration: 'none',
+                        transition: 'color 0.2s',
+                      }}
+                      onMouseEnter={(e) => linkStyle(e.currentTarget, true)}
+                      onMouseLeave={(e) => linkStyle(e.currentTarget, false)}
                     >
                       {link.label}
                     </Link>
@@ -219,13 +288,101 @@ const Footer: React.FC = () => {
             </ul>
           </div>
 
+          {/* Resources + Legal */}
+          <div>
+            <h5
+              style={{
+                fontFamily: 'var(--font-syne)',
+                fontWeight: 600,
+                fontSize: 12,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                color: 'var(--text-1)',
+                marginBottom: 20,
+              }}
+            >
+              Resources
+            </h5>
+            <ul className="space-y-3 mb-8">
+              {RESOURCE_LINKS.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    style={{
+                      fontFamily: 'var(--font-inter)',
+                      fontSize: 14,
+                      color: 'var(--text-2)',
+                      textDecoration: 'none',
+                      transition: 'color 0.2s',
+                    }}
+                    onMouseEnter={(e) => linkStyle(e.currentTarget, true)}
+                    onMouseLeave={(e) => linkStyle(e.currentTarget, false)}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <h5
+              style={{
+                fontFamily: 'var(--font-syne)',
+                fontWeight: 600,
+                fontSize: 12,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                color: 'var(--text-1)',
+                marginBottom: 20,
+              }}
+            >
+              Legal
+            </h5>
+            <ul className="space-y-3">
+              {LEGAL_LINKS.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    style={{
+                      fontFamily: 'var(--font-inter)',
+                      fontSize: 14,
+                      color: 'var(--text-2)',
+                      textDecoration: 'none',
+                      transition: 'color 0.2s',
+                    }}
+                    onMouseEnter={(e) => linkStyle(e.currentTarget, true)}
+                    onMouseLeave={(e) => linkStyle(e.currentTarget, false)}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           {/* Newsletter */}
           <div>
-            <h5 style={{ fontFamily: 'var(--font-syne)', fontWeight: 600, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-1)', marginBottom: 20 }}>
-              Stay Updated
+            <h5
+              style={{
+                fontFamily: 'var(--font-syne)',
+                fontWeight: 600,
+                fontSize: 12,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                color: 'var(--text-1)',
+                marginBottom: 20,
+              }}
+            >
+              Stay updated
             </h5>
-            <p style={{ fontFamily: 'var(--font-inter)', fontSize: 14, color: 'var(--text-2)', lineHeight: 1.6, marginBottom: 16 }}>
-              Insights on AI, automation, and digital engineering — monthly.
+            <p
+              style={{
+                fontFamily: 'var(--font-inter)',
+                fontSize: 14,
+                color: 'var(--text-2)',
+                lineHeight: 1.6,
+                marginBottom: 16,
+              }}
+            >
+              Occasional notes on shipping software, AI systems, and automation.
             </p>
 
             {subscribed ? (
@@ -233,7 +390,11 @@ const Footer: React.FC = () => {
                 initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="flex items-center gap-2.5 px-4 py-3 rounded-2xl text-sm font-medium"
-                style={{ background: 'var(--indigo-dim)', border: '0.5px solid var(--border-v2)', color: 'var(--indigo)' }}
+                style={{
+                  background: 'var(--indigo-dim)',
+                  border: '0.5px solid var(--border-v2)',
+                  color: 'var(--indigo)',
+                }}
                 role="status"
                 aria-live="polite"
               >
@@ -245,7 +406,6 @@ const Footer: React.FC = () => {
                 <label htmlFor="footer-newsletter-email" className="sr-only">
                   Email address
                 </label>
-                {/* Honeypot — hidden from users, bots often fill it */}
                 <input
                   type="text"
                   name="website"
@@ -270,7 +430,9 @@ const Footer: React.FC = () => {
                   style={{ borderRadius: 12 }}
                 />
                 {subError && (
-                  <p role="alert" style={{ fontSize: 12, color: '#f87171' }}>{subError}</p>
+                  <p role="alert" style={{ fontSize: 12, color: '#f87171' }}>
+                    {subError}
+                  </p>
                 )}
                 <button
                   type="submit"
@@ -301,22 +463,28 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        {/* Bottom bar */}
         <div
           className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-8 text-xs"
           style={{ borderTop: '0.5px solid var(--border-v2)', color: 'var(--text-3)' }}
         >
-          <p style={{ fontFamily: 'var(--font-inter)' }}>© {new Date().getFullYear()} BinaryScouts. All rights reserved.</p>
+          <p style={{ fontFamily: 'var(--font-inter)' }}>
+            © {new Date().getFullYear()} BinaryScouts. All rights reserved.
+          </p>
           <div className="flex gap-6">
-            <Link href="/privacy" style={{ color: 'var(--text-3)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--indigo)')} onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-3)')}>
-              Privacy Policy
-            </Link>
-            <Link href="/terms" style={{ color: 'var(--text-3)', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--indigo)')} onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-3)')}>
-              Terms of Service
-            </Link>
+            {LEGAL_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                style={{ color: 'var(--text-3)', textDecoration: 'none', transition: 'color 0.2s' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--indigo)')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-3)')}
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
           <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-3)' }}>
-            Built with precision by BinaryScouts Studio
+            Built by BinaryScouts
           </p>
         </div>
       </div>

@@ -1,23 +1,34 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageTransition from '@/components/motion/PageTransition';
 import { Mail, MessageSquare, Send, Sparkles, CheckCircle, Loader2, MapPin, Clock, Phone } from 'lucide-react';
-import { ease, dur, viewport } from '@/lib/motion';
 import { useContactInfo } from '@/components/hooks/useContactInfo';
 import { getContactEmail } from '@/lib/site-contact';
+import { ENGAGEMENT_STEPS, PROJECT_TYPES } from '@/lib/company';
+import { trackEvent } from '@/lib/analytics';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
 export default function ContactPage() {
   const { email: contactEmail, phoneDisplay, whatsappUrl } = useContactInfo();
-  const [form, setForm] = useState({ name: '', email: '', message: '', budget: '', timeline: '', website: '' });
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    company: '',
+    projectType: '',
+    message: '',
+    budget: '',
+    timeline: '',
+    website: '',
+  });
   const [status, setStatus] = useState<FormStatus>('idle');
   const [error, setError] = useState('');
   const [emailDelivered, setEmailDelivered] = useState(true);
+  const submittingRef = useRef(false);
 
   const INFO_CARDS = useMemo(
     () => [
@@ -26,7 +37,7 @@ export default function ContactPage() {
         title: 'Email',
         value: contactEmail,
         href: `mailto:${contactEmail}`,
-        sub: 'Typically within one business day',
+        sub: 'We aim to reply within one business day',
         gradient: 'linear-gradient(135deg, rgba(139,92,246,0.14), rgba(167,139,250,0.05))',
         iconColor: 'var(--accent)',
         border: 'rgba(139,92,246,0.22)',
@@ -36,7 +47,7 @@ export default function ContactPage() {
         title: 'WhatsApp',
         value: phoneDisplay,
         href: whatsappUrl,
-        sub: 'Chat with us instantly',
+        sub: 'Quick questions welcome',
         gradient: 'linear-gradient(135deg, rgba(37,211,102,0.14), rgba(16,185,129,0.05))',
         iconColor: '#25D366',
         border: 'rgba(37,211,102,0.25)',
@@ -45,16 +56,16 @@ export default function ContactPage() {
         icon: Clock,
         title: 'Availability',
         value: 'Mon – Fri, 9am – 6pm IST',
-        sub: 'Emergency support available',
+        sub: 'Discovery calls by appointment',
         gradient: 'linear-gradient(135deg, rgba(236,72,153,0.12), rgba(244,114,182,0.05))',
         iconColor: 'var(--rose)',
         border: 'rgba(236,72,153,0.20)',
       },
       {
         icon: MapPin,
-        title: 'Studio',
-        value: 'Remote-first, globally distributed',
-        sub: 'Serving clients worldwide',
+        title: 'Working model',
+        value: 'Remote-first',
+        sub: 'Embedded engineering engagements',
         gradient: 'linear-gradient(135deg, rgba(16,185,129,0.12), rgba(110,231,183,0.05))',
         iconColor: 'var(--sage)',
         border: 'rgba(16,185,129,0.20)',
@@ -66,6 +77,8 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) return;
+    if (submittingRef.current || status === 'loading' || status === 'success') return;
+    submittingRef.current = true;
 
     setStatus('loading');
     setError('');
@@ -78,14 +91,16 @@ export default function ContactPage() {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setStatus('error');
-        setError(data.error || 'Could not send message.');
+        setError(data.error || 'Something went wrong. Please try again or contact us directly.');
         return;
       }
       setEmailDelivered(data.delivered !== false);
       setStatus('success');
     } catch {
       setStatus('error');
-      setError(`Network error. Email ${getContactEmail()}.`);
+      setError(`Something went wrong. Please try again or email ${getContactEmail()}.`);
+    } finally {
+      submittingRef.current = false;
     }
   };
 
@@ -105,21 +120,35 @@ export default function ContactPage() {
           >
             <div className="eyebrow-badge mb-6">
               <MessageSquare size={11} />
-              <span>Get in Touch</span>
+              <span>Start a project</span>
             </div>
             <h1
               className="font-display font-bold text-5xl md:text-6xl tracking-tight mb-5"
               style={{ color: 'var(--text-primary)', letterSpacing: '-0.05em' }}
             >
-              Let&apos;s build something{' '}
-              <span className="gradient-text">remarkable.</span>
+              Tell us what you&apos;re{' '}
+              <span className="gradient-text">building.</span>
             </h1>
             <p
               className="font-sans text-lg leading-relaxed"
               style={{ color: 'var(--text-secondary)', letterSpacing: '-0.01em' }}
             >
-              Tell us about your project and we&apos;ll get back to you with a tailored strategy within one business day.
+              Share enough context for a useful first conversation. We review every request and reply with next steps.
             </p>
+            <ol className="mt-8 space-y-2 max-w-md">
+              {ENGAGEMENT_STEPS.map((step, i) => (
+                <li
+                  key={step}
+                  className="font-sans text-sm flex gap-3"
+                  style={{ color: 'var(--text-secondary)' }}
+                >
+                  <span className="font-mono text-xs" style={{ color: 'var(--accent)', minWidth: 24 }}>
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  {step}
+                </li>
+              ))}
+            </ol>
           </motion.div>
 
           {/* Info cards */}
@@ -216,18 +245,31 @@ export default function ContactPage() {
                       className="font-display font-bold text-3xl mb-3"
                       style={{ color: 'var(--text-primary)', letterSpacing: '-0.04em' }}
                     >
-                      {emailDelivered ? 'Message sent!' : 'Message saved!'}
+                      {emailDelivered ? 'Request received.' : 'Request saved.'}
                     </h3>
                     <p className="font-sans text-lg" style={{ color: 'var(--text-secondary)' }}>
                       {emailDelivered
-                        ? "We'll be in touch within one business day with a tailored response."
-                        : "We've saved your message and will follow up within one business day."}
+                        ? "Thank you. Your project request has been received. We'll review it and get back to you with next steps."
+                        : "We've saved your request and will follow up with next steps."}
                     </p>
                     <button
-                      onClick={() => { setStatus('idle'); setError(''); setForm({ name: '', email: '', message: '', budget: '', timeline: '', website: '' }); }}
+                      onClick={() => {
+                        setStatus('idle');
+                        setError('');
+                        setForm({
+                          name: '',
+                          email: '',
+                          company: '',
+                          projectType: '',
+                          message: '',
+                          budget: '',
+                          timeline: '',
+                          website: '',
+                        });
+                      }}
                       className="btn-secondary px-8 py-3 text-sm mt-8"
                     >
-                      Send another message
+                      Send another request
                     </button>
                   </motion.div>
                 ) : (
@@ -247,7 +289,7 @@ export default function ContactPage() {
 
                     <div className="flex flex-col gap-2">
                       <label htmlFor="page-contact-name" className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-                        Your Name *
+                        Name *
                       </label>
                       <input
                         id="page-contact-name"
@@ -262,8 +304,23 @@ export default function ContactPage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
+                      <label htmlFor="page-contact-company" className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+                        Company
+                      </label>
+                      <input
+                        id="page-contact-company"
+                        type="text"
+                        autoComplete="organization"
+                        value={form.company}
+                        onChange={(e) => setForm({ ...form, company: e.target.value })}
+                        placeholder="Company name"
+                        className="input-cinematic"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-2">
                       <label htmlFor="page-contact-email" className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-                        Email Address *
+                        Business email *
                       </label>
                       <input
                         id="page-contact-email"
@@ -278,36 +335,53 @@ export default function ContactPage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
+                      <label htmlFor="page-contact-type" className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+                        Project type
+                      </label>
+                      <select
+                        id="page-contact-type"
+                        value={form.projectType}
+                        onChange={(e) => setForm({ ...form, projectType: e.target.value })}
+                        className="input-cinematic"
+                      >
+                        <option value="">Select…</option>
+                        {PROJECT_TYPES.map((t) => (
+                          <option key={t} value={t}>{t}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
                       <label htmlFor="page-contact-budget" className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-                        Budget (INR)
+                        Approx. budget (optional)
                       </label>
                       <input
                         id="page-contact-budget"
                         type="text"
                         value={form.budget}
                         onChange={(e) => setForm({ ...form, budget: e.target.value })}
-                        placeholder="e.g. ₹5,00,000 or 10 lakhs"
+                        placeholder="Optional"
                         className="input-cinematic"
                       />
                     </div>
 
                     <div className="flex flex-col gap-2">
                       <label htmlFor="page-contact-timeline" className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-                        Expected Timeline
+                        Desired timeline
                       </label>
                       <input
                         id="page-contact-timeline"
                         type="text"
                         value={form.timeline}
                         onChange={(e) => setForm({ ...form, timeline: e.target.value })}
-                        placeholder="e.g. 3 months, 6 weeks"
+                        placeholder="e.g. 8–12 weeks"
                         className="input-cinematic"
                       />
                     </div>
 
                     <div className="md:col-span-2 flex flex-col gap-2">
                       <label htmlFor="page-contact-message" className="font-sans text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-                        Tell Us About Your Project *
+                        Project description *
                       </label>
                       <textarea
                         id="page-contact-message"
@@ -315,7 +389,7 @@ export default function ContactPage() {
                         rows={5}
                         value={form.message}
                         onChange={(e) => setForm({ ...form, message: e.target.value })}
-                        placeholder="Describe what you're building, what problem you're solving, and what success looks like..."
+                        placeholder="What are you building, and what problem should it solve?"
                         className="input-cinematic"
                         style={{ resize: 'vertical', minHeight: 120 }}
                       />
@@ -325,26 +399,26 @@ export default function ContactPage() {
                       <p role="alert" className="md:col-span-2 font-sans text-sm" style={{ color: '#f87171' }}>{error}</p>
                     )}
 
-                    {/* Submit */}
                     <div className="md:col-span-2 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                       <p className="font-sans text-sm" style={{ color: 'var(--text-muted)' }}>
-                        No commitment required. We&apos;ll respond within one business day.
+                        Custom engagements based on scope, complexity and timeline.
                       </p>
                       <button
                         type="submit"
                         disabled={status === 'loading'}
                         className="btn-primary text-base px-8 py-4 gap-2 whitespace-nowrap flex-shrink-0"
                         style={{ opacity: status === 'loading' ? 0.7 : 1 }}
+                        onClick={() => trackEvent('cta_click', { location: 'contact_page', label: 'start_project' })}
                       >
                         {status === 'loading' ? (
                           <>
                             <Loader2 size={16} className="animate-spin" />
-                            Sending...
+                            Sending…
                           </>
                         ) : (
                           <>
                             <Send size={15} />
-                            Send Message
+                            Start a project
                           </>
                         )}
                       </button>
@@ -366,9 +440,13 @@ export default function ContactPage() {
             <p className="font-sans text-sm mb-3" style={{ color: 'var(--text-muted)' }}>
               Prefer a direct conversation?
             </p>
-            <a href="/planner" className="btn-primary text-base px-8 py-3.5 gap-2 inline-flex items-center">
+            <a
+              href="/planner"
+              className="btn-primary text-base px-8 py-3.5 gap-2 inline-flex items-center"
+              onClick={() => trackEvent('cta_click', { location: 'contact_page', label: 'planner' })}
+            >
               <Sparkles size={15} />
-              Book a Free 30-Min Strategy Call
+              Open project planner
             </a>
           </motion.div>
 

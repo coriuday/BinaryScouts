@@ -33,28 +33,27 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'BinaryScouts — AI-Native Digital Engineering Studio',
+    default: 'BinaryScouts — Production Software & AI Engineering',
     template: '%s — BinaryScouts',
   },
   description:
-    'BinaryScouts designs, builds, and automates intelligent digital systems for modern businesses. Full-stack engineering, CRM automation, AI integration, and growth infrastructure.',
+    'BinaryScouts is a lean technology startup that designs and ships production software — AI systems, SaaS products, automation, and digital infrastructure.',
   keywords: [
-    'AI Engineering',
+    'BinaryScouts',
+    'Software Engineering',
     'SaaS Development',
-    'CRM Automation',
-    'Digital Studio',
-    'Next.js Agency',
+    'AI Systems',
     'Business Automation',
-    'AI Integration',
-    'Web Platform Development',
-    'Growth Engineering',
+    'Custom Software',
+    'Next.js',
+    'Technology Startup',
   ],
-  authors: [{ name: 'BinaryScouts Studio' }],
+  authors: [{ name: 'BinaryScouts' }],
   // Per-route canonicals live on each page — do not set a site-wide "/" here.
   openGraph: {
-    title: 'BinaryScouts — AI-Native Digital Engineering Studio',
+    title: 'BinaryScouts — Production Software & AI Engineering',
     description:
-      'We design, build, and automate intelligent digital systems for modern businesses.',
+      'A lean technology startup building production software, AI systems, SaaS products, and business automation.',
     url: siteUrl,
     siteName: 'BinaryScouts',
     locale: 'en_US',
@@ -62,9 +61,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'BinaryScouts — AI-Native Digital Engineering Studio',
+    title: 'BinaryScouts — Production Software & AI Engineering',
     description:
-      'We design, build, and automate intelligent digital systems for modern businesses.',
+      'A lean technology startup building production software, AI systems, SaaS products, and business automation.',
   },
   robots: {
     index: true,
@@ -79,7 +78,7 @@ const organizationJsonLd = {
   name: 'BinaryScouts',
   url: siteUrl,
   description:
-    'AI-native digital engineering studio building intelligent systems, SaaS products, and business automation.',
+    'A lean technology startup building production software, AI systems, SaaS products, and business automation.',
   email: 'thebinaryscouts@gmail.com',
   areaServed: 'Worldwide',
 };

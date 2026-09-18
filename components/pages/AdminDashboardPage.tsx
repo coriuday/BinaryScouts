@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { PROJECT_CATEGORIES, type Project, type ProjectStatus } from '@/lib/projects';
 import type { Review } from '@/lib/review-types';
-import type { DbTeamMember, DbContactLead, HeroStats, ContactEngagement, ContactInfo } from '@/lib/cms/types';
+import type { DbTeamMember, DbContactLead, ContactEngagement, ContactInfo } from '@/lib/cms/types';
 import { DEFAULT_CONTACT_INFO } from '@/lib/site-contact';
 import { adminLogout } from '@/lib/admin-auth';
 import { ease, dur } from '@/lib/motion';
@@ -120,7 +120,6 @@ const AdminDashboardPage: React.FC = () => {
   const [team, setTeam] = useState<DbTeamMember[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [leads, setLeads] = useState<DbContactLead[]>([]);
-  const [heroStats, setHeroStats] = useState<HeroStats>({ systemsBuilt: 0, revenueLabel: '—', clientRetention: 0, avgRating: 0 });
   const [contactEngagement, setContactEngagement] = useState<ContactEngagement>({ typicalRange: 'Scoped per engagement', responseTime: '<24 hours', discoveryCall: '30 min, free' });
   const [contactInfo, setContactInfo] = useState<ContactInfo>(DEFAULT_CONTACT_INFO);
   const [loading, setLoading] = useState({ projects: false, team: false, reviews: false, leads: false, settings: false });
@@ -193,7 +192,6 @@ const AdminDashboardPage: React.FC = () => {
       const res = await fetch('/api/admin/settings');
       if (res.ok) {
         const data = await res.json();
-        if (data.heroStats) setHeroStats(data.heroStats);
         if (data.contactEngagement) setContactEngagement(data.contactEngagement);
         if (data.contactInfo) setContactInfo(data.contactInfo);
       }
@@ -264,11 +262,10 @@ const AdminDashboardPage: React.FC = () => {
     const res = await fetch('/api/admin/settings', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ heroStats, contactEngagement, contactInfo }),
+      body: JSON.stringify({ contactEngagement, contactInfo }),
     });
     if (res.ok) {
       const data = await res.json();
-      if (data.heroStats) setHeroStats(data.heroStats);
       if (data.contactEngagement) setContactEngagement(data.contactEngagement);
       if (data.contactInfo) setContactInfo(data.contactInfo);
     }
@@ -653,30 +650,9 @@ const AdminDashboardPage: React.FC = () => {
             <motion.div key="settings" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: dur.base, ease: ease.out }}>
               <div className="mb-8">
                 <h1 className="font-display font-bold text-3xl mb-1" style={{ color: 'var(--text-primary)', letterSpacing: '-0.04em' }}>Site Settings</h1>
-                <p className="font-sans text-sm" style={{ color: 'var(--text-muted)' }}>Hero stats and contact engagement copy</p>
+                <p className="font-sans text-sm" style={{ color: 'var(--text-muted)' }}>Contact details and engagement copy</p>
               </div>
               <div className="max-w-xl flex flex-col gap-6">
-                <div className="p-6 rounded-2xl" style={{ background: 'var(--glass-1)', border: '1px solid var(--glass-border-1)' }}>
-                  <h2 className="font-display font-bold text-base mb-4" style={{ color: 'var(--text-primary)' }}>Hero Stats</h2>
-                  <div className="grid grid-cols-2 gap-4">
-                    <label className="flex flex-col gap-1">
-                      <span className="font-sans text-xs" style={{ color: 'var(--text-muted)' }}>Systems Built</span>
-                      <input type="number" className="admin-input" value={heroStats.systemsBuilt} onChange={(e) => setHeroStats((s) => ({ ...s, systemsBuilt: Number(e.target.value) }))} />
-                    </label>
-                    <label className="flex flex-col gap-1">
-                      <span className="font-sans text-xs" style={{ color: 'var(--text-muted)' }}>Revenue Label</span>
-                      <input className="admin-input" value={heroStats.revenueLabel} onChange={(e) => setHeroStats((s) => ({ ...s, revenueLabel: e.target.value }))} placeholder="Only if verified — e.g. client outcome note" />
-                    </label>
-                    <label className="flex flex-col gap-1">
-                      <span className="font-sans text-xs" style={{ color: 'var(--text-muted)' }}>Client Retention %</span>
-                      <input type="number" className="admin-input" value={heroStats.clientRetention} onChange={(e) => setHeroStats((s) => ({ ...s, clientRetention: Number(e.target.value) }))} />
-                    </label>
-                    <label className="flex flex-col gap-1">
-                      <span className="font-sans text-xs" style={{ color: 'var(--text-muted)' }}>Avg Rating</span>
-                      <input type="number" step="0.1" className="admin-input" value={heroStats.avgRating} onChange={(e) => setHeroStats((s) => ({ ...s, avgRating: Number(e.target.value) }))} />
-                    </label>
-                  </div>
-                </div>
                 <div className="p-6 rounded-2xl" style={{ background: 'var(--glass-1)', border: '1px solid var(--glass-border-1)' }}>
                   <h2 className="font-display font-bold text-base mb-4" style={{ color: 'var(--text-primary)' }}>Contact Info</h2>
                   <label className="flex flex-col gap-1 mb-4">

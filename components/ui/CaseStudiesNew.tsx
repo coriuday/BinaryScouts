@@ -5,6 +5,7 @@ import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { ExternalLink, X } from 'lucide-react';
 import { getFeaturedProjects, type Project } from '@/lib/projects';
 import SitePreview from '@/components/ui/SitePreview';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 const ACCENTS = [
   { accent: '#00d4ff', accentBg: 'rgba(0,212,255,0.08)' },
@@ -145,6 +146,7 @@ const ProjectToast: React.FC<{
 }> = ({ project, index, onClose }) => {
   const panelRef = useRef<HTMLDivElement>(null);
   const { accent, accentBg } = projectAccent(index);
+  useFocusTrap(true, panelRef);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -152,7 +154,6 @@ const ProjectToast: React.FC<{
     };
     document.addEventListener('keydown', handleKey);
     document.body.style.overflow = 'hidden';
-    panelRef.current?.focus();
     return () => {
       document.removeEventListener('keydown', handleKey);
       document.body.style.overflow = '';
@@ -224,8 +225,8 @@ const ProjectToast: React.FC<{
             onClick={onClose}
             aria-label="Close"
             style={{
-              width: 32,
-              height: 32,
+              width: 44,
+              height: 44,
               borderRadius: 10,
               border: '0.5px solid var(--border-v2)',
               background: 'var(--space-3)',

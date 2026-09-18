@@ -26,7 +26,7 @@ export default function ContactPage() {
         title: 'Email',
         value: contactEmail,
         href: `mailto:${contactEmail}`,
-        sub: 'Usually responds within 4 hours',
+        sub: 'Typically within one business day',
         gradient: 'linear-gradient(135deg, rgba(139,92,246,0.14), rgba(167,139,250,0.05))',
         iconColor: 'var(--accent)',
         border: 'rgba(139,92,246,0.22)',
@@ -366,11 +366,9 @@ export default function ContactPage() {
             <p className="font-sans text-sm mb-3" style={{ color: 'var(--text-muted)' }}>
               Prefer a direct conversation?
             </p>
-            <a href="/planner">
-              <button className="btn-primary text-base px-8 py-3.5 gap-2">
-                <Sparkles size={15} />
-                Book a Free 30-Min Strategy Call
-              </button>
+            <a href="/planner" className="btn-primary text-base px-8 py-3.5 gap-2 inline-flex items-center">
+              <Sparkles size={15} />
+              Book a Free 30-Min Strategy Call
             </a>
           </motion.div>
 

@@ -143,8 +143,8 @@ const Navbar: React.FC = () => {
             <button
               onClick={() => setSettingsOpen(true)}
               style={{
-                width: 36,
-                height: 36,
+                width: 44,
+                height: 44,
                 borderRadius: 10,
                 border: '0.5px solid var(--border-v2)',
                 background: 'transparent',
@@ -199,10 +199,11 @@ const Navbar: React.FC = () => {
             {/* Mobile hamburger */}
             <button
               className="md:hidden"
+              type="button"
               onClick={() => setIsOpen(!isOpen)}
               style={{
-                width: 36,
-                height: 36,
+                width: 44,
+                height: 44,
                 borderRadius: 10,
                 border: '0.5px solid var(--border-v2)',
                 background: 'transparent',
@@ -213,6 +214,8 @@ const Navbar: React.FC = () => {
                 justifyContent: 'center',
               }}
               aria-label={isOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isOpen}
+              aria-controls="mobile-nav-menu"
             >
               {isOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
@@ -225,6 +228,7 @@ const Navbar: React.FC = () => {
         {isOpen && (
           <motion.div
             key="mobile-menu"
+            id="mobile-nav-menu"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

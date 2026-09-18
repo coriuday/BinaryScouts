@@ -1,9 +1,11 @@
 'use client';
 
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import ParticleCanvas from '@/components/ui/ParticleCanvas';
-import TechBubbles from '@/components/ui/TechBubbles';
+
+const ParticleCanvas = dynamic(() => import('@/components/ui/ParticleCanvas'), { ssr: false });
+const TechBubbles = dynamic(() => import('@/components/ui/TechBubbles'), { ssr: false });
 
 /* ── Status pill component ───────────────────────────── */
 const StatusPill: React.FC<{ label: string; value: string }> = ({ label, value }) => {

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Terminal as TerminalIcon, X, Maximize2, Minimize2, CornerDownLeft } from 'lucide-react';
 import { useAudio } from '@/components/hooks/AudioProvider';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 interface Message {
   role: 'user' | 'model' | 'system';
@@ -26,6 +27,8 @@ const Terminal: React.FC = () => {
   const [typedText, setTypedText] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(isOpen && !isMinimized, panelRef);
 
   // Listen for navbar >_ toggle event
   useEffect(() => {
@@ -47,6 +50,18 @@ const Terminal: React.FC = () => {
       setTimeout(() => inputRef.current?.focus(), 150);
     }
   }, [isOpen, isMinimized]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+        window.dispatchEvent(new CustomEvent('bs:terminal-toggle', { detail: { open: false } }));
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [isOpen]);
 
   const typeMessage = (text: string, callback: () => void) => {
     let index = 0;
@@ -147,11 +162,22 @@ const Terminal: React.FC = () => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-6 right-28 z-50 font-mono text-xs animate-fade-up">
+    <div
+      className="fixed z-50 font-mono text-xs animate-fade-up"
+      style={{
+        bottom: 'calc(24px + env(safe-area-inset-bottom, 0px))',
+        right: 'calc(112px + env(safe-area-inset-right, 0px))',
+      }}
+    >
       <div
-        className="flex flex-col transition-all duration-300 overflow-hidden rounded-2xl"
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="BinaryScouts AI Terminal"
+        tabIndex={-1}
+        className="flex flex-col transition-all duration-300 overflow-hidden rounded-2xl outline-none"
         style={{
-          width: isMinimized ? '260px' : '400px',
+          width: isMinimized ? '260px' : 'min(400px, calc(100vw - 48px))',
           height: isMinimized ? '48px' : '440px',
           backgroundColor: 'var(--bg-glass-solid)',
           backdropFilter: 'blur(24px)',

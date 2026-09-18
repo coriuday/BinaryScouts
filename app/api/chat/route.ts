@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { clientIp, rateLimit } from '@/lib/rate-limit';
+import { clientIp, rateLimitAsync } from '@/lib/rate-limit';
 import { getRustChatUrl } from '@/lib/rust-api';
 
 const MAX_MESSAGE = 2000;
@@ -10,7 +10,7 @@ type ChatMessage = { role?: string; text?: string };
 
 export async function POST(req: Request) {
   const ip = clientIp(req);
-  const limited = rateLimit(`chat:${ip}`, 30, 60 * 60_000);
+  const limited = await rateLimitAsync(`chat:${ip}`, 30, 60 * 60_000);
   if (!limited.ok) {
     return NextResponse.json(
       { text: 'RATE LIMIT REACHED. TRY AGAIN SHORTLY.' },

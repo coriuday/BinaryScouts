@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import WorkPage from '@/components/pages/WorkPage';
+import { getSiteUrl } from '@/lib/site';
 
 export const metadata: Metadata = {
-  title: 'Our Work — BinaryScouts',
+  title: 'Our Work',
   description:
-    'Case studies and project showcases from BinaryScouts. AI automation, SaaS development, enterprise dashboards, and growth engineering — all with real results.',
+    'Case studies and project showcases from BinaryScouts — AI automation, SaaS, dashboards, and growth engineering.',
+  alternates: { canonical: `${getSiteUrl()}/work` },
 };
 
 export default function Page() {

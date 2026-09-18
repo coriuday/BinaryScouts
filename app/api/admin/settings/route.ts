@@ -1,31 +1,31 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin, revalidateCms } from '@/lib/admin-guard';
-import { getSiteSettings, updateSiteSetting } from '@/lib/cms/settings';
-import type { ContactEngagement, ContactInfo, HeroStats } from '@/lib/cms/types';
+import { getContactEngagement, getContactInfo, updateSiteSetting } from '@/lib/cms/settings';
+import type { ContactEngagement, ContactInfo } from '@/lib/cms/types';
 
 export async function GET() {
   const denied = await requireAdmin();
   if (denied) return denied;
 
-  const settings = await getSiteSettings();
-  return NextResponse.json(settings);
+  const [contactEngagement, contactInfo] = await Promise.all([
+    getContactEngagement(),
+    getContactInfo(),
+  ]);
+  return NextResponse.json({ contactEngagement, contactInfo });
 }
 
 export async function PATCH(req: Request) {
   const denied = await requireAdmin();
   if (denied) return denied;
 
-  let body: { heroStats?: HeroStats; contactEngagement?: ContactEngagement; contactInfo?: ContactInfo };
+  let body: { contactEngagement?: ContactEngagement; contactInfo?: ContactInfo };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  if (body.heroStats) {
-    const ok = await updateSiteSetting('hero_stats', body.heroStats as unknown as Record<string, unknown>);
-    if (!ok) return NextResponse.json({ error: 'Failed to save hero stats' }, { status: 500 });
-  }
+  // hero_stats intentionally not writable — vanity metrics are not shown on the public site.
   if (body.contactEngagement) {
     const ok = await updateSiteSetting('contact_engagement', body.contactEngagement as unknown as Record<string, unknown>);
     if (!ok) return NextResponse.json({ error: 'Failed to save contact settings' }, { status: 500 });
@@ -37,6 +37,9 @@ export async function PATCH(req: Request) {
   }
 
   revalidateCms();
-  const settings = await getSiteSettings();
-  return NextResponse.json(settings);
+  const [contactEngagement, contactInfo] = await Promise.all([
+    getContactEngagement(),
+    getContactInfo(),
+  ]);
+  return NextResponse.json({ contactEngagement, contactInfo });
 }

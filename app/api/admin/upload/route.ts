@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/admin-guard';
 import { createServiceClient } from '@/lib/supabase/server';
-import { clientIp, rateLimit } from '@/lib/rate-limit';
+import { clientIp, rateLimitAsync } from '@/lib/rate-limit';
 
 export async function POST(req: Request) {
   const denied = await requireAdmin();
   if (denied) return denied;
 
   const ip = clientIp(req);
-  const limited = rateLimit(`upload:${ip}`, 20, 60 * 60_000);
+  const limited = await rateLimitAsync(`upload:${ip}`, 20, 60 * 60_000);
   if (!limited.ok) {
     return NextResponse.json({ error: 'Too many uploads' }, { status: 429 });
   }

@@ -23,9 +23,8 @@ const COMPANY = [
 ];
 
 const SOCIALS = [
-  { label: 'GitHub',    href: 'https://github.com/coriuday', abbr: 'GH' },
-  { label: 'LinkedIn',  href: 'https://www.linkedin.com/in/uday-kumar-kori-784678210', abbr: 'in' },
-  { label: 'Twitter',   href: 'https://x.com', abbr: 'X' },
+  { label: 'GitHub', href: 'https://github.com/coriuday', abbr: 'GH' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/uday-kori-784678210/', abbr: 'in' },
 ];
 
 const contactLinkStyle: React.CSSProperties = {
@@ -42,6 +41,7 @@ const contactLinkStyle: React.CSSProperties = {
 const Footer: React.FC = () => {
   const { email: contactEmail, phoneDisplay, whatsappUrl } = useContactInfo();
   const [email, setEmail] = useState('');
+  const [honeypot, setHoneypot] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [emailDelivered, setEmailDelivered] = useState(true);
   const [subStatus, setSubStatus] = useState<'idle' | 'loading' | 'error'>('idle');
@@ -49,14 +49,14 @@ const Footer: React.FC = () => {
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
+    if (!email.trim() || subStatus === 'loading') return;
     setSubStatus('loading');
     setSubError('');
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'newsletter', email: email.trim() }),
+        body: JSON.stringify({ type: 'newsletter', email: email.trim(), website: honeypot }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -111,8 +111,8 @@ const Footer: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
-                    width: 36,
-                    height: 36,
+                    width: 44,
+                    height: 44,
                     borderRadius: 10,
                     background: 'var(--space-3)',
                     border: '0.5px solid var(--border-v2)',
@@ -245,6 +245,17 @@ const Footer: React.FC = () => {
                 <label htmlFor="footer-newsletter-email" className="sr-only">
                   Email address
                 </label>
+                {/* Honeypot — hidden from users, bots often fill it */}
+                <input
+                  type="text"
+                  name="website"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden
+                  style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, width: 0 }}
+                />
                 <input
                   id="footer-newsletter-email"
                   type="email"

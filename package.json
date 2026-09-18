@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit",
     "seed": "npx tsx scripts/seed-supabase.ts",
     "migrate:pg": "npx tsx scripts/run-migration-pg.ts",
     "render:setup": "npx tsx scripts/render-setup.ts",

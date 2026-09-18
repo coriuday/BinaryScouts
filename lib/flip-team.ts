@@ -42,8 +42,8 @@ export const FLIP_TEAM_MEMBERS: FlipCardData[] = [
     image: '/team/uday-kori.jpg',
     bio: 'Full-stack and AI systems builder. Co-founder leading architecture, ML pipelines, and production-grade applications at BinaryScouts.',
     stats: [
-      { label: 'Repos', value: '20+' },
-      { label: 'Projects', value: '50+' },
+      { label: 'Focus', value: 'AI / Full-stack' },
+      { label: 'Role', value: 'Co-Founder' },
       { label: 'Experience', value: '5+ Yrs' },
     ],
     socialLinks: {
@@ -59,9 +59,9 @@ export const FLIP_TEAM_MEMBERS: FlipCardData[] = [
     image: '/team/ashish-kumar.jpg',
     bio: 'Generative AI full-stack developer shipping TypeScript, Next.js, Python, and modern ML-integrated products at BinaryScouts.',
     stats: [
-      { label: 'Repos', value: '4+' },
-      { label: 'Stack', value: 'Full Stack' },
       { label: 'Focus', value: 'Gen AI' },
+      { label: 'Stack', value: 'Full Stack' },
+      { label: 'Role', value: 'Junior Dev' },
     ],
     socialLinks: {
       github: 'https://github.com/ashuisalluneed',

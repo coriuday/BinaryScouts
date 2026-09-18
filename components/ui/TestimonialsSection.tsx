@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { reviewInitials, type Review } from '@/lib/review-types';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 type DisplayReview = Pick<Review, 'id' | 'name' | 'role' | 'company' | 'quote' | 'stars'>;
 
@@ -67,6 +68,7 @@ const TestimonialCard: React.FC<{ t: DisplayReview }> = ({ t }) => {
 };
 
 const TestimonialsSection: React.FC = () => {
+  const reducedMotion = useReducedMotion();
   const [reviews, setReviews] = useState<DisplayReview[]>([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ name: '', role: '', company: '', quote: '', stars: 5, website: '' });
@@ -110,7 +112,7 @@ const TestimonialsSection: React.FC = () => {
   };
 
   const hasReviews = reviews.length > 0;
-  const useTicker = reviews.length >= 3;
+  const useTicker = reviews.length >= 3 && !reducedMotion;
   const splitAt = Math.ceil(reviews.length / 2);
   const row1 = duplicateForLoop(reviews.slice(0, splitAt));
   const row2 = duplicateForLoop(reviews.slice(splitAt));

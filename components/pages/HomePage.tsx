@@ -1,18 +1,20 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import LoadingScreen, { type IntroMode } from '@/components/layout/LoadingScreen';
 import HeroNew from '@/components/ui/HeroNew';
-import AboutSection from '@/components/ui/AboutSection';
-import ServicesBento from '@/components/ui/ServicesBento';
-import CaseStudiesNew from '@/components/ui/CaseStudiesNew';
-import TeamNew from '@/components/ui/TeamNew';
-import ProcessSection from '@/components/ui/ProcessSection';
-import TechStackGrid from '@/components/ui/TechStackGrid';
-import TestimonialsSection from '@/components/ui/TestimonialsSection';
-import ContactSection from '@/components/ui/ContactSection';
+
+const AboutSection = dynamic(() => import('@/components/ui/AboutSection'));
+const ServicesBento = dynamic(() => import('@/components/ui/ServicesBento'));
+const CaseStudiesNew = dynamic(() => import('@/components/ui/CaseStudiesNew'));
+const TeamNew = dynamic(() => import('@/components/ui/TeamNew'));
+const ProcessSection = dynamic(() => import('@/components/ui/ProcessSection'));
+const TechStackGrid = dynamic(() => import('@/components/ui/TechStackGrid'));
+const TestimonialsSection = dynamic(() => import('@/components/ui/TestimonialsSection'));
+const ContactSection = dynamic(() => import('@/components/ui/ContactSection'));
+const Footer = dynamic(() => import('@/components/layout/Footer'));
 
 type IntroState = IntroMode | 'pending' | 'done';
 
@@ -21,8 +23,11 @@ export default function Home() {
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) {
+    const coarse = window.matchMedia('(pointer: coarse)').matches;
+    if (reduced || coarse) {
+      // Skip long intro on touch / reduced-motion — faster first paint.
       setIntroState('done');
+      sessionStorage.setItem('bs_loaded', 'true');
       return;
     }
     const hasLoaded = sessionStorage.getItem('bs_loaded');
@@ -57,10 +62,6 @@ export default function Home() {
         <LoadingScreen mode={loaderMode} onComplete={handleIntroComplete} />
       )}
 
-      <a href="#main-content" className="skip-to-content">
-        Skip to main content
-      </a>
-
       <div
         className="min-h-screen"
         inert={showIntro ? true : undefined}
@@ -73,7 +74,7 @@ export default function Home() {
         }}
       >
         <Navbar />
-        <main id="main-content">
+        <main>
           <HeroNew />
 
           <div className="section-lazy">

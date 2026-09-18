@@ -131,10 +131,10 @@ const MemberCard: React.FC<{ member: TeamMember; index: number }> = ({ member, i
               style={{ background: 'var(--glass-1)', border: '1px solid var(--glass-border-1)' }}
             >
               <p className="font-display font-bold text-xl leading-none mb-1" style={{ color: 'var(--accent)', letterSpacing: '-0.04em' }}>
-                {member.projectsShipped}+
+                {member.badges[0] || member.role.split('·')[0].trim()}
               </p>
               <p className="font-sans text-[9px] uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-                Projects shipped
+                Focus
               </p>
             </div>
           </div>

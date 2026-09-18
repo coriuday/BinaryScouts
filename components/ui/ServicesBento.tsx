@@ -211,11 +211,8 @@ const SaaSCard: React.FC = () => {
 
         <div className="mt-auto">
           <div className="flex items-center gap-2" style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-3)' }}>
-            Lighthouse:
-            <div style={{ flex: 1, height: 4, background: 'var(--space-4)', borderRadius: 2, overflow: 'hidden' }}>
-              <div style={{ width: hovered ? '98%' : '0%', height: '100%', background: '#22d3ee', borderRadius: 2, transition: 'width 0.8s ease' }} />
-            </div>
-            <span style={{ color: '#22d3ee' }}>98</span>
+            Focus:
+            <span style={{ color: '#22d3ee' }}>Performance · accessibility · scale</span>
           </div>
         </div>
       </div>
@@ -226,13 +223,6 @@ const SaaSCard: React.FC = () => {
 /* Card 3: CRM Automation */
 const CRMCard: React.FC = () => {
   const [hovered, setHovered] = useState(false);
-  const [leads, setLeads] = useState(1241);
-
-  useEffect(() => {
-    if (!hovered) return;
-    const t = setInterval(() => setLeads((p) => p + 1), 800);
-    return () => clearInterval(t);
-  }, [hovered]);
 
   return (
     <TiltCard accent="#10b981">
@@ -274,18 +264,18 @@ const CRMCard: React.FC = () => {
               maxWidth: '80%',
             }}
           >
-            New lead qualified ✓✓ · 45s ago
+            New lead qualified ✓✓
           </motion.div>
         )}
 
         <div className="flex gap-3 mb-3">
-          <span style={{ textDecoration: 'line-through', color: 'var(--text-3)', fontFamily: 'var(--font-inter)', fontSize: 13 }}>4 hr avg response</span>
+          <span style={{ color: 'var(--text-3)', fontFamily: 'var(--font-inter)', fontSize: 13 }}>Manual follow-up</span>
           <span style={{ color: 'var(--text-3)', fontSize: 13 }}>→</span>
-          <span style={{ color: 'var(--emerald)', fontWeight: 600, fontFamily: 'var(--font-inter)', fontSize: 13 }}>45 sec</span>
+          <span style={{ color: 'var(--emerald)', fontWeight: 600, fontFamily: 'var(--font-inter)', fontSize: 13 }}>Automated routing</span>
         </div>
 
         <div className="mt-auto" style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--emerald)' }}>
-          ↑ {leads.toLocaleString()} leads automated this month
+          WhatsApp · email · CRM sync
         </div>
       </div>
     </TiltCard>

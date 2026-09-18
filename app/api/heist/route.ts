@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { clientIp, rateLimit } from '@/lib/rate-limit';
+import { clientIp, rateLimitAsync } from '@/lib/rate-limit';
 import { getRustHeistUrl } from '@/lib/rust-api';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -8,7 +8,7 @@ const MAX_TARGETS = 12;
 
 export async function POST(req: Request) {
   const ip = clientIp(req);
-  const limited = rateLimit(`heist:${ip}`, 10, 60 * 60_000);
+  const limited = await rateLimitAsync(`heist:${ip}`, 10, 60 * 60_000);
   if (!limited.ok) {
     return NextResponse.json(
       { error: 'Too many requests. Try again later.' },

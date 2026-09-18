@@ -28,8 +28,8 @@ export default function WhatsAppFab() {
       className="whatsapp-fab"
       style={{
         position: 'fixed',
-        bottom: 24,
-        right: 24,
+        bottom: 'calc(24px + env(safe-area-inset-bottom, 0px))',
+        right: 'calc(24px + env(safe-area-inset-right, 0px))',
         zIndex: 60,
         width: 56,
         height: 56,

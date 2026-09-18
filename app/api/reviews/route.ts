@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { clientIp, rateLimit } from '@/lib/rate-limit';
+import { clientIp, rateLimitAsync } from '@/lib/rate-limit';
 import { getApprovedReviews, submitReview } from '@/lib/cms/reviews';
 
 type ReviewBody = {
@@ -23,7 +23,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const ip = clientIp(req);
-  const limited = rateLimit(`reviews:${ip}`, 3, 60 * 60_000);
+  const limited = await rateLimitAsync(`reviews:${ip}`, 3, 60 * 60_000);
   if (!limited.ok) {
     return NextResponse.json(
       { error: 'Too many review submissions. Please try again later.' },

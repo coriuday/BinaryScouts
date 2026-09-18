@@ -36,9 +36,9 @@ function mapTeamMember(m: CmsTeamMember, i: number): DisplayMember {
     description: m.bio,
     avatar: m.avatar,
     stats: [
+      { label: 'Focus', value: m.badges[0] || 'Engineering' },
       { label: 'Experience', value: `${m.experience}+ Yrs` },
-      { label: 'Projects', value: `${m.projectsShipped}+` },
-      { label: 'Skills', value: `${m.skills.length}+` },
+      { label: 'Stack depth', value: `${m.skills.length} skills` },
     ],
     accentColor: ACCENTS[i % ACCENTS.length],
     gradient: GRADIENTS[i % GRADIENTS.length],
@@ -190,7 +190,17 @@ export default function AboutPage() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.65, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
                     className="glass-card rounded-3xl p-7 cursor-pointer group"
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={isActive}
+                    aria-label={`${member.name} — ${isActive ? 'collapse' : 'expand'} details`}
                     onClick={() => setActiveMember(isActive ? null : member.name)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setActiveMember(isActive ? null : member.name);
+                      }
+                    }}
                     style={{
                       borderColor: isActive ? member.accentColor : undefined,
                       boxShadow: isActive ? `0 0 40px ${member.accentColor}22, var(--shadow-card), var(--glass-inner)` : undefined,

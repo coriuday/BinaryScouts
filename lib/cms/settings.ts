@@ -25,7 +25,13 @@ export async function getContactEngagement(): Promise<ContactEngagement> {
 
   const { data } = await db.from('site_settings').select('value').eq('key', 'contact_engagement').maybeSingle();
   if (!data?.value) return DEFAULT_CONTACT_ENGAGEMENT;
-  return { ...DEFAULT_CONTACT_ENGAGEMENT, ...(data.value as ContactEngagement) };
+  const merged = { ...DEFAULT_CONTACT_ENGAGEMENT, ...(data.value as ContactEngagement) };
+  // Replace known legacy placeholder ranges that overstated pricing.
+  const legacyRanges = new Set(['₹10L – ₹50L', '₹10L - ₹50L', '₹10L–₹50L']);
+  if (legacyRanges.has(merged.typicalRange.trim())) {
+    merged.typicalRange = DEFAULT_CONTACT_ENGAGEMENT.typicalRange;
+  }
+  return merged;
 }
 
 export async function getContactInfo(): Promise<ContactInfo> {

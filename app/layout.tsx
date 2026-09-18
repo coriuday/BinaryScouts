@@ -50,23 +50,13 @@ export const metadata: Metadata = {
     'Growth Engineering',
   ],
   authors: [{ name: 'BinaryScouts Studio' }],
-  alternates: {
-    canonical: siteUrl,
-  },
+  // Per-route canonicals live on each page — do not set a site-wide "/" here.
   openGraph: {
     title: 'BinaryScouts — AI-Native Digital Engineering Studio',
     description:
       'We design, build, and automate intelligent digital systems for modern businesses.',
     url: siteUrl,
     siteName: 'BinaryScouts',
-    images: [
-      {
-        url: '/logo.png',
-        width: 1200,
-        height: 1200,
-        alt: 'BinaryScouts — AI-Native Digital Engineering Studio',
-      },
-    ],
     locale: 'en_US',
     type: 'website',
   },
@@ -75,13 +65,23 @@ export const metadata: Metadata = {
     title: 'BinaryScouts — AI-Native Digital Engineering Studio',
     description:
       'We design, build, and automate intelligent digital systems for modern businesses.',
-    images: ['/logo.png'],
   },
   robots: {
     index: true,
     follow: true,
     googleBot: { index: true, follow: true },
   },
+};
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: 'BinaryScouts',
+  url: siteUrl,
+  description:
+    'AI-native digital engineering studio building intelligent systems, SaaS products, and business automation.',
+  email: 'thebinaryscouts@gmail.com',
+  areaServed: 'Worldwide',
 };
 
 export default function RootLayout({
@@ -101,6 +101,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `document.documentElement.setAttribute('data-theme','dark');`,
           }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
       </head>
       <ThemeProvider>

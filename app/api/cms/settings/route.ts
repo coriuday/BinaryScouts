@@ -1,12 +1,16 @@
 import { NextResponse } from 'next/server';
-import { getSiteSettings } from '@/lib/cms/settings';
+import { getContactEngagement, getContactInfo } from '@/lib/cms/settings';
 
+/** Public settings — engagement + contact only. Vanity heroStats are never exposed. */
 export async function GET() {
   try {
-    const settings = await getSiteSettings();
-    return NextResponse.json(settings);
+    const [contactEngagement, contactInfo] = await Promise.all([
+      getContactEngagement(),
+      getContactInfo(),
+    ]);
+    return NextResponse.json({ contactEngagement, contactInfo });
   } catch (e) {
     console.error('CMS settings fetch failed', e);
-    return NextResponse.json({ heroStats: null, contactEngagement: null }, { status: 500 });
+    return NextResponse.json({ contactEngagement: null, contactInfo: null }, { status: 500 });
   }
 }

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Volume2, VolumeX, Terminal, Sliders } from 'lucide-react';
 import { useAudio } from '@/components/hooks/AudioProvider';
 import Logo from '@/components/ui/Logo';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 interface SettingsDrawerProps {
   isOpen: boolean;
@@ -54,6 +55,7 @@ const Toggle: React.FC<{ checked: boolean; onChange: () => void; id: string }> =
 const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose, onTerminalOpen }) => {
   const { isMuted, toggleMute } = useAudio();
   const panelRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(isOpen, panelRef);
 
   // Custom cursor state — persisted in localStorage
   const [cursorEnabled, setCursorEnabled] = React.useState(() => {
@@ -107,11 +109,15 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose, onTerm
           <motion.div
             key="panel"
             ref={panelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Settings"
+            tabIndex={-1}
             initial={{ x: '100%', opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '100%', opacity: 0 }}
             transition={{ type: 'spring', stiffness: 320, damping: 32, mass: 0.9 }}
-            className="fixed right-4 z-[999] w-80 rounded-2xl overflow-hidden"
+            className="fixed right-4 z-[999] w-80 rounded-2xl overflow-hidden outline-none"
             style={{
               top: '80px',
               backgroundColor: 'var(--bg-glass-solid)',
@@ -138,9 +144,11 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose, onTerm
                 </span>
               </div>
               <button
+                type="button"
                 onClick={onClose}
-                className="p-1.5 rounded-lg transition-colors duration-200"
-                style={{ color: 'var(--text-muted)' }}
+                aria-label="Close settings"
+                className="p-2 rounded-lg transition-colors duration-200"
+                style={{ color: 'var(--text-muted)', width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
                 onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
               >

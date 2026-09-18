@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { mkdir, writeFile } from 'fs/promises';
 import path from 'path';
-import { clientIp, rateLimit } from '@/lib/rate-limit';
+import { clientIp, rateLimitAsync } from '@/lib/rate-limit';
 import { saveContactLead } from '@/lib/cms/leads';
 import { sendContactNotification } from '@/lib/contact-email';
 
@@ -30,7 +30,7 @@ async function persistLead(filename: string, data: Record<string, unknown>) {
 
 export async function POST(req: Request) {
   const ip = clientIp(req);
-  const limited = rateLimit(`contact:${ip}`, 8, 60 * 60_000);
+  const limited = await rateLimitAsync(`contact:${ip}`, 8, 60 * 60_000);
   if (!limited.ok) {
     return NextResponse.json(
       { error: 'Too many submissions. Please try again later.' },

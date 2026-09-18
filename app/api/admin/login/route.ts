@@ -5,7 +5,7 @@ import {
   createAdminToken,
   getAdminPassword,
 } from '@/lib/admin-session';
-import { clientIp, rateLimit } from '@/lib/rate-limit';
+import { clientIp, rateLimitAsync } from '@/lib/rate-limit';
 
 function safeEqual(a: string, b: string): boolean {
   const bufA = Buffer.from(a);
@@ -20,7 +20,7 @@ function safeEqual(a: string, b: string): boolean {
 
 export async function POST(req: Request) {
   const ip = clientIp(req);
-  const limited = rateLimit(`admin-login:${ip}`, 5, 15 * 60_000);
+  const limited = await rateLimitAsync(`admin-login:${ip}`, 5, 15 * 60_000);
   if (!limited.ok) {
     return NextResponse.json(
       { error: 'Too many attempts. Try again later.' },

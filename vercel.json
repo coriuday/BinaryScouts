@@ -44,7 +44,7 @@
     "binaryscouts": {
       "root": ".",
       "framework": "nextjs",
-      "buildCommand": "npm install && npm run build"
+      "buildCommand": "npm install --include=dev && npm run build"
     }
   }
 }

@@ -67,4 +67,21 @@ export const FLIP_TEAM_MEMBERS: FlipCardData[] = [
       github: 'https://github.com/ashuisalluneed',
     },
   },
+  {
+    name: 'Chetan Chauhan',
+    username: '@chetanchauhan64',
+    titles: ['Fullstack Developer'],
+    role: 'Fullstack Developer',
+    image: '/team/chetan-chauhan.jpg',
+    bio: 'Fullstack developer focused on web apps and open-source work. Builds across the stack with experience in JavaScript/TypeScript, Web3 experiments, and data-driven product features — shipping clean, practical software.',
+    stats: [
+      { label: 'Focus', value: 'Fullstack' },
+      { label: 'Stack', value: 'JS / Web3' },
+      { label: 'Role', value: 'Developer' },
+    ],
+    socialLinks: {
+      github: 'https://github.com/chetanchauhan64',
+      linkedin: 'https://www.linkedin.com/in/chetanchauhan64/',
+    },
+  },
 ];

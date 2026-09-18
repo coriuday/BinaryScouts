@@ -104,6 +104,30 @@ export const TEAM_MEMBERS: TeamMember[] = [
     experience: 2,
     projectsShipped: 8,
   },
+  {
+    id: '4',
+    name: 'Chetan Chauhan',
+    role: 'Fullstack Developer',
+    bio: 'Fullstack developer focused on web apps and open-source work. Builds across the stack with experience in JavaScript/TypeScript, Web3 experiments, and data-driven product features — shipping clean, practical software.',
+    avatar: '/team/chetan-chauhan.jpg',
+    skills: [
+      { name: 'JavaScript', level: 86, category: 'frontend' },
+      { name: 'TypeScript', level: 82, category: 'frontend' },
+      { name: 'React', level: 84, category: 'frontend' },
+      { name: 'Node.js', level: 80, category: 'backend' },
+      { name: 'Solidity', level: 78, category: 'backend' },
+      { name: 'Web3', level: 80, category: 'other' },
+      { name: 'Data Science', level: 75, category: 'ai' },
+      { name: 'Open Source', level: 85, category: 'other' },
+    ],
+    socials: {
+      github: 'https://github.com/chetanchauhan64',
+      linkedin: 'https://www.linkedin.com/in/chetanchauhan64/',
+    },
+    badges: ['Fullstack', 'Web3', 'Open Source'],
+    experience: 2,
+    projectsShipped: 10,
+  },
 ];
 
 /* ─── Helpers ──────────────────────────────────────────────── */

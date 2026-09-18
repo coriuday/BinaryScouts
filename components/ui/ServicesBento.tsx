@@ -398,7 +398,7 @@ const DashboardCard: React.FC = () => {
             ))}
           </div>
           <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-3)', marginTop: 8, textAlign: 'center' as const }}>
-            6 data sources → 1 unified intelligence layer
+            Many sources → one unified intelligence layer
           </p>
         </div>
       </div>

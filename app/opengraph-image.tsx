@@ -1,7 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-export const runtime = 'edge';
-export const alt = 'BinaryScouts — AI-Native Digital Engineering Studio';
+export const alt = 'BinaryScouts — Production Software & AI Engineering';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -37,13 +36,12 @@ export default function OpenGraphImage() {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18, maxWidth: 900 }}>
           <div style={{ fontSize: 64, fontWeight: 700, lineHeight: 1.05, letterSpacing: '-0.03em' }}>
-            AI-native digital engineering studio
+            Production software & AI engineering
           </div>
-          <div style={{ fontSize: 28, color: '#94a3b8', lineHeight: 1.4 }}>
-            We design, build, and automate intelligent systems for modern businesses.
+          <div style={{ fontSize: 28, lineHeight: 1.35, color: '#cbd5e1' }}>
+            A lean technology startup building SaaS, automation, and digital infrastructure.
           </div>
         </div>
-        <div style={{ fontSize: 22, color: '#64748b' }}>binary-scouts.vercel.app</div>
       </div>
     ),
     { ...size }

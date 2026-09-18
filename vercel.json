@@ -7,44 +7,6 @@
     {
       "source": "/api/heist",
       "destination": "https://binaryscouts-rust.onrender.com/api/heist"
-    },
-    {
-      "source": "/api/binaryscouts-python(/.*)?",
-      "destination": {
-        "type": "service",
-        "service": "binaryscouts-python"
-      }
-    },
-    {
-      "source": "/api/binaryscouts-rust(/.*)?",
-      "destination": {
-        "type": "service",
-        "service": "binaryscouts-rust"
-      }
-    },
-    {
-      "source": "/(.*)",
-      "destination": {
-        "type": "service",
-        "service": "binaryscouts"
-      }
     }
-  ],
-  "services": {
-    "binaryscouts-python": {
-      "root": "backend-python",
-      "entrypoint": "app:app",
-      "buildCommand": "pip install -r requirements.txt"
-    },
-    "binaryscouts-rust": {
-      "root": "backend-rust",
-      "entrypoint": "src/main.rs",
-      "buildCommand": "cargo build --release"
-    },
-    "binaryscouts": {
-      "root": ".",
-      "framework": "nextjs",
-      "buildCommand": "npm install --include=dev && npm run build"
-    }
-  }
+  ]
 }

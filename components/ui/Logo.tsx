@@ -10,20 +10,29 @@ interface LogoProps {
   priority?: boolean;
   /** Hide from assistive tech when a sibling already names the brand */
   decorative?: boolean;
+  /**
+   * Bypass Next image recompression for maximum fidelity (preloader).
+   * Default false — PNG sources still optimize cleanly for navbar/footer.
+   */
+  crisp?: boolean;
 }
 
 /**
  * BinaryScouts brand mark.
- * - icon: square crop focused on the BS monogram (navbar, admin)
- * - full: complete lockup with monogram, binary accents, and wordmark
- * - wordmark: metallic "BINARY SCOUTS" text lockup
+ * - icon: dedicated square monogram PNG (navbar, preloader, admin)
+ * - full: complete lockup PNG
+ * - wordmark: metallic "BINARY SCOUTS" PNG lockup
+ *
+ * Masters are true PNG. Misnamed JPEG `/logo.png` and `/wordmark.png`
+ * remain for compatibility but are not used by this component.
  */
 export default function Logo({
   variant = 'icon',
   size,
-  className = '',
   priority = false,
   decorative = false,
+  crisp = false,
+  className = '',
 }: LogoProps) {
   if (variant === 'icon') {
     const s = size ?? 36;
@@ -34,13 +43,15 @@ export default function Logo({
         aria-hidden={decorative || undefined}
       >
         <Image
-          src="/logo.png"
+          src="/logo-icon.png"
           alt={decorative ? '' : 'BinaryScouts'}
-          width={s * 2}
-          height={s * 2}
+          width={768}
+          height={768}
           priority={priority}
-          className="absolute inset-0 h-full w-full object-cover"
-          style={{ objectPosition: '50% 32%' }}
+          unoptimized={crisp}
+          quality={100}
+          sizes={`${Math.ceil(s * 3)}px`}
+          className="absolute inset-0 h-full w-full object-contain"
         />
       </span>
     );
@@ -48,8 +59,8 @@ export default function Logo({
 
   if (variant === 'wordmark') {
     const h = size ?? 22;
-    // Wide lockup — aspect roughly 6.5:1 for "BINARY SCOUTS"
-    const w = Math.round(h * 6.5);
+    // Master aspect 977×110
+    const w = Math.round(h * (977 / 110));
     return (
       <span
         className={`relative inline-block shrink-0 ${className}`}
@@ -57,11 +68,14 @@ export default function Logo({
         aria-hidden={decorative || undefined}
       >
         <Image
-          src="/wordmark.png"
+          src="/wordmark-hq.png"
           alt={decorative ? '' : 'BinaryScouts'}
-          width={w * 2}
-          height={h * 2}
+          width={977}
+          height={110}
           priority={priority}
+          unoptimized={crisp}
+          quality={100}
+          sizes={`${Math.ceil(w * 3)}px`}
           className="h-full w-full object-contain object-left"
         />
       </span>
@@ -69,7 +83,7 @@ export default function Logo({
   }
 
   const h = size ?? 64;
-  const w = Math.round(h * 1.15);
+  const w = Math.round(h * (1024 / 886));
 
   return (
     <span
@@ -78,11 +92,14 @@ export default function Logo({
       aria-hidden={decorative || undefined}
     >
       <Image
-        src="/logo.png"
+        src="/logo-full.png"
         alt={decorative ? '' : 'BinaryScouts'}
-        width={w * 2}
-        height={h * 2}
+        width={1024}
+        height={886}
         priority={priority}
+        unoptimized={crisp}
+        quality={100}
+        sizes={`${Math.ceil(w * 3)}px`}
         className="h-full w-full object-contain"
       />
     </span>

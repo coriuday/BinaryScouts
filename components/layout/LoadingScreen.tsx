@@ -111,8 +111,8 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, mode = 'full'
     );
   }
 
-  const logoSize = isMobile ? 100 : 132;
-  const wordmarkH = isMobile ? 24 : 32;
+  const logoSize = isMobile ? 168 : 208;
+  const wordmarkH = isMobile ? 28 : 36;
 
   return (
     <AnimatePresence>
@@ -296,11 +296,24 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, mode = 'full'
                 alignItems: 'center',
                 justifyContent: 'center',
                 borderRadius: 20,
-                boxShadow: '0 0 40px rgba(0,212,255,0.35), 0 0 80px rgba(0,212,255,0.15)',
                 overflow: 'hidden',
               }}
             >
-              <Logo variant="icon" size={logoSize} priority decorative />
+              {/* Glow behind logo — keeps mark crisp (no filter on the asset) */}
+              <div
+                aria-hidden
+                style={{
+                  position: 'absolute',
+                  inset: '8%',
+                  borderRadius: 20,
+                  boxShadow: '0 0 36px rgba(0,212,255,0.28), 0 0 72px rgba(0,212,255,0.12)',
+                  pointerEvents: 'none',
+                  zIndex: 0,
+                }}
+              />
+              <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%' }}>
+                <Logo variant="icon" size={logoSize} priority crisp decorative />
+              </div>
               {/* Shine across monogram */}
               <motion.div
                 aria-hidden
@@ -310,6 +323,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, mode = 'full'
                 style={{
                   position: 'absolute',
                   inset: 0,
+                  zIndex: 2,
                   background:
                     'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.35) 50%, transparent 65%)',
                   pointerEvents: 'none',
@@ -326,7 +340,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, mode = 'full'
               transition={{ duration: 0.7, delay: 1.35, ease: EASE }}
               style={{ position: 'relative', overflow: 'hidden' }}
             >
-              <Logo variant="wordmark" size={wordmarkH} priority decorative />
+              <Logo variant="wordmark" size={wordmarkH} priority crisp decorative />
               <motion.div
                 aria-hidden
                 initial={{ x: '-100%' }}

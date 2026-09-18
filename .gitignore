@@ -67,3 +67,5 @@ backend-rust/vault/
 data/contacts/
 data/newsletter/
 data/reviews/
+.vercel
+.env*
